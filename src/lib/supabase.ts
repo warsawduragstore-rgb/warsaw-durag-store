@@ -301,3 +301,246 @@ export async function subscribeNewsletterToSupabase(email: string): Promise<{ su
     return { success: false, message: err?.message || 'Wystąpił błąd przy zapisie.' };
   }
 }
+
+// ============================================================================
+// ORDERS CMS & CHECKOUT
+// ============================================================================
+export interface SupabaseOrder {
+  id?: number;
+  order_no: string;
+  created_at?: string;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string;
+  delivery_method: 'paczkomat' | 'courier';
+  locker_code?: string | null;
+  locker_address?: string | null;
+  items: any[];
+  items_summary?: string;
+  subtotal: number;
+  discount_code?: string | null;
+  discount_pct?: number;
+  discount_val?: number;
+  total: number;
+  status: 'new' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+}
+
+export async function createOrderInSupabase(order: Omit<SupabaseOrder, 'id' | 'created_at'>): Promise<{ success: boolean; orderNo?: string; error?: string }> {
+  const client = getSupabaseBrowserClient();
+  if (!client) {
+    return { success: true, orderNo: order.order_no }; // Offline/fallback simulation
+  }
+
+  try {
+    const { data, error } = await client
+      .from('orders')
+      .insert([order])
+      .select()
+      .single();
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true, orderNo: data.order_no };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Błąd podczas składania zamówienia' };
+  }
+}
+
+export async function fetchOrdersFromSupabase(): Promise<SupabaseOrder[]> {
+  const client = getSupabaseBrowserClient();
+  if (!client) return [];
+
+  try {
+    const { data, error } = await client
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error || !data) return [];
+    return data;
+  } catch {
+    return [];
+  }
+}
+
+export async function updateOrderStatusInSupabase(
+  orderId: number,
+  status: SupabaseOrder['status']
+): Promise<{ success: boolean; error?: string }> {
+  const client = getSupabaseBrowserClient();
+  if (!client) return { success: false, error: 'Brak klienta Supabase' };
+
+  try {
+    const { error } = await client
+      .from('orders')
+      .update({ status })
+      .eq('id', orderId);
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Błąd aktualizacji' };
+  }
+}
+
+// ============================================================================
+// PROMO CODES CMS
+// ============================================================================
+export interface SupabasePromoCode {
+  id: number;
+  code: string;
+  rate: number;
+  active: boolean;
+  uses_count: number;
+  created_at: string;
+}
+
+export async function fetchPromoCodesFromSupabase(): Promise<SupabasePromoCode[]> {
+  const client = getSupabaseBrowserClient();
+  if (!client) return [];
+
+  try {
+    const { data, error } = await client
+      .from('promo_codes')
+      .select('*')
+      .order('id', { ascending: true });
+
+    if (error || !data) return [];
+    return data;
+  } catch {
+    return [];
+  }
+}
+
+export async function savePromoCodeToSupabase(
+  code: string,
+  rate: number,
+  active = true
+): Promise<{ success: boolean; error?: string }> {
+  const client = getSupabaseBrowserClient();
+  if (!client) return { success: false, error: 'Brak klienta Supabase' };
+
+  try {
+    const { error } = await client
+      .from('promo_codes')
+      .upsert({ code: code.toUpperCase().trim(), rate, active }, { onConflict: 'code' });
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Błąd zapisu kodu' };
+  }
+}
+
+export async function togglePromoCodeStatus(
+  id: number,
+  active: boolean
+): Promise<{ success: boolean; error?: string }> {
+  const client = getSupabaseBrowserClient();
+  if (!client) return { success: false, error: 'Brak klienta Supabase' };
+
+  try {
+    const { error } = await client
+      .from('promo_codes')
+      .update({ active })
+      .eq('id', id);
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Błąd aktualizacji' };
+  }
+}
+
+// ============================================================================
+// SITE SETTINGS CMS (Dynamic text / announcements)
+// ============================================================================
+export interface SiteSetting {
+  id?: number;
+  key: string;
+  value: string;
+  label: string;
+  category: string;
+  updated_at?: string;
+}
+
+export const DEFAULT_SITE_SETTINGS: Record<string, string> = {
+  announcement_bar: 'Darmowa wysyłka InPost od 150 PLN • Ręczne pakowanie w Warszawie • Wysyłka w 24h',
+  hero_badge: 'Atelier Warszawa 2026 • 100% Mulberry Silk',
+  hero_title: 'Ręcznie Szyte Duragi Jedwabne i Satynowe',
+  hero_subtitle: 'Stworzone z myślą o perfekcyjnych falach 360 waves i ochronie włosów. Prawdziwy jedwab morwowy 19 Momme, szyty w warszawskim atelier.',
+  contact_email: 'kontakt@warsawduragstore.pl',
+  contact_phone: '+48 500 000 000',
+  instagram_handle: '@warsawduragstore',
+};
+
+export async function fetchSiteSettings(): Promise<Record<string, string>> {
+  const client = getSupabaseServerClient() || getSupabaseBrowserClient();
+  if (!client) return DEFAULT_SITE_SETTINGS;
+
+  try {
+    const { data, error } = await client
+      .from('site_settings')
+      .select('key, value');
+
+    if (error || !data || data.length === 0) {
+      return DEFAULT_SITE_SETTINGS;
+    }
+
+    const settings = { ...DEFAULT_SITE_SETTINGS };
+    data.forEach((row: any) => {
+      if (row.key && row.value) {
+        settings[row.key] = row.value;
+      }
+    });
+    return settings;
+  } catch {
+    return DEFAULT_SITE_SETTINGS;
+  }
+}
+
+export async function saveSiteSetting(
+  key: string,
+  value: string,
+  label = '',
+  category = 'general'
+): Promise<{ success: boolean; error?: string }> {
+  const client = getSupabaseBrowserClient();
+  if (!client) return { success: false, error: 'Brak klienta Supabase' };
+
+  try {
+    const { error } = await client
+      .from('site_settings')
+      .upsert(
+        { key, value, label: label || key, category, updated_at: new Date().toISOString() },
+        { onConflict: 'key' }
+      );
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Błąd zapisu ustawienia' };
+  }
+}
+
+// ============================================================================
+// NEWSLETTER SUBSCRIBERS
+// ============================================================================
+export async function fetchNewsletterSubscribers(): Promise<Array<{ id: number; email: string; subscribed_at: string }>> {
+  const client = getSupabaseBrowserClient();
+  if (!client) return [];
+
+  try {
+    const { data, error } = await client
+      .from('newsletter_emails')
+      .select('*')
+      .order('subscribed_at', { ascending: false });
+
+    if (error || !data) return [];
+    return data;
+  } catch {
+    return [];
+  }
+}
+

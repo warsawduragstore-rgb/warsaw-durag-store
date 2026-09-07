@@ -13,6 +13,18 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [dynamicAnnouncement, setDynamicAnnouncement] = useState<string | null>(null);
+
+  useEffect(() => {
+    import('@/lib/supabase')
+      .then(({ fetchSiteSettings }) => fetchSiteSettings())
+      .then((settings) => {
+        if (settings?.announcement_bar) {
+          setDynamicAnnouncement(settings.announcement_bar);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,9 +86,9 @@ export default function Header() {
       {/* Announcement Ticker */}
       <div className="bg-[#0D0D0B] text-[#D9A87E] text-[11px] uppercase tracking-[0.15em] py-2 overflow-hidden border-b border-[#3B3C40]/30 select-none" aria-hidden="true">
         <div className="flex whitespace-nowrap animate-marquee">
-          <span className="pr-8">{t.announcement}</span>
-          <span className="pr-8">{t.announcement}</span>
-          <span className="pr-8">{t.announcement}</span>
+          <span className="pr-8">{dynamicAnnouncement || t.announcement}</span>
+          <span className="pr-8">{dynamicAnnouncement || t.announcement}</span>
+          <span className="pr-8">{dynamicAnnouncement || t.announcement}</span>
         </div>
       </div>
 

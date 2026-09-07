@@ -20,7 +20,8 @@ interface CartContextType {
   subtotal: number;
   promoDiscount: number;
   appliedPromoCode: string | null;
-  applyPromoCode: (code: string) => boolean;
+  promoRate: number;
+  applyPromoCode: (code: string) => Promise<boolean>;
   total: number;
 }
 
@@ -86,17 +87,47 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setPromoRate(0);
   };
 
-  const applyPromoCode = (code: string) => {
+  const applyPromoCode = async (code: string): Promise<boolean> => {
     const cleanCode = code.trim().toUpperCase();
-    if (cleanCode === 'WARSAW10' || cleanCode === 'WDS10') {
+    if (!cleanCode) return false;
+
+    // Fast static check for initial codes
+    const staticCodes: Record<string, number> = {
+      WARSAW10: 0.10,
+      WDS10: 0.10,
+      ELEMENTY: 0.15,
+      DURAGWAVES: 0.20,
+      VIP20: 0.20,
+    };
+
+    if (staticCodes[cleanCode]) {
       setAppliedPromoCode(cleanCode);
-      setPromoRate(0.10);
-      return true;
-    } else if (cleanCode === 'VIP20') {
-      setAppliedPromoCode(cleanCode);
-      setPromoRate(0.20);
+      setPromoRate(staticCodes[cleanCode]);
       return true;
     }
+
+    // Try dynamic check in Supabase
+    try {
+      const { getSupabaseBrowserClient } = await import('@/lib/supabase');
+      const client = getSupabaseBrowserClient();
+      if (client) {
+        const { data } = await client
+          .from('promo_codes')
+          .select('rate, active')
+          .eq('code', cleanCode)
+          .eq('active', true)
+          .maybeSingle();
+
+        if (data && data.rate) {
+          setAppliedPromoCode(cleanCode);
+          setPromoRate(Number(data.rate));
+          return true;
+        }
+      }
+    } catch {
+      // Fallback failed
+    }
+
     return false;
   };
 
@@ -122,6 +153,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         subtotal,
         promoDiscount,
         appliedPromoCode,
+        promoRate,
         applyPromoCode,
         total,
       }}
