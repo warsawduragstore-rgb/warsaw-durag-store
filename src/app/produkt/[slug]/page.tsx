@@ -7,7 +7,7 @@ import { SITE_URL } from '@/lib/siteConfig';
 import ProductDetailsClient from '@/components/ProductDetailsClient';
 import ProductCard from '@/components/ProductCard';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 interface ProductPageProps {
   params: Promise<{
@@ -15,12 +15,6 @@ interface ProductPageProps {
   }>;
 }
 
-export async function generateStaticParams() {
-  const products = await fetchServerProducts();
-  return products.map((p) => ({
-    slug: p.slug,
-  }));
-}
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;

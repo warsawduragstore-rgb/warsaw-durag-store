@@ -7,7 +7,7 @@ import TrustBanner from '@/components/TrustBanner';
 import { fetchServerProducts, fetchServerProductsByCategory } from '@/lib/supabase';
 import { SITE_URL } from '@/lib/siteConfig';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 interface CategoryPageProps {
   params: Promise<{
@@ -43,21 +43,10 @@ const CATEGORY_NAMES: Record<string, { title: string; desc: string; label: strin
   },
   accessories: {
     title: 'Akcesoria do Fal 360 Waves & Pielęgnacja',
-    desc: 'Profesjonalne szczotki z naturalnego włosia dzika, wave capy i niezbędne akcesoria wspomagające codzienną rutynę pielęgnacji.',
+    desc: 'Ręcznie profilowane szczotki z naturalnego włosia dzika oraz oddychające wave capy. Niezbędne do utrzymania fal.',
     label: 'Akcesoria',
   },
 };
-
-export async function generateStaticParams() {
-  return [
-    { slug: 'all' },
-    { slug: 'silk' },
-    { slug: 'satin' },
-    { slug: 'velvet' },
-    { slug: 'seasonal' },
-    { slug: 'accessories' },
-  ];
-}
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { slug } = await params;

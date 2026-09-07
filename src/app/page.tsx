@@ -10,7 +10,7 @@ import { Feather, ShieldCheck, Sparkles, Star } from 'lucide-react';
 
 import { SITE_URL } from '@/lib/siteConfig';
 
-export const revalidate = 60; // SSR / Incremental Static Regeneration every 60 seconds
+export const dynamic = 'force-dynamic'; // Pure dynamic SSR: fresh products and CMS content from Supabase
 
 export const metadata: Metadata = {
   title: 'Warsaw Durag Store — Ręcznie Szyte Duragi Jedwabne, Satynowe i Welurowe',
