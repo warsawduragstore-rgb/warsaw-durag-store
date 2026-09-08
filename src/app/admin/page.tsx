@@ -21,7 +21,6 @@ import {
   EyeOff,
   Sliders,
   Tag,
-  Mail,
   FileText,
   Truck,
   ExternalLink,
@@ -45,12 +44,11 @@ import {
   SupabasePromoCode,
   fetchSiteSettings,
   saveSiteSetting,
-  fetchNewsletterSubscribers,
   DEFAULT_SITE_SETTINGS,
 } from '@/lib/supabase';
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<'products' | 'orders' | 'cms' | 'promos' | 'newsletter'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'orders' | 'cms' | 'promos'>('products');
 
   // Supabase Status
   const [supabaseConnected, setSupabaseConnected] = useState<boolean>(false);
@@ -95,8 +93,6 @@ export default function AdminPage() {
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [settingsSuccessMsg, setSettingsSuccessMsg] = useState<string | null>(null);
 
-  // Newsletter State
-  const [subscribers, setSubscribers] = useState<Array<{ id: number; email: string; subscribed_at: string }>>([]);
 
   // Load all initial data from Supabase
   const loadAllData = async () => {
@@ -136,9 +132,6 @@ export default function AdminPage() {
       const settings = await fetchSiteSettings();
       setSiteSettings(settings);
 
-      // 5. Newsletter
-      const subs = await fetchNewsletterSubscribers();
-      setSubscribers(subs);
 
       setSupabaseConnected(true);
     } catch (err) {
@@ -341,21 +334,6 @@ export default function AdminPage() {
     }
   };
 
-  // Export Newsletter to CSV
-  const handleExportNewsletter = () => {
-    if (subscribers.length === 0) {
-      alert('Brak subskrybentów do wyeksportowania.');
-      return;
-    }
-    const headers = 'ID,Email,Data Zapisu\n';
-    const rows = subscribers.map((s) => `${s.id},"${s.email}","${s.subscribed_at}"`).join('\n');
-    const blob = new Blob([headers + rows], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `wds-newsletter-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-  };
 
   const showTemporaryToast = (msg: string) => {
     setSyncMessage(msg);
@@ -508,17 +486,6 @@ export default function AdminPage() {
           <span>Kody Rabatowe ({promosList.length})</span>
         </button>
 
-        <button
-          onClick={() => setActiveTab('newsletter')}
-          className={`py-3.5 px-4 text-xs uppercase tracking-widest font-semibold flex items-center gap-2 border-b-2 transition-all whitespace-nowrap ${
-            activeTab === 'newsletter'
-              ? 'border-[#C6A87D] text-[#C6A87D] bg-[#161614]'
-              : 'border-transparent text-[#8C8D94] hover:text-white'
-          }`}
-        >
-          <Mail className="w-4 h-4" />
-          <span>Newsletter ({subscribers.length})</span>
-        </button>
       </nav>
 
       {/* Main Content Area */}
@@ -1061,49 +1028,6 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* ==================================================================== */}
-        {/* TAB 5: NEWSLETTER SUBSCRIBERS */}
-        {/* ==================================================================== */}
-        {activeTab === 'newsletter' && (
-          <div className="space-y-4 max-w-3xl">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-serif text-base text-white font-medium">
-                  Zapisani do Newslettera
-                </h3>
-                <p className="text-xs text-[#8C8D94]">
-                  Baza adresów e-mail zbierana przez formularz w stopce sklepu.
-                </p>
-              </div>
-
-              <button
-                onClick={handleExportNewsletter}
-                className="px-4 py-2 bg-[#1F1F1D] hover:bg-[#2B2B28] text-xs text-white border border-[#3A3A36] rounded flex items-center gap-1.5 transition-colors"
-              >
-                <Download className="w-3.5 h-3.5 text-[#C6A87D]" />
-                <span>Eksportuj do CSV</span>
-              </button>
-            </div>
-
-            <div className="bg-[#141412] border border-[#242421] rounded overflow-hidden">
-              <div className="divide-y divide-[#1F1F1D]">
-                {subscribers.map((sub) => (
-                  <div key={sub.id} className="p-3.5 flex items-center justify-between text-xs">
-                    <span className="font-mono text-white">{sub.email}</span>
-                    <span className="text-[#8C8D94]">
-                      {sub.subscribed_at ? new Date(sub.subscribed_at).toLocaleDateString('pl-PL') : ''}
-                    </span>
-                  </div>
-                ))}
-                {subscribers.length === 0 && (
-                  <div className="p-8 text-center text-[#8C8D94] text-xs">
-                    Brak subskrybentów w bazie.
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
 
       </main>
 
