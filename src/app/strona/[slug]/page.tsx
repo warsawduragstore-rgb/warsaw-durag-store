@@ -74,7 +74,6 @@ const PAGES_DATA: Record<string, { title: string; subtitle: string; content: Rea
             <ul className="list-disc pl-5 space-y-2 font-medium text-[#0D0D0B]">
               <li><strong>ul. Włodarzewska 4</strong> (Warszawska Ochota) — darmowy odbiór po umówieniu</li>
               <li><strong>Centrum Warszawy</strong> — często można nas złapać w Śródmieściu</li>
-              <li><strong>Salon barberski Eclipse</strong> — pod Rondem Waszyngtona (Saska Kępa / Praga)</li>
             </ul>
             <p className="text-xs text-[#734C1D] pt-2 font-semibold">
               Jeśli masz wolną półkę do wynajęcia w swoim sklepie, z chęcią umieścimy tam swoje produkty (Warszawa, Katowice, Wrocław)!
