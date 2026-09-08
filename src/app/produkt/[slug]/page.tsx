@@ -2,12 +2,12 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { fetchServerProducts, fetchServerProductBySlug } from '@/lib/supabase';
+import { fetchProducts, fetchProductBySlug } from '@/lib/products-db';
 import { SITE_URL } from '@/lib/siteConfig';
 import ProductDetailsClient from '@/components/ProductDetailsClient';
 import ProductCard from '@/components/ProductCard';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR cache 60s
 
 interface ProductPageProps {
   params: Promise<{
@@ -18,7 +18,7 @@ interface ProductPageProps {
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = await fetchServerProductBySlug(slug);
+  const product = await fetchProductBySlug(slug);
 
   if (!product) {
     return { title: 'Produkt | Warsaw Durag Store' };
@@ -59,13 +59,13 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = await fetchServerProductBySlug(slug);
+  const product = await fetchProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
 
-  const allProducts = await fetchServerProducts();
+  const allProducts = await fetchProducts();
   const relatedProducts = allProducts.filter((p) => p.id !== product.id).slice(0, 4);
 
   const productUrl = `${SITE_URL}/produkt/${product.slug}`;

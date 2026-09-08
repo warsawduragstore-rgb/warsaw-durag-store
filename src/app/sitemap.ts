@@ -1,11 +1,11 @@
 import { MetadataRoute } from 'next';
-import { fetchServerProducts } from '@/lib/supabase';
+import { fetchProducts } from '@/lib/products-db';
 import { SITE_URL } from '@/lib/siteConfig';
 
 const BASE_URL = SITE_URL;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const products = await fetchServerProducts();
+  const products = await fetchProducts();
   const currentDate = new Date();
 
   // Static core routes

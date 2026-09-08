@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
 import TrustBanner from '@/components/TrustBanner';
-import { fetchServerProducts, fetchServerProductsByCategory } from '@/lib/supabase';
+import { fetchProducts } from '@/lib/products-db';
 import { SITE_URL } from '@/lib/siteConfig';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR cache 60s
 
 interface CategoryPageProps {
   params: Promise<{
@@ -83,10 +83,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  // SSR: Fetch products and all products from Supabase
+  // Fetch products and all products from database
   const [products, allProducts] = await Promise.all([
-    fetchServerProductsByCategory(slug),
-    fetchServerProducts(),
+    fetchProducts({ category: slug }),
+    fetchProducts(),
   ]);
 
   const categoryUrl = `${SITE_URL}/kolekcja/${slug}`;

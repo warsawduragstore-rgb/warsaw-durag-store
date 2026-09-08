@@ -10,21 +10,36 @@ export interface ProductColor {
   hex: string;
 }
 
+export interface ProductVariant {
+  id?: string;
+  name: string;
+  value?: string;
+  hex?: string;
+  sku?: string;
+  price?: number;
+  stock?: number;
+}
+
 export interface Product {
   id: number;
   slug: string;
   name: string;
-  nameEn: string;
+  nameEn?: string;
+  description: string;
   price: number;
+  compareAtPrice?: number;
+  images: string[];
   category: 'silk' | 'satin' | 'velvet' | 'seasonal' | 'accessories';
   categoryLabel: string;
   material: string;
-  description: string;
   storyDescription?: string;
-  images: string[];
-  colors: ProductColor[];
-  reviews: ProductReview[];
+  variants?: ProductVariant[];
+  colors?: ProductColor[];
+  reviews?: ProductReview[];
   stock?: number;
+  isFeatured?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
   visible?: boolean;
 }
 

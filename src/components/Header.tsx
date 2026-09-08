@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBag, Menu, X, Globe, ChevronRight, BookOpen, MapPin, Sparkles } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Globe, ChevronRight, BookOpen, MapPin, Sparkles } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useLanguage, Language } from '@/context/LanguageContext';
 
@@ -164,6 +164,18 @@ export default function Header() {
               )}
             </div>
 
+            {/* Search Button */}
+            <Link
+              href="/szukaj"
+              className={`p-2 transition-colors focus:outline-none ${
+                isScrolled ? 'text-white hover:text-[#D9A87E]' : 'text-[#0D0D0B] hover:text-[#734C1D]'
+              }`}
+              aria-label="Szukaj produktów"
+              title="Szukaj produktów"
+            >
+              <Search className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.5]" />
+            </Link>
+
             {/* Cart Button */}
             <button
               onClick={() => setIsCartOpen(true)}
@@ -248,6 +260,21 @@ export default function Header() {
             {/* Scrollable Nav Content */}
             <div className="flex-1 overflow-y-auto px-5 py-5 space-y-6 text-sm">
               
+              {/* Mobile Search Form */}
+              <form
+                action="/szukaj"
+                onSubmit={() => setMobileMenuOpen(false)}
+                className="relative"
+              >
+                <input
+                  type="search"
+                  name="q"
+                  placeholder="Szukaj (jedwab, satyna, model)..."
+                  className="w-full bg-[#1C1C1A] text-white pl-10 pr-4 py-2.5 rounded-xl text-xs border border-white/10 focus:outline-none focus:border-[#D9A87E] placeholder-gray-400 font-medium"
+                />
+                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              </form>
+
               {/* Main Categories */}
               <div>
                 <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#D9A87E] mb-3">
