@@ -1,73 +1,51 @@
 'use client';
 
 import React from 'react';
-import { Truck, ShieldCheck, RefreshCw, CreditCard } from 'lucide-react';
+
+const TRUST_PILLARS = [
+  {
+    num: '01',
+    title: 'Wysyłka 24h z Warszawy',
+    desc: 'Darmowy Paczkomat InPost od 0 zł. Paczka u Ciebie na drugi dzień roboczy.',
+  },
+  {
+    num: '02',
+    title: '100% Jedwab Morwowy',
+    desc: 'Gramatura 19 Momme. Naturalne białko, zero puszenia i łamania włosów.',
+  },
+  {
+    num: '03',
+    title: 'Szew Bezodciskowy',
+    desc: 'Autorski krój zewnętrzny i pasy 100 cm. Zero śladów na czole po nocy.',
+  },
+  {
+    num: '04',
+    title: 'BLIK, Apple Pay & 14 Dni',
+    desc: 'Natychmiastowe płatności i 14 dni na bezproblemowy zwrot lub wymianę.',
+  },
+];
 
 export default function TrustBanner() {
-
   return (
-    <section className="bg-[#F7F5F2] border-y border-[#E5E2DC] py-5 sm:py-6">
+    <section className="bg-[#0D0D0B] text-white border-y border-white/10 py-6 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-          
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-[#E5E2DC] flex items-center justify-center text-[#734C1D] shrink-0 shadow-2xs">
-              <Truck className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
-            </div>
-            <div>
-              <h4 className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#0D0D0B]">
-                Wysyłka w 24h
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-white/10">
+          {TRUST_PILLARS.map((pillar, idx) => (
+            <div key={idx} className={`pt-4 sm:pt-0 ${idx > 0 ? 'sm:pl-6 lg:pl-8' : ''}`}>
+              <span className="font-mono text-xs text-[#D9A87E] font-bold block mb-1.5 tracking-wider">
+                [ {pillar.num} ]
+              </span>
+              <h4 className="font-serif text-sm sm:text-base font-medium text-white tracking-tight">
+                {pillar.title}
               </h4>
-              <p className="text-[11px] sm:text-[12px] text-[#3B3C40] font-light mt-0.5 leading-snug">
-                Darmowy Paczkomat InPost od 0 zł z Warszawy
+              <p className="text-xs text-gray-400 font-light mt-1 leading-relaxed">
+                {pillar.desc}
               </p>
             </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-[#E5E2DC] flex items-center justify-center text-[#734C1D] shrink-0 shadow-2xs">
-              <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
-            </div>
-            <div>
-              <h4 className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#0D0D0B]">
-                Naturalny Jedwab
-              </h4>
-              <p className="text-[11px] sm:text-[12px] text-[#3B3C40] font-light mt-0.5 leading-snug">
-                Czysty morwowy 19 Momme & polski szew
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-[#E5E2DC] flex items-center justify-center text-[#734C1D] shrink-0 shadow-2xs">
-              <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
-            </div>
-            <div>
-              <h4 className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#0D0D0B]">
-                Bezpieczne Płatności
-              </h4>
-              <p className="text-[11px] sm:text-[12px] text-[#3B3C40] font-light mt-0.5 leading-snug">
-                BLIK, Apple Pay, Google Pay, Karty
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-[#E5E2DC] flex items-center justify-center text-[#734C1D] shrink-0 shadow-2xs">
-              <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
-            </div>
-            <div>
-              <h4 className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#0D0D0B]">
-                14 Dni na Zwrot
-              </h4>
-              <p className="text-[11px] sm:text-[12px] text-[#3B3C40] font-light mt-0.5 leading-snug">
-                Bezproblemowa wymiana lub zwrot środków
-              </p>
-            </div>
-          </div>
-
+          ))}
         </div>
       </div>
     </section>
   );
 }
+

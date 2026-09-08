@@ -127,15 +127,14 @@ export default function Header() {
 
           {/* Cart & Language Selector & Hamburger */}
           <div className="flex items-center gap-2 sm:gap-4">
-            
-            {/* Multi-language Selector (Desktop) */}
+               {/* Multi-language Selector (Desktop) */}
             <div className="relative hidden sm:block">
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border transition-colors ${
+                className={`flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider px-2.5 py-1 border transition-colors ${
                   isScrolled 
                     ? 'border-white/20 hover:border-[#D9A87E] text-white bg-white/5' 
-                    : 'border-gray-300 hover:border-[#0D0D0B] text-[#0D0D0B] bg-gray-50'
+                    : 'border-gray-300 hover:border-[#0D0D0B] text-[#0D0D0B] bg-white'
                 }`}
                 title="Wybierz język / Change language"
               >
@@ -144,7 +143,7 @@ export default function Header() {
               </button>
 
               {langDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-36 bg-[#0D0D0B] border border-white/20 rounded-xl shadow-2xl py-2 z-50 text-xs font-medium text-gray-200 animate-scale-in">
+                <div className="absolute right-0 mt-2 w-36 bg-[#0D0D0B] border border-white/20 shadow-2xl py-1 z-50 text-xs font-mono font-medium text-gray-200">
                   {languages.map(({ code, label }) => (
                     <button
                       key={code}
@@ -186,7 +185,7 @@ export default function Header() {
             >
               <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.5]" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#D9A87E] text-[#0D0D0B] text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-scale-in shadow-sm">
+                <span className="absolute top-1 right-1 bg-[#D9A87E] text-[#0D0D0B] text-[9px] font-mono font-bold px-1 min-w-[16px] h-4 flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -195,13 +194,12 @@ export default function Header() {
             {/* Mobile Hamburger Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className={`lg:hidden p-2 rounded-lg transition-colors focus:outline-none ${
+              className={`lg:hidden p-2 transition-colors focus:outline-none ${
                 isScrolled 
                   ? 'text-white hover:bg-white/10' 
-                  : 'text-[#0D0D0B] hover:bg-black/5'
+                  : 'text-[#0D0D0B] hover:bg-gray-100'
               }`}
               aria-label="Otwórz menu nawigacji"
-              aria-expanded={mobileMenuOpen}
             >
               <Menu className="w-6 h-6 stroke-[1.8]" />
             </button>
@@ -244,17 +242,17 @@ export default function Header() {
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 text-gray-400 hover:text-white rounded-full hover:bg-white/10 transition-colors focus:outline-none"
+                className="p-2 text-gray-400 hover:text-white transition-colors focus:outline-none"
                 aria-label="Zamknij menu"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Promo Pill Bar */}
-            <div className="bg-gradient-to-r from-[#D9A87E]/15 via-[#D9A87E]/25 to-[#D9A87E]/15 border-b border-[#D9A87E]/30 px-5 py-2.5 flex items-center gap-2 text-xs font-medium text-[#D9A87E]">
-              <Sparkles className="w-3.5 h-3.5 flex-shrink-0 animate-pulse" />
-              <span className="truncate">Promocja 2+1 Gratis • Wysyłka w 24h z Warszawy</span>
+            {/* Promo Bar */}
+            <div className="bg-[#161614] border-b border-white/10 px-5 py-2.5 flex items-center justify-between text-[11px] font-mono text-[#D9A87E]">
+              <span>[ PROMOCJA 2+1 GRATIS ]</span>
+              <span className="text-gray-400">WARSZAWA 24H</span>
             </div>
 
             {/* Scrollable Nav Content */}
@@ -270,15 +268,15 @@ export default function Header() {
                   type="search"
                   name="q"
                   placeholder="Szukaj (jedwab, satyna, model)..."
-                  className="w-full bg-[#1C1C1A] text-white pl-10 pr-4 py-2.5 rounded-xl text-xs border border-white/10 focus:outline-none focus:border-[#D9A87E] placeholder-gray-400 font-medium"
+                  className="w-full bg-[#1C1C1A] text-white pl-10 pr-4 py-2.5 text-xs border border-white/15 focus:outline-none focus:border-[#D9A87E] placeholder-gray-400 font-mono"
                 />
                 <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               </form>
 
               {/* Main Categories */}
               <div>
-                <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#D9A87E] mb-3">
-                  Kolekcje & Materiały
+                <p className="text-[10px] uppercase font-mono font-bold tracking-[0.2em] text-[#D9A87E] mb-3">
+                  [ KOLEKCJE & MATERIAŁY ]
                 </p>
                 <div className="space-y-1">
                   {categories.map((cat) => (
@@ -286,11 +284,11 @@ export default function Header() {
                       key={cat.href}
                       href={cat.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="group flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-white/5 transition-all text-gray-200 hover:text-white"
+                      className="group flex items-center justify-between py-2.5 px-3 hover:bg-white/5 transition-all text-gray-200 hover:text-white border-b border-white/5"
                     >
                       <span className="font-medium">{cat.label}</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[#D9A87E] font-medium">
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 border border-white/10 text-[#D9A87E] font-medium">
                           {cat.badge}
                         </span>
                         <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-[#D9A87E] transition-colors" />
@@ -301,18 +299,18 @@ export default function Header() {
               </div>
 
               {/* 360 Wave Guide Banner Box */}
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-[#1E1B18] to-[#121210] border border-[#D9A87E]/40 shadow-inner">
-                <div className="flex items-center gap-2 text-[#D9A87E] mb-1.5 font-bold text-xs uppercase tracking-wider">
+              <div className="p-4 bg-[#141412] border border-[#D9A87E]/40">
+                <div className="flex items-center gap-2 text-[#D9A87E] mb-1.5 font-mono font-bold text-xs uppercase tracking-wider">
                   <BookOpen className="w-4 h-4" />
                   <span>360 Waves Kompendium</span>
                 </div>
-                <p className="text-xs text-gray-300 mb-3 leading-relaxed">
+                <p className="text-xs text-gray-300 mb-3 leading-relaxed font-light">
                   Jak dbać o fale, dobrać szczotkę i wiązać durag bez śladów na czole.
                 </p>
                 <Link
                   href="/poradnik/wave-guide"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="inline-flex items-center justify-center w-full py-2 px-3 rounded-xl bg-[#D9A87E] text-[#0D0D0B] font-bold text-xs hover:bg-[#c49266] transition-colors shadow-sm"
+                  className="inline-flex items-center justify-center w-full py-2.5 px-3 bg-[#D9A87E] text-[#0D0D0B] font-mono font-bold uppercase tracking-wider text-xs hover:bg-white transition-colors"
                 >
                   Zobacz poradnik fal 360 →
                 </Link>
@@ -320,8 +318,8 @@ export default function Header() {
 
               {/* Information & Store links */}
               <div>
-                <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-gray-400 mb-3">
-                  Informacje & Pomoc
+                <p className="text-[10px] uppercase font-mono font-bold tracking-[0.2em] text-gray-400 mb-3">
+                  [ INFORMACJE & ATELIER ]
                 </p>
                 <div className="space-y-1">
                   {infoLinks.map((item) => (
@@ -329,7 +327,7 @@ export default function Header() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block py-2 px-3 rounded-lg text-xs text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                      className="block py-2 px-3 text-xs text-gray-300 hover:text-white hover:bg-white/5 transition-colors border-b border-white/5 font-light"
                     >
                       {item.label}
                     </Link>
@@ -339,21 +337,21 @@ export default function Header() {
 
               {/* Language Switcher in Mobile Menu */}
               <div>
-                <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-gray-400 mb-2 flex items-center gap-1.5">
+                <p className="text-[10px] uppercase font-mono font-bold tracking-[0.2em] text-[#D9A87E] mb-2 flex items-center gap-1.5">
                   <Globe className="w-3.5 h-3.5 text-[#D9A87E]" />
-                  <span>Wybierz Język</span>
+                  <span>[ WYBIERZ JĘZYK ]</span>
                 </p>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-1.5 font-mono">
                   {languages.map(({ code, label }) => (
                     <button
                       key={code}
                       onClick={() => {
                         setLanguage(code);
                       }}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                      className={`px-3 py-1 text-xs font-semibold transition-all border ${
                         language === code
-                          ? 'bg-[#D9A87E] text-[#0D0D0B] font-bold shadow'
-                          : 'bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10'
+                          ? 'bg-[#D9A87E] text-[#0D0D0B] border-[#D9A87E]'
+                          : 'bg-white/5 border-white/15 text-gray-300 hover:bg-white/10'
                       }`}
                     >
                       {code} <span className="opacity-70 text-[10px]">({label})</span>
@@ -403,10 +401,10 @@ export default function Header() {
                   setMobileMenuOpen(false);
                   setIsCartOpen(true);
                 }}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs tracking-wider uppercase transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-white text-[#0D0D0B] hover:bg-[#D9A87E] font-mono font-bold text-xs tracking-[0.2em] uppercase transition-colors"
               >
-                <ShoppingBag className="w-4 h-4 text-[#D9A87E]" />
-                <span>Twój Koszyk ({cartCount})</span>
+                <ShoppingBag className="w-4 h-4" />
+                <span>[ TWÓJ KOSZYK: {cartCount} ]</span>
               </button>
             </div>
           </div>

@@ -152,8 +152,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </section>
 
       {/* Category Tabs */}
-      <section className="py-6 sm:py-8 bg-[#F7F5F2] border-b border-[#CFCFCF]/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex overflow-x-auto no-scrollbar scroll-smooth justify-start sm:justify-center gap-2 sm:gap-3 pb-2 sm:pb-0 text-xs uppercase tracking-wider font-semibold">
+      <section className="py-6 sm:py-8 bg-[#F6F5F2] border-b border-[#0D0D0B]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex overflow-x-auto no-scrollbar scroll-smooth justify-start sm:justify-center gap-2 pb-2 sm:pb-0 text-xs font-mono uppercase tracking-wider">
           {Object.entries(CATEGORY_NAMES).map(([catKey, catVal]) => {
             const count =
               catKey === 'all'
@@ -164,13 +164,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               <Link
                 key={catKey}
                 href={`/kolekcja/${catKey}`}
-                className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full transition-colors whitespace-nowrap flex-shrink-0 ${
+                className={`px-4 sm:px-5 py-2.5 transition-colors whitespace-nowrap flex-shrink-0 font-medium ${
                   isActive
-                    ? 'bg-[#0D0D0B] text-white shadow-md'
-                    : 'bg-white text-[#3B3C40] hover:bg-[#0D0D0B] hover:text-white border border-[#CFCFCF]/50'
+                    ? 'bg-[#0D0D0B] text-white'
+                    : 'bg-white text-[#0D0D0B] hover:bg-[#0D0D0B] hover:text-white border border-[#0D0D0B]'
                 }`}
               >
-                {catVal.label} ({count})
+                [{catVal.label.toUpperCase()}] <span className="text-[10px] opacity-70">({count})</span>
               </Link>
             );
           })}
@@ -182,8 +182,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       {/* Responsive Grid: 2 columns on mobile, 3 on tablet, 4 on desktop */}
       <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6">
         {products.length === 0 ? (
-          <div className="text-center py-20 bg-[#F7F5F2] rounded-xl border border-dashed border-[#CFCFCF]">
-            <p className="text-base text-[#3B3C40]">Brak produktów w tej kategorii.</p>
+          <div className="text-center py-20 bg-[#F6F5F2] border border-[#0D0D0B] p-8">
+            <span className="font-mono text-xs text-[#734C1D] uppercase tracking-widest block mb-2">[ STATUS ]</span>
+            <p className="font-serif text-xl text-[#0D0D0B]">Brak produktów w tej kategorii atelier.</p>
+            <p className="text-xs text-[#5A5B60] mt-1 font-light">Nowy drop w przygotowaniu.</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">

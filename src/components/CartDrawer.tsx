@@ -158,16 +158,18 @@ export default function CartDrawer() {
       <div className="relative w-full max-w-lg bg-white h-full shadow-2xl flex flex-col z-10 animate-slide-left border-l border-[#CFCFCF]/50">
         
         {/* Header */}
-        <div className="px-6 py-5 border-b border-[#CFCFCF]/50 flex items-center justify-between bg-[#F7F5F2]">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#0D0D0B]" />
-            <h2 className="font-serif text-lg font-medium tracking-wide text-[#0D0D0B]">
-              {t.cartTitle} ({cart.length})
+        <div className="px-6 py-5 border-b border-[#0D0D0B] flex items-center justify-between bg-[#F6F5F2]">
+          <div className="flex items-center gap-2.5">
+            <span className="text-[10px] font-mono tracking-widest uppercase bg-[#0D0D0B] text-white px-2 py-0.5">
+              ATELIER WDS
+            </span>
+            <h2 className="font-mono text-sm tracking-wider uppercase font-semibold text-[#0D0D0B]">
+              {t.cartTitle} [{cart.length}]
             </h2>
           </div>
           <button
             onClick={() => setIsCartOpen(false)}
-            className="p-1.5 text-[#3B3C40] hover:text-[#0D0D0B] transition-colors rounded-sm hover:bg-black/5"
+            className="p-1.5 text-[#0D0D0B] hover:bg-[#0D0D0B] hover:text-white transition-colors"
             aria-label="Zamknij koszyk"
           >
             <X className="w-5 h-5" />
@@ -176,84 +178,79 @@ export default function CartDrawer() {
 
         {/* Success View */}
         {placedOrderNo ? (
-          <div className="flex-grow p-8 flex flex-col items-center justify-center text-center bg-[#FAF9F7] space-y-5 overflow-y-auto">
-            <div className="w-16 h-16 rounded-full bg-[#0D0D0B] text-[#C6A87D] flex items-center justify-center shadow-md">
-              <CheckCircle2 className="w-8 h-8" />
+          <div className="flex-grow p-8 flex flex-col items-center justify-center text-center bg-[#F6F5F2] space-y-6 overflow-y-auto">
+            <div className="w-14 h-14 border-2 border-[#0D0D0B] text-[#0D0D0B] flex items-center justify-center">
+              <CheckCircle2 className="w-7 h-7" />
             </div>
 
             <div>
-              <span className="text-[11px] uppercase tracking-widest font-mono text-[#734C1D] font-bold">
-                Zamówienie Przyjęte
+              <span className="text-[11px] uppercase tracking-[0.25em] font-mono text-[#734C1D] font-bold block mb-1">
+                [ ZAMÓWIENIE PRZYJĘTE ]
               </span>
-              <h3 className="font-serif text-2xl text-[#0D0D0B] mt-1">
-                Dziękujemy za zaufanie!
+              <h3 className="font-serif text-3xl text-[#0D0D0B] tracking-tight">
+                Dziękujemy za zaufanie.
               </h3>
-              <p className="text-xs text-[#5A5B60] mt-1 max-w-sm mx-auto">
-                Twoje zamówienie trafiło prosto do naszego warszawskiego atelier.
+              <p className="text-xs text-[#5A5B60] mt-2 max-w-sm mx-auto font-light leading-relaxed">
+                Zamówienie zostało zarejestrowane w naszym warszawskim atelier i trafiło do realizacji.
               </p>
             </div>
 
             {/* Order Confirmation Card */}
-            <div className="w-full bg-white border border-[#CFCFCF] p-4 text-left space-y-2.5 rounded-sm shadow-xs">
-              <div className="flex justify-between items-center border-b border-[#EAE6DF] pb-2">
-                <span className="text-xs text-[#5A5B60]">Numer zamówienia:</span>
-                <span className="font-mono text-xs font-bold text-[#0D0D0B] bg-[#F7F5F2] px-2 py-0.5 rounded">
+            <div className="w-full bg-white border border-[#0D0D0B] p-5 text-left space-y-3">
+              <div className="flex justify-between items-center border-b border-[#E5E5E0] pb-2.5">
+                <span className="text-xs uppercase tracking-wider text-[#5A5B60]">ID ZAMÓWIENIA:</span>
+                <span className="font-mono text-xs font-bold text-[#0D0D0B] bg-[#F6F5F2] px-2 py-1 border border-[#0D0D0B]">
                   {placedOrderNo}
                 </span>
               </div>
 
               <div className="flex justify-between items-center text-xs">
-                <span className="text-[#5A5B60]">Sposób dostawy:</span>
-                <span className="font-medium text-[#0D0D0B] flex items-center gap-1">
+                <span className="text-[#5A5B60] uppercase tracking-wider">DOSTAWA:</span>
+                <span className="font-mono text-xs font-semibold text-[#0D0D0B]">
                   {placedOrderDetails?.method === 'paczkomat' ? (
-                    <>
-                      <span className="w-2 h-2 rounded-full bg-[#FFD100]" />
-                      Paczkomat InPost ({placedOrderDetails.pointName})
-                    </>
+                    `PACZKOMAT INPOST (${placedOrderDetails.pointName})`
                   ) : (
-                    <>
-                      <Truck className="w-3.5 h-3.5 text-[#734C1D]" />
-                      Kurier pod adres
-                    </>
+                    `KURIER POD ADRES`
                   )}
                 </span>
               </div>
 
               {placedOrderDetails?.address && (
-                <div className="text-[11px] text-[#5A5B60] pt-1 border-t border-[#EAE6DF]">
-                  <strong>Adres docelowy:</strong> {placedOrderDetails.address}
+                <div className="text-[11px] text-[#5A5B60] pt-2 border-t border-[#E5E5E0]">
+                  <strong className="text-[#0D0D0B] font-mono uppercase tracking-wider">ADRES:</strong> {placedOrderDetails.address}
                 </div>
               )}
 
-              <div className="flex justify-between items-center pt-2 border-t border-[#EAE6DF] text-xs font-semibold text-[#0D0D0B]">
-                <span>Kwota całkowita:</span>
-                <span>{placedOrderDetails?.total.toFixed(2)} PLN (Dostawa gratis)</span>
+              <div className="flex justify-between items-center pt-2.5 border-t border-[#0D0D0B] text-xs font-bold text-[#0D0D0B]">
+                <span className="uppercase tracking-wider">ŁĄCZNIE:</span>
+                <span className="font-mono">{placedOrderDetails?.total.toFixed(2)} PLN (DOSTAWA 0 ZŁ)</span>
               </div>
             </div>
 
-            <p className="text-[11px] text-[#734C1D] italic">
-              Szczegóły wysyłki oraz numer śledzenia przesyłki otrzymasz drogą mailową.
+            <p className="text-[11px] font-mono text-[#5A5B60]">
+              Potwierdzenie i numer przesyłki wyślemy na Twój e-mail.
             </p>
 
             <button
               onClick={handleCloseSuccess}
-              className="w-full bg-[#0D0D0B] text-white py-3.5 text-xs uppercase tracking-widest font-semibold hover:bg-[#734C1D] transition-colors rounded-sm"
+              className="w-full bg-[#0D0D0B] text-white py-4 text-xs uppercase tracking-[0.2em] font-mono font-semibold hover:bg-[#734C1D] transition-colors"
             >
-              Powrót do sklepu
+              [ POWRÓT DO SKLEPU ]
             </button>
           </div>
         ) : cart.length === 0 ? (
           /* Empty Cart View */
-          <div className="flex-grow p-8 flex flex-col items-center justify-center text-center">
-            <div className="w-12 h-12 rounded-full bg-[#F7F5F2] flex items-center justify-center text-[#5A5B60] mb-4">
+          <div className="flex-grow p-8 flex flex-col items-center justify-center text-center bg-[#FAF9F7]">
+            <div className="w-14 h-14 border border-[#0D0D0B] flex items-center justify-center text-[#0D0D0B] mb-5">
               <Package className="w-6 h-6" />
             </div>
-            <p className="text-[#3B3C40] text-sm font-light mb-6">Twój koszyk jest obecnie pusty.</p>
+            <p className="text-[#0D0D0B] font-serif text-xl mb-2">Twój koszyk jest pusty</p>
+            <p className="text-xs text-[#5A5B60] font-light mb-6">Dodaj produkty z atelier, aby skompletować zamówienie.</p>
             <button
               onClick={() => setIsCartOpen(false)}
-              className="bg-[#0D0D0B] text-white px-8 py-3.5 text-xs uppercase tracking-widest font-semibold hover:bg-[#734C1D] transition-colors rounded-sm"
+              className="bg-[#0D0D0B] text-white px-8 py-3.5 text-xs uppercase tracking-[0.2em] font-mono font-semibold hover:bg-[#734C1D] transition-colors"
             >
-              Przeglądaj kolekcję
+              [ PRZEGLĄDAJ OFERTĘ ]
             </button>
           </div>
         ) : (
@@ -261,14 +258,15 @@ export default function CartDrawer() {
           <div className="flex-grow overflow-y-auto flex flex-col justify-between">
             
             {/* 1. Item List */}
-            <div className="p-6 space-y-4 divide-y divide-[#EAE6DF]">
-              <div className="text-xs uppercase tracking-widest font-semibold text-[#5A5B60] pb-2">
-                Zawartość koszyka ({cart.reduce((sum, i) => sum + i.quantity, 0)} szt.)
+            <div className="p-6 space-y-4 divide-y divide-[#E5E5E0]">
+              <div className="text-xs uppercase tracking-[0.2em] font-mono font-bold text-[#0D0D0B] pb-2 flex justify-between items-center">
+                <span>[ ZAWARTOŚĆ KOSZYKA ]</span>
+                <span className="text-[#5A5B60]">{cart.reduce((sum, i) => sum + i.quantity, 0)} SZT.</span>
               </div>
 
               {cart.map((item) => (
                 <div key={item.product.id} className="flex gap-4 pt-4">
-                  <div className="relative w-16 h-16 bg-[#F7F5F2] shrink-0 border border-[#CFCFCF]/60 rounded-sm overflow-hidden">
+                  <div className="relative w-16 h-16 bg-[#F6F5F2] shrink-0 border border-[#0D0D0B] overflow-hidden">
                     <Image
                       src={item.product.images[0] || '/assets/durag_silk_black.png'}
                       alt={item.product.name}
@@ -284,37 +282,37 @@ export default function CartDrawer() {
                       </h4>
                       <button
                         onClick={() => removeFromCart(item.product.id)}
-                        className="text-[#8C8D94] hover:text-[#B53838] transition-colors p-1"
+                        className="text-[#8C8D94] hover:text-[#0D0D0B] transition-colors p-1"
                         title="Usuń z koszyka"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
 
-                    <span className="text-[11px] text-[#734C1D] font-medium block mt-0.5">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#734C1D] block mt-0.5">
                       {item.product.material}
                     </span>
 
                     <div className="flex items-center justify-between mt-2.5">
-                      <div className="flex items-center border border-[#CFCFCF] rounded-xs bg-white">
+                      <div className="flex items-center border border-[#0D0D0B] bg-white">
                         <button
                           onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                          className="px-2 py-1 text-[#3B3C40] hover:bg-gray-100 transition-colors"
+                          className="px-2 py-1 text-[#0D0D0B] hover:bg-black hover:text-white transition-colors"
                           aria-label="Zmniejsz ilość"
                         >
                           <Minus className="w-2.5 h-2.5" />
                         </button>
-                        <span className="px-2.5 text-xs font-semibold text-[#0D0D0B]">{item.quantity}</span>
+                        <span className="px-2.5 text-xs font-mono font-bold text-[#0D0D0B]">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                          className="px-2 py-1 text-[#3B3C40] hover:bg-gray-100 transition-colors"
+                          className="px-2 py-1 text-[#0D0D0B] hover:bg-black hover:text-white transition-colors"
                           aria-label="Zwiększ ilość"
                         >
                           <Plus className="w-2.5 h-2.5" />
                         </button>
                       </div>
 
-                      <span className="text-xs font-bold text-[#0D0D0B]">
+                      <span className="text-xs font-mono font-bold text-[#0D0D0B]">
                         {(item.product.price * item.quantity).toFixed(2)} PLN
                       </span>
                     </div>
@@ -324,65 +322,62 @@ export default function CartDrawer() {
             </div>
 
             {/* 2. Promo Code, Summary & Checkout Form */}
-            <div className="p-6 border-t border-[#CFCFCF]/60 bg-[#FAF9F7] space-y-4">
+            <div className="p-6 border-t border-[#0D0D0B] bg-[#F6F5F2] space-y-4">
               
               {/* Promo Code Input */}
               <form onSubmit={handleApplyPromo} className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="Kod rabatowy (np. WARSAW10)"
+                  placeholder="KOD RABATOWY (NP. WARSAW10)"
                   value={promoInput}
                   onChange={(e) => setPromoInput(e.target.value)}
-                  className="flex-grow px-3 py-2 text-xs bg-white border border-[#CFCFCF] outline-none focus:border-[#734C1D] uppercase tracking-wider rounded-xs"
+                  className="flex-grow px-3 py-2 text-xs font-mono bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D] uppercase tracking-wider"
                 />
                 <button
                   type="submit"
                   disabled={isApplyingPromo}
-                  className="bg-[#0D0D0B] text-white px-4 py-2 text-xs uppercase tracking-wider font-semibold hover:bg-[#734C1D] transition-colors rounded-xs disabled:opacity-50"
+                  className="bg-[#0D0D0B] text-white px-4 py-2 text-xs uppercase tracking-[0.15em] font-mono font-semibold hover:bg-[#734C1D] transition-colors disabled:opacity-50"
                 >
-                  {isApplyingPromo ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Zastosuj'}
+                  {isApplyingPromo ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : '[ ZASTOSUJ ]'}
                 </button>
               </form>
 
               {appliedPromoCode && (
-                <div className="text-[11px] text-[#2E7D32] bg-[#2E7D32]/10 px-3 py-1.5 rounded flex items-center justify-between font-semibold">
-                  <span>Aktywny kod: <strong>{appliedPromoCode}</strong></span>
+                <div className="text-[11px] font-mono text-[#0D0D0B] bg-white border border-[#0D0D0B] px-3 py-2 flex items-center justify-between font-semibold">
+                  <span>KOD: <strong>{appliedPromoCode}</strong></span>
                   <span>-{promoDiscount.toFixed(2)} PLN ({((promoRate || 0.1) * 100).toFixed(0)}%)</span>
                 </div>
               )}
               {promoError && (
-                <div className="text-[11px] text-[#B53838]">{promoError}</div>
+                <div className="text-[11px] font-mono text-[#B53838] border border-[#B53838] bg-white p-2">{promoError}</div>
               )}
 
               {/* Subtotals */}
-              <div className="space-y-1.5 text-xs text-[#5A5B60] pt-1">
+              <div className="space-y-1.5 text-xs font-mono text-[#5A5B60] pt-1">
                 <div className="flex justify-between">
-                  <span>Wartość koszyka</span>
-                  <span>{subtotal.toFixed(2)} PLN</span>
+                  <span className="uppercase">Wartość produktów:</span>
+                  <span className="text-[#0D0D0B] font-bold">{subtotal.toFixed(2)} PLN</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="flex items-center gap-1">
-                    Dostawa (InPost / Kurier)
-                  </span>
-                  <span className="text-[#2E7D32] font-semibold">0.00 PLN (Gratis)</span>
+                  <span className="uppercase">Dostawa:</span>
+                  <span className="text-[#0D0D0B] font-bold">0.00 PLN (GRATIS)</span>
                 </div>
                 {promoDiscount > 0 && (
-                  <div className="flex justify-between text-[#2E7D32]">
-                    <span>Naliczony rabat</span>
+                  <div className="flex justify-between text-[#734C1D]">
+                    <span className="uppercase">Rabat:</span>
                     <span>-{promoDiscount.toFixed(2)} PLN</span>
                   </div>
                 )}
-                <div className="flex justify-between text-sm font-bold text-[#0D0D0B] pt-2 border-t border-[#EAE6DF]">
-                  <span>Łącznie do zapłaty</span>
+                <div className="flex justify-between text-sm font-bold text-[#0D0D0B] pt-2 border-t border-[#0D0D0B]">
+                  <span className="uppercase">Do zapłaty:</span>
                   <span>{total.toFixed(2)} PLN</span>
                 </div>
               </div>
 
               {/* 3. Checkout Details & Delivery */}
-              <form onSubmit={handleCheckoutSubmit} className="space-y-3 pt-3 border-t border-[#EAE6DF]">
-                <div className="text-xs uppercase tracking-widest font-semibold text-[#0D0D0B] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#734C1D]" />
-                  Dane odbiorcy i dostawa
+              <form onSubmit={handleCheckoutSubmit} className="space-y-3 pt-3 border-t border-[#0D0D0B]">
+                <div className="text-xs uppercase tracking-[0.2em] font-mono font-bold text-[#0D0D0B]">
+                  [ DANE DOSTAWY I PŁATNOŚCI ]
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
@@ -392,15 +387,15 @@ export default function CartDrawer() {
                     required
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-white border border-[#CFCFCF] outline-none focus:border-[#734C1D] rounded-xs"
+                    className="w-full px-3 py-2 text-xs bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D]"
                   />
                   <input
                     type="tel"
-                    placeholder="Telefon (do SMS InPost) *"
+                    placeholder="Telefon (SMS InPost) *"
                     required
                     value={customerPhone}
                     onChange={(e) => setCustomerPhone(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-white border border-[#CFCFCF] outline-none focus:border-[#734C1D] rounded-xs"
+                    className="w-full px-3 py-2 text-xs bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D]"
                   />
                 </div>
 
@@ -410,52 +405,50 @@ export default function CartDrawer() {
                   required
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-white border border-[#CFCFCF] outline-none focus:border-[#734C1D] rounded-xs"
+                  className="w-full px-3 py-2 text-xs bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D]"
                 />
 
                 {/* Delivery Method Selection */}
                 <div className="space-y-1.5 pt-1">
-                  <label className="text-[11px] uppercase tracking-wider text-[#5A5B60] font-semibold block">
-                    Wybierz formę dostawy
+                  <label className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#5A5B60] font-bold block">
+                    Forma wysyłki (0 PLN)
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
                       onClick={() => setDeliveryMethod('paczkomat')}
-                      className={`p-2.5 text-left border rounded-xs transition-all flex flex-col justify-between ${
+                      className={`p-3 text-left border transition-all flex flex-col justify-between ${
                         deliveryMethod === 'paczkomat'
-                          ? 'border-[#0D0D0B] bg-[#0D0D0B] text-white shadow-xs'
-                          : 'border-[#CFCFCF] bg-white text-[#0D0D0B] hover:border-gray-400'
+                          ? 'border-[#0D0D0B] bg-[#0D0D0B] text-white'
+                          : 'border-[#0D0D0B] bg-white text-[#0D0D0B] hover:bg-[#F6F5F2]'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-[#FFD100]" />
-                          Paczkomat InPost
+                        <span className="text-xs font-mono font-bold">
+                          [ PACZKOMAT ]
                         </span>
                       </div>
-                      <span className={`text-[10px] mt-1 ${deliveryMethod === 'paczkomat' ? 'text-[#C6A87D]' : 'text-[#734C1D]'}`}>
-                        24/7 • Gratis
+                      <span className={`text-[10px] font-mono mt-1 ${deliveryMethod === 'paczkomat' ? 'text-[#D9A87E]' : 'text-[#734C1D]'}`}>
+                        INPOST 24/7 • 0 ZŁ
                       </span>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setDeliveryMethod('courier')}
-                      className={`p-2.5 text-left border rounded-xs transition-all flex flex-col justify-between ${
+                      className={`p-3 text-left border transition-all flex flex-col justify-between ${
                         deliveryMethod === 'courier'
-                          ? 'border-[#0D0D0B] bg-[#0D0D0B] text-white shadow-xs'
-                          : 'border-[#CFCFCF] bg-white text-[#0D0D0B] hover:border-gray-400'
+                          ? 'border-[#0D0D0B] bg-[#0D0D0B] text-white'
+                          : 'border-[#0D0D0B] bg-white text-[#0D0D0B] hover:bg-[#F6F5F2]'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold flex items-center gap-1.5">
-                          <Truck className="w-3 h-3" />
-                          Kurier pod adres
+                        <span className="text-xs font-mono font-bold flex items-center gap-1.5">
+                          [ KURIER ]
                         </span>
                       </div>
-                      <span className={`text-[10px] mt-1 ${deliveryMethod === 'courier' ? 'text-[#C6A87D]' : 'text-[#734C1D]'}`}>
-                        DPD / InPost • Gratis
+                      <span className={`text-[10px] font-mono mt-1 ${deliveryMethod === 'courier' ? 'text-[#D9A87E]' : 'text-[#734C1D]'}`}>
+                        POD DRZWI • 0 ZŁ
                       </span>
                     </button>
                   </div>
@@ -478,16 +471,16 @@ export default function CartDrawer() {
                       required
                       value={courierStreet}
                       onChange={(e) => setCourierStreet(e.target.value)}
-                      className="w-full px-3 py-2 text-xs bg-white border border-[#CFCFCF] outline-none focus:border-[#734C1D] rounded-xs"
+                      className="w-full px-3 py-2 text-xs bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D]"
                     />
                     <div className="grid grid-cols-2 gap-2">
                       <input
                         type="text"
-                        placeholder="Kod pocztowy (np. 00-001) *"
+                        placeholder="Kod pocztowy *"
                         required
                         value={courierPostCode}
                         onChange={(e) => setCourierPostCode(e.target.value)}
-                        className="w-full px-3 py-2 text-xs bg-white border border-[#CFCFCF] outline-none focus:border-[#734C1D] rounded-xs"
+                        className="w-full px-3 py-2 text-xs bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D]"
                       />
                       <input
                         type="text"
@@ -495,14 +488,14 @@ export default function CartDrawer() {
                         required
                         value={courierCity}
                         onChange={(e) => setCourierCity(e.target.value)}
-                        className="w-full px-3 py-2 text-xs bg-white border border-[#CFCFCF] outline-none focus:border-[#734C1D] rounded-xs"
+                        className="w-full px-3 py-2 text-xs bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D]"
                       />
                     </div>
                   </div>
                 )}
 
                 {formError && (
-                  <div className="text-[11px] text-[#B53838] bg-[#B53838]/10 p-2.5 rounded text-center font-medium">
+                  <div className="text-[11px] font-mono text-[#B53838] border border-[#B53838] bg-white p-3 text-center">
                     {formError}
                   </div>
                 )}
@@ -511,25 +504,24 @@ export default function CartDrawer() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[#0D0D0B] text-white py-3.5 text-xs uppercase tracking-widest font-semibold hover:bg-[#734C1D] transition-colors rounded-xs shadow-md flex items-center justify-center gap-2 group disabled:opacity-60"
+                  className="w-full bg-[#0D0D0B] text-white py-4 text-xs font-mono uppercase tracking-[0.2em] font-semibold hover:bg-[#734C1D] transition-colors flex items-center justify-center gap-2 group disabled:opacity-60"
                 >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Przetwarzanie zamówienia...</span>
+                      <span>PRZETWARZANIE...</span>
                     </>
                   ) : (
                     <>
-                      <span>Zamawiam i Płacę ({total.toFixed(2)} PLN)</span>
+                      <span>[ ZAMÓW I ZAPŁAĆ: {total.toFixed(2)} PLN ]</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </button>
-                <p className="text-[10px] text-center text-[#8C8D94]">
-                  Wysyłka w 24h z Warszawy • 14 dni na zwrot • Bezpieczne płatności
+                <p className="text-[10px] font-mono text-center text-[#5A5B60] tracking-wider uppercase">
+                  WYSYŁKA 24H • BEZPŁATNY ZWROT 14 DNI • PRAWDZIWY ATELIER
                 </p>
               </form>
-
             </div>
           </div>
         )}

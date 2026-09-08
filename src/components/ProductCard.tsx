@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { Product } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { ShoppingBag, Check, Sparkles } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
@@ -35,14 +34,14 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
   return (
     <div
-      className="group relative flex flex-col bg-white border border-[#E5E2DC] rounded-xl sm:rounded-2xl overflow-hidden hover:border-[#D9A87E]/80 hover:shadow-lg transition-all duration-200"
+      className="group relative flex flex-col bg-white border border-[#E5E2DC] transition-all duration-200 hover:border-[#0D0D0B]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* 3:4 Reserved Ratio Container to Guarantee 0 CLS */}
       <Link
         href={`/produkt/${product.slug}`}
-        className="relative aspect-[3/4] overflow-hidden bg-[#F7F5F2] block cursor-pointer"
+        className="relative aspect-[3/4] overflow-hidden bg-[#F6F5F2] block cursor-pointer"
         aria-label={displayName}
       >
         {/* Primary Image */}
@@ -69,21 +68,20 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           />
         )}
 
-        {/* Top Badges */}
-        <div className="absolute top-2 left-2 sm:top-2.5 sm:left-2.5 z-10 flex flex-col gap-1 pointer-events-none">
-          <span className="bg-[#0D0D0B]/85 backdrop-blur-md text-[#D9A87E] text-[9px] sm:text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full border border-white/10 shadow-xs">
+        {/* Top Badges: Sharp, Editorial, Monochromatic */}
+        <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
+          <span className="bg-[#0D0D0B] text-[#D9A87E] text-[9px] uppercase tracking-[0.18em] font-mono px-2 py-0.5 font-medium border border-white/10">
             {product.categoryLabel}
           </span>
         </div>
 
-        <div className="absolute top-2 right-2 sm:top-2.5 sm:right-2.5 z-10 pointer-events-none">
+        <div className="absolute top-2.5 right-2.5 z-10 pointer-events-none">
           {product.category === 'silk' ? (
-            <span className="bg-[#D9A87E] text-[#0D0D0B] text-[8px] sm:text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full shadow-xs flex items-center gap-1">
-              <Sparkles className="w-2.5 h-2.5" />
-              <span>19 Momme</span>
+            <span className="bg-[#D9A87E] text-[#0D0D0B] text-[9px] uppercase tracking-[0.18em] font-mono px-2 py-0.5 font-bold">
+              19 Momme
             </span>
           ) : (
-            <span className="bg-[#0D0D0B]/80 backdrop-blur-md text-emerald-400 text-[8px] sm:text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full border border-emerald-400/20 shadow-xs">
+            <span className="bg-[#0D0D0B] text-white text-[9px] uppercase tracking-[0.18em] font-mono px-2 py-0.5 font-medium border border-white/10">
               2+1 Gratis
             </span>
           )}
@@ -91,68 +89,57 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
       </Link>
 
       {/* Card Info Section */}
-      <div className="p-3 sm:p-4 flex flex-col flex-grow justify-between bg-white">
+      <div className="p-3.5 sm:p-4 flex flex-col flex-grow justify-between bg-white border-t border-[#E5E2DC]">
         <div>
-          {/* Availability & Material */}
-          <div className="flex items-center justify-between gap-1 mb-1 text-[9px] sm:text-[10px]">
-            <span className="text-[#734C1D] uppercase tracking-wider font-bold truncate">
+          {/* Material & Atelier Origin */}
+          <div className="flex items-center justify-between gap-1 mb-1.5 text-[9px] sm:text-[10px] font-mono">
+            <span className="text-[#734C1D] uppercase tracking-wider font-semibold truncate">
               {product.material}
             </span>
-            <span className="flex items-center gap-1 text-emerald-700 font-medium shrink-0">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
-              <span className="hidden sm:inline">Wysyłka 24h</span>
+            <span className="text-gray-400 uppercase tracking-widest shrink-0">
+              Warszawa • 24h
             </span>
           </div>
 
           {/* Product Name */}
           <Link href={`/produkt/${product.slug}`} className="block group-hover:text-[#734C1D] transition-colors">
-            <h3 className="font-serif text-xs sm:text-sm font-medium text-[#0D0D0B] leading-snug line-clamp-2 min-h-[2rem]">
+            <h3 className="font-serif text-sm sm:text-base font-medium text-[#0D0D0B] leading-snug line-clamp-2 min-h-[2.4rem]">
               {displayName}
             </h3>
           </Link>
 
-          {/* Key Feature Highlight */}
+          {/* Technical Spec / Highlight */}
           <p className="text-[10px] text-gray-500 line-clamp-1 mt-1 font-light">
             {product.category === 'silk'
-              ? '100% morwowy • szew zewnętrzny'
+              ? '100% naturalny jedwab • szew zewnętrzny'
               : product.category === 'velvet'
               ? 'Maksymalna kompresja fal 360'
-              : 'Gładka struktura • ochrona włosów'}
+              : 'Gładka mikrofibra • ochrona włosów'}
           </p>
         </div>
 
         {/* Pricing and Action */}
-        <div className="mt-2.5 sm:mt-3 pt-2.5 border-t border-[#E5E2DC]/70 flex items-center justify-between gap-2">
+        <div className="mt-3 pt-3 border-t border-[#E5E2DC] flex items-center justify-between gap-2">
           <div>
-            <span className="text-sm sm:text-base font-bold text-[#0D0D0B] tracking-tight block">
+            <span className="font-mono text-sm sm:text-base font-bold text-[#0D0D0B] tracking-tight block">
               {product.price.toFixed(2)} PLN
             </span>
-            <span className="text-[8px] sm:text-[9px] text-emerald-700 font-medium block">
-              Darmowa dostawa
+            <span className="text-[9px] font-mono text-gray-400 block tracking-wider uppercase">
+              Paczkomat 0 zł
             </span>
           </div>
 
           <button
             onClick={handleAddToCart}
-            className={`cursor-pointer flex items-center justify-center gap-1.5 transition-all duration-200 rounded-full font-bold uppercase tracking-wider shadow-xs active:scale-95 px-3 py-1.5 sm:px-3.5 sm:py-2 text-[10px] sm:text-xs shrink-0 ${
+            className={`cursor-pointer px-3 py-2 sm:px-3.5 sm:py-2 text-[10px] sm:text-[11px] uppercase tracking-[0.16em] font-mono font-bold transition-colors border ${
               isAdded
-                ? 'bg-emerald-600 text-white'
-                : 'bg-[#0D0D0B] text-white hover:bg-[#D9A87E] hover:text-[#0D0D0B]'
+                ? 'bg-[#0D0D0B] border-[#0D0D0B] text-[#D9A87E]'
+                : 'bg-[#0D0D0B] border-[#0D0D0B] text-white hover:bg-[#D9A87E] hover:border-[#D9A87E] hover:text-[#0D0D0B]'
             }`}
             title={isAdded ? 'Dodano do koszyka' : t.addToCart}
             aria-label={t.addToCart}
           >
-            {isAdded ? (
-              <>
-                <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-                <span>Dodano</span>
-              </>
-            ) : (
-              <>
-                <ShoppingBag className="w-3.5 h-3.5" />
-                <span>Do koszyka</span>
-              </>
-            )}
+            {isAdded ? '[ DODANO ]' : '+ KOSZYK'}
           </button>
         </div>
       </div>

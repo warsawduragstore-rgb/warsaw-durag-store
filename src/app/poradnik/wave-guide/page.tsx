@@ -2,7 +2,6 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import TrustBanner from '@/components/TrustBanner';
-import { CheckCircle2, Sparkles, BookOpen } from 'lucide-react';
 import { SITE_URL } from '@/lib/siteConfig';
 
 export const metadata: Metadata = {
@@ -70,70 +69,87 @@ export default function WaveGuidePage() {
       <article className="max-w-4xl mx-auto px-6 py-16 space-y-12 text-[#0D0D0B]">
         
         {/* Step 1 */}
-        <section className="space-y-4">
-          <div className="flex items-center gap-3 text-[#734C1D]">
-            <BookOpen className="w-6 h-6" />
-            <span className="text-xs uppercase tracking-[0.2em] font-semibold">Krok 1</span>
-          </div>
+        <section className="space-y-4 border-l-2 border-[#0D0D0B] pl-6">
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#734C1D] font-bold block">
+            [ ETAP 01 / MECHANIKA FAL ]
+          </span>
           <h2 className="font-serif text-2xl sm:text-3xl font-medium">
             1. Fundamenty: Czym są fale 360 i jak działają?
           </h2>
           <p className="text-sm text-[#3B3C40] font-light leading-relaxed">
-            Fale 360 waves to nic innego jak naturalne skrętki włosów, które zostały spłaszczone i ukierunkowane w stały wzór za pomocą regularnego szczotkowania (brushing) oraz kompresji pod duragiem. Kluczem do sukcesu nie są drogie pomady, lecz <strong>konsekwencja</strong> i <strong>ochrona wilgoci</strong>.
+            Fale 360 waves to naturalne skrętki włosów, które zostały spłaszczone i ułożone w jednolity wzór za pomocą regularnego szczotkowania (brushing) oraz stałej kompresji pod duragiem. Kluczem do głębi fal nie są ciężkie chemiczne pomady, lecz <strong>konsekwencja</strong>, <strong>prawidłowy kąt szczotkowania</strong> i <strong>retencja naturalnej wilgoci włosa</strong>.
           </p>
         </section>
 
         {/* Step 2 */}
-        <section className="space-y-4">
-          <div className="flex items-center gap-3 text-[#734C1D]">
-            <Sparkles className="w-6 h-6" />
-            <span className="text-xs uppercase tracking-[0.2em] font-semibold">Krok 2</span>
-          </div>
+        <section className="space-y-4 border-l-2 border-[#0D0D0B] pl-6">
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#734C1D] font-bold block">
+            [ ETAP 02 / BRUSH SESSION ]
+          </span>
           <h2 className="font-serif text-2xl sm:text-3xl font-medium">
-            2. Rytuał Szczotkowania (Brush Session)
+            2. Rytuał Szczotkowania
           </h2>
           <p className="text-sm text-[#3B3C40] font-light leading-relaxed">
-            Szczotkowanie ukierunkowuje włosy i trenuje cebulki do wzrostu w danym kierunku:
+            Szczotkowanie trenuje cebulki do wzrostu w ściśle określonym kierunku:
           </p>
-          <ul className="space-y-2 text-sm text-[#3B3C40] font-light pl-6 list-disc">
-            <li><strong>Rozpocznij od korony (crown):</strong> Szczotkuj od czubka głowy na zewnątrz pod kątem 45 stopni.</li>
-            <li><strong>Używaj odpowiedniej szczotki:</strong> Do krótkich włosów używaj szczotki miękkiej (soft), a w miarę wzrostu przejdź na średnią (medium boar bristle).</li>
-            <li><strong>Czas trwania:</strong> Minimum 15–20 minut dziennie. Najlepiej podzielić to na dwie sesje rano i wieczorem.</li>
-          </ul>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            <div className="border border-[#0D0D0B] p-4 bg-[#F6F5F2]">
+              <span className="font-mono text-[10px] uppercase text-[#734C1D] font-bold block mb-1">[ 01. KORONA ]</span>
+              <p className="text-xs text-[#3B3C40] font-light leading-relaxed">
+                Zawsze rozpoczynaj od korony (crown) i szczotkuj na zewnątrz pod kątem 45 stopni.
+              </p>
+            </div>
+            <div className="border border-[#0D0D0B] p-4 bg-[#F6F5F2]">
+              <span className="font-mono text-[10px] uppercase text-[#734C1D] font-bold block mb-1">[ 02. WŁOSIE DZIKA ]</span>
+              <p className="text-xs text-[#3B3C40] font-light leading-relaxed">
+                Do krótkich włosów używaj szczotki Soft, a w miarę wzrostu Medium z naturalnego włosia dzika.
+              </p>
+            </div>
+            <div className="border border-[#0D0D0B] p-4 bg-[#F6F5F2]">
+              <span className="font-mono text-[10px] uppercase text-[#734C1D] font-bold block mb-1">[ 03. REŻIM ]</span>
+              <p className="text-xs text-[#3B3C40] font-light leading-relaxed">
+                Minimum 15–20 minut dziennie. Podziel czas na dwie sesje: poranną i wieczorną.
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* Step 3 */}
-        <section className="space-y-4">
-          <div className="flex items-center gap-3 text-[#734C1D]">
-            <CheckCircle2 className="w-6 h-6" />
-            <span className="text-xs uppercase tracking-[0.2em] font-semibold">Krok 3</span>
-          </div>
+        <section className="space-y-4 border-l-2 border-[#0D0D0B] pl-6">
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#734C1D] font-bold block">
+            [ ETAP 03 / WIĄZANIE ]
+          </span>
           <h2 className="font-serif text-2xl sm:text-3xl font-medium">
             3. Prawidłowe Wiązanie Duraga
           </h2>
-          <div className="bg-[#F7F5F2] p-8 border border-[#CFCFCF]/50 rounded-sm space-y-4 text-sm text-[#3B3C40] font-light">
-            <ol className="space-y-3 list-decimal pl-5">
-              <li>Nałóż durag centralnym szwem skierowanym na zewnątrz (aby zapobiec pionowej kresce na czole).</li>
+          <div className="bg-[#F6F5F2] p-8 border border-[#0D0D0B] space-y-4 text-sm text-[#3B3C40] font-light">
+            <ol className="space-y-3 list-decimal pl-5 font-mono text-xs leading-relaxed">
+              <li>Nałóż durag ze szwem skierowanym na zewnątrz (aby uniknąć śladu na czole).</li>
               <li>Przeciągnij oba pasy za głowę i skrzyżuj je nisko na karku.</li>
-              <li>Przeciągnij pasy z powrotem na czoło i wyrównaj na płasko, aby nie skręcały się.</li>
-              <li>Zawiąż z tyłu na miękki supeł. Pamiętaj — kompresja ma być równomierna, nie wywołująca bólu głowy!</li>
-              <li>Zaciągnij delikatnie tylny płat tkaniny w dół, aby wygładzić fale na koronie.</li>
+              <li>Przeciągnij pasy z powrotem na czoło i wyrównaj na płasko, aby nie skręcały się pod kątem.</li>
+              <li>Zawiąż z tyłu na miękki węzeł — nacisk musi być równomierny, bez ucisku skroni.</li>
+              <li>Zaciągnij lekko tylny flap w dół, aby idealnie zablokować kompresję na koronie.</li>
             </ol>
           </div>
         </section>
 
         {/* Product Callout */}
-        <section className="bg-[#0D0D0B] text-white p-10 rounded-sm text-center space-y-4">
-          <h3 className="font-serif text-2xl font-medium">Gotowy na rozpoczęcie rytuału?</h3>
-          <p className="text-xs text-gray-300 font-light max-w-md mx-auto">
-            Wybierz ręcznie szyty durag z 100% naturalnego jedwabiu morwowego 19 Momme i zadbaj o swoje fale.
+        <section className="bg-[#0D0D0B] text-white p-10 sm:p-14 text-center space-y-5">
+          <span className="font-mono text-xs text-[#D9A87E] uppercase tracking-[0.3em] block">
+            [ MATERIAŁ MA ZNACZENIE ]
+          </span>
+          <h3 className="font-serif text-2xl sm:text-3xl font-medium">
+            100% Jedwab Morwowy 19 Momme
+          </h3>
+          <p className="text-xs text-gray-300 font-light max-w-md mx-auto leading-relaxed">
+            Syntetyczny poliester pochłania sebum i elektryzuje włosy. Prawdziwy jedwab morwowy chroni strukturę włosa i utrzymuje fale w ryzach.
           </p>
-          <div>
+          <div className="pt-2">
             <Link
               href="/kolekcja/silk"
-              className="inline-block bg-[#734C1D] text-white hover:bg-white hover:text-[#0D0D0B] px-8 py-3 text-xs font-semibold uppercase tracking-widest transition-colors rounded-full"
+              className="inline-block bg-white text-[#0D0D0B] hover:bg-[#D9A87E] hover:text-[#0D0D0B] px-8 py-3.5 text-xs font-mono font-bold uppercase tracking-[0.2em] transition-colors"
             >
-              Zobacz Kolekcję Jedwabną
+              [ ZOBACZ KOLEKCJĘ JEDWABNĄ ]
             </Link>
           </div>
         </section>

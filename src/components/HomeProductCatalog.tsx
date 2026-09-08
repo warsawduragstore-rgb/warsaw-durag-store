@@ -28,20 +28,22 @@ export default function HomeProductCatalog({ initialProducts }: HomeProductCatal
   return (
     <section className="py-12 sm:py-16 lg:py-20 max-w-7xl mx-auto px-4 sm:px-6" id="kolekcja">
       {/* Heading */}
-      <div className="text-center mb-8 sm:mb-12">
-        <span className="text-[#734C1D] text-[10px] sm:text-xs uppercase tracking-[0.25em] font-semibold block mb-2">
-          [ Durag Activity ]
-        </span>
-        <h2 className="font-serif text-2xl sm:text-4xl text-[#0D0D0B] font-medium">
-          Unikalny styl
-        </h2>
-        <p className="text-xs sm:text-sm text-[#3B3C40] font-light max-w-xl mx-auto mt-2.5 min-h-[36px] transition-opacity duration-300 px-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-4 pb-6 border-b border-[#E5E2DC]">
+        <div>
+          <span className="text-[#734C1D] text-[10px] sm:text-xs uppercase font-mono tracking-[0.25em] font-semibold block mb-1.5">
+            [ PEŁNA OFERTA ATELIER ]
+          </span>
+          <h2 className="font-serif text-2xl sm:text-4xl text-[#0D0D0B] font-medium tracking-tight">
+            Kolekcja Warsaw Durag Store
+          </h2>
+        </div>
+        <p className="text-xs sm:text-sm text-[#6B6D74] font-light max-w-md">
           {CATEGORY_DESCRIPTIONS[selectedCategory] || CATEGORY_DESCRIPTIONS['all']}
         </p>
       </div>
 
-      {/* Horizontal Scrollable Category Filter Pills for Mobile & Desktop */}
-      <div className="flex overflow-x-auto no-scrollbar scroll-smooth justify-start sm:justify-center gap-2 sm:gap-3 mb-8 sm:mb-12 pb-2 sm:pb-0 px-2 sm:px-0 text-[11px] sm:text-xs uppercase tracking-wider font-semibold">
+      {/* Sharp Architectural Category Tabs */}
+      <div className="flex overflow-x-auto no-scrollbar scroll-smooth gap-2 sm:gap-2.5 mb-8 sm:mb-12 pb-2 sm:pb-0">
         {CATEGORIES.map((cat) => {
           const count =
             cat.key === 'all'
@@ -54,13 +56,13 @@ export default function HomeProductCatalog({ initialProducts }: HomeProductCatal
             <button
               key={cat.key}
               onClick={() => setSelectedCategory(cat.key)}
-              className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0 ${
+              className={`px-4 sm:px-5 py-2.5 text-[11px] sm:text-xs uppercase font-mono tracking-[0.15em] font-medium transition-colors cursor-pointer whitespace-nowrap border shrink-0 ${
                 isActive
-                  ? 'bg-[#0D0D0B] text-white shadow-md'
-                  : 'bg-[#F7F5F2] text-[#3B3C40] hover:bg-[#0D0D0B] hover:text-white border border-[#E5E2DC]/80'
+                  ? 'bg-[#0D0D0B] text-[#D9A87E] border-[#0D0D0B]'
+                  : 'bg-white text-[#0D0D0B] border-[#E5E2DC] hover:border-[#0D0D0B]'
               }`}
             >
-              {cat.label} {cat.key === 'all' ? `(${count})` : count > 0 ? `(${count})` : ''}
+              {cat.label} {cat.key === 'all' ? `[${count}]` : count > 0 ? `[${count}]` : ''}
             </button>
           );
         })}
@@ -74,8 +76,10 @@ export default function HomeProductCatalog({ initialProducts }: HomeProductCatal
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 bg-[#F7F5F2] rounded-xl border border-dashed border-[#CFCFCF]">
-          <p className="text-[#3B3C40] text-sm">Brak dostępnych produktów w tej kategorii.</p>
+        <div className="text-center py-16 bg-[#F6F5F2] border border-[#E5E2DC]">
+          <p className="text-[#6B6D74] text-xs font-mono uppercase tracking-widest">
+            Brak modeli w wybranej kategorii.
+          </p>
         </div>
       )}
     </section>
