@@ -15,6 +15,7 @@ export const isSupabaseConfigured = Boolean(
 
 // Global singleton client for browser
 let browserClient: SupabaseClient | null = null;
+let serverClient: SupabaseClient | null = null;
 
 export function getSupabaseBrowserClient(): SupabaseClient | null {
   if (!isSupabaseConfigured) return null;
@@ -32,12 +33,19 @@ export function getSupabaseBrowserClient(): SupabaseClient | null {
 // Client for Server-Side Rendering (SSR)
 export function getSupabaseServerClient(): SupabaseClient | null {
   if (!isSupabaseConfigured) return null;
-  return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-  });
+  // If invoked in browser context, reuse the browser singleton to avoid multiple GoTrueClient instances
+  if (typeof window !== 'undefined') {
+    return getSupabaseBrowserClient();
+  }
+  if (!serverClient) {
+    serverClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
+  }
+  return serverClient;
 }
 
 // Slug generator helper
@@ -476,7 +484,7 @@ export const DEFAULT_SITE_SETTINGS: Record<string, string> = {
 };
 
 export async function fetchSiteSettings(): Promise<Record<string, string>> {
-  const client = getSupabaseServerClient() || getSupabaseBrowserClient();
+  const client = typeof window !== 'undefined' ? getSupabaseBrowserClient() : (getSupabaseServerClient() || getSupabaseBrowserClient());
   if (!client) return DEFAULT_SITE_SETTINGS;
 
   try {
@@ -517,7 +525,12 @@ export async function saveSiteSetting(
         { onConflict: 'key' }
       );
 
-    if (error) return { success: false, error: error.message };
+    if (error) {
+      if (error.code === 'PGRST204' || error.message?.includes('does not exist') || error.code === '42P01') {
+        return { success: false, error: "Tabela 'site_settings' nie istnieje w bazie danych. Wklej i uruchom skrypt 002_site_settings.sql w Supabase SQL Editor." };
+      }
+      return { success: false, error: error.message };
+    }
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err?.message || 'Błąd zapisu ustawienia' };
