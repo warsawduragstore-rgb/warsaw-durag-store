@@ -75,10 +75,11 @@ export default function Header() {
   ];
 
   const infoLinks = [
-    { href: '/strona/o-nas', label: 'O nas i Manufakturze' },
+    { href: '/o-nas', label: 'O nas i Atelier Warszawa' },
+    { href: '/blog', label: 'Blog & Kompendium' },
+    { href: '/poradnik/wave-guide', label: 'Poradnik 360 Waves' },
     { href: '/strona/kontakt', label: 'Kontakt & Odbiór w Warszawie' },
     { href: '/strona/dostawa-i-zwroty', label: 'Wysyłka i Zwroty 14 dni' },
-    { href: '/strona/blog', label: 'Blog & Stylizacje' },
   ];
 
   return (
@@ -115,13 +116,13 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className={`hidden lg:flex items-center gap-6 text-xs font-semibold uppercase tracking-[0.15em] ${isScrolled ? 'text-gray-200' : 'text-[#3B3C40]'}`}>
+          <nav className={`hidden lg:flex items-center gap-5 xl:gap-6 text-xs font-semibold uppercase tracking-[0.12em] ${isScrolled ? 'text-gray-200' : 'text-[#3B3C40]'}`}>
             <Link href="/kolekcja/all" className="hover:text-[#D9A87E] transition-colors py-2">{t.navAll}</Link>
             <Link href="/kolekcja/silk" className="hover:text-[#D9A87E] transition-colors py-2">{t.navSilk}</Link>
             <Link href="/kolekcja/satin" className="hover:text-[#D9A87E] transition-colors py-2">{t.navSatin}</Link>
             <Link href="/kolekcja/velvet" className="hover:text-[#D9A87E] transition-colors py-2">{t.navVelvet}</Link>
-            <Link href="/kolekcja/seasonal" className="hover:text-[#D9A87E] transition-colors py-2">{t.navSeasonal}</Link>
-            <Link href="/kolekcja/accessories" className="hover:text-[#D9A87E] transition-colors py-2">{t.navAccessories}</Link>
+            <Link href="/o-nas" className="hover:text-[#D9A87E] transition-colors py-2">O nas</Link>
+            <Link href="/blog" className="hover:text-[#D9A87E] transition-colors py-2">Blog</Link>
             <Link href="/poradnik/wave-guide" className="hover:text-[#D9A87E] transition-colors py-2 text-[#D9A87E]">{t.navGuide}</Link>
           </nav>
 

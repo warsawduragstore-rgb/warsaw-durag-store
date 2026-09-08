@@ -39,11 +39,11 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#D9A87E] mb-4">{t.footerInfo}</h4>
             <ul className="space-y-2.5 text-xs text-[#CFCFCF] font-light">
-              <li><Link href="/strona/o-nas" className="hover:text-white transition-colors">O nas</Link></li>
-              <li><Link href="/strona/kontakt" className="hover:text-white transition-colors">Kontakt & Odbiór Osobisty</Link></li>
+              <li><Link href="/o-nas" className="hover:text-white transition-colors">O nas &amp; Historia Atelier</Link></li>
+              <li><Link href="/blog" className="hover:text-white transition-colors">Blog &amp; Kompendium</Link></li>
+              <li><Link href="/strona/kontakt" className="hover:text-white transition-colors">Kontakt &amp; Odbiór Osobisty</Link></li>
               <li><Link href="/poradnik/wave-guide" className="hover:text-white transition-colors text-[#D9A87E]">{t.navGuide}</Link></li>
               <li><Link href="/strona/dostawa-i-zwroty" className="hover:text-white transition-colors">Dostawa i Zwroty</Link></li>
-              <li><Link href="/strona/blog" className="hover:text-white transition-colors">Blog & Artykuły</Link></li>
             </ul>
           </div>
 
@@ -52,8 +52,9 @@ export default function Footer() {
             <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#D9A87E] mb-4">{t.trustHandmadeTitle}</h4>
             <div className="text-xs text-[#CFCFCF] font-light space-y-1">
               <p className="font-semibold text-white">Warszawa (po umówieniu):</p>
-              <p>• ul. Włodarzewska 4</p>
+              <p>• ul. Włodarzewska 4 (Ochota)</p>
               <p>• Centrum Warszawy</p>
+              <p>• Eclipse Barber (Rondo Waszyngtona)</p>
               <p className="pt-2 text-gray-400">Instagram: @warsawduragstore</p>
               <p className="text-[#D9A87E]">Email: support@warsawduragstore.pl</p>
             </div>
@@ -67,9 +68,9 @@ export default function Footer() {
             &copy; 2026 Warsaw Durag Store. {t.footerRights}
           </div>
           <div className="flex gap-6 text-gray-400">
-            <Link href="/strona/o-nas" className="hover:text-white transition-colors">O nas</Link>
+            <Link href="/o-nas" className="hover:text-white transition-colors">O nas</Link>
+            <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
             <Link href="/strona/kontakt" className="hover:text-white transition-colors">Kontakt</Link>
-            <Link href="/strona/blog" className="hover:text-white transition-colors">Blog</Link>
             <Link href="/strona/regulamin" className="hover:text-white transition-colors">Regulamin</Link>
             <Link href="/strona/polityka-prywatnosci" className="hover:text-white transition-colors">Polityka Prywatności</Link>
           </div>

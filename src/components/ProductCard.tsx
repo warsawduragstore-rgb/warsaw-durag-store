@@ -67,25 +67,6 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         )}
-
-        {/* Top Badges: Sharp, Editorial, Monochromatic */}
-        <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
-          <span className="bg-[#0D0D0B] text-[#D9A87E] text-[9px] uppercase tracking-[0.18em] font-mono px-2 py-0.5 font-medium border border-white/10">
-            {product.categoryLabel}
-          </span>
-        </div>
-
-        <div className="absolute top-2.5 right-2.5 z-10 pointer-events-none">
-          {product.category === 'silk' ? (
-            <span className="bg-[#D9A87E] text-[#0D0D0B] text-[9px] uppercase tracking-[0.18em] font-mono px-2 py-0.5 font-bold">
-              19 Momme
-            </span>
-          ) : (
-            <span className="bg-[#0D0D0B] text-white text-[9px] uppercase tracking-[0.18em] font-mono px-2 py-0.5 font-medium border border-white/10">
-              2+1 Gratis
-            </span>
-          )}
-        </div>
       </Link>
 
       {/* Card Info Section */}

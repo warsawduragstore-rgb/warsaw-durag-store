@@ -6,6 +6,7 @@ import TrustBanner from '@/components/TrustBanner';
 import HomeProductCatalog from '@/components/HomeProductCatalog';
 import ProductCard from '@/components/ProductCard';
 import AboutStoryCarousel from '@/components/AboutStoryCarousel';
+import HeroVideo from '@/components/HeroVideo';
 import { fetchProducts, fetchBestsellers } from '@/lib/products-db';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import { SITE_URL } from '@/lib/siteConfig';
@@ -178,22 +179,10 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
       />
 
-      {/* Hero Section: Editorial Streetwear Poster */}
-      <section className="relative bg-[#0D0D0B] text-white min-h-[75vh] sm:min-h-[82vh] flex items-center justify-center overflow-hidden">
-        {/* High-priority LCP Background Image */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/assets/lookbook_editorial.png"
-            alt="Warsaw Durag Store Atelier"
-            fill
-            priority
-            fetchPriority="high"
-            className="object-cover object-center opacity-30 filter brightness-90"
-            sizes="100vw"
-            quality={85}
-          />
-          <div className="absolute inset-0 bg-[#0D0D0B]/60" />
-        </div>
+      {/* Hero Section: Official Video Background with Streetwear Controls */}
+      <section className="relative bg-[#0D0D0B] text-white min-h-[75vh] sm:min-h-[85vh] flex items-center justify-center overflow-hidden">
+        {/* Official Brand Video Player */}
+        <HeroVideo poster="/media/wds/wyszol1126.jpg" />
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center py-16 sm:py-24">
           <div className="inline-block border border-white/20 bg-[#0D0D0B]/80 px-3.5 py-1 mb-6">
@@ -375,7 +364,7 @@ export default async function HomePage() {
           {/* Editorial Image Showcase */}
           <div className="relative aspect-[4/5] bg-[#111111] border border-white/15 overflow-hidden">
             <Image
-              src="/assets/lookbook_editorial.png"
+              src="/media/wds/wyszol1126.jpg"
               alt="Jedwab w mieście — Durag Milanówek 19 Momme"
               fill
               className="object-cover"
@@ -408,13 +397,45 @@ export default async function HomePage() {
               To jedyny w Polsce durag wykonany z prawdziwego jedwabiu z Milanówka. Pasy o długości 100 cm pozwalają na stabilne, komfortowe wiązanie bez ucisku na skronie.
             </p>
 
-            <div className="pt-4">
+            <div className="pt-4 flex flex-wrap gap-4">
               <Link
                 href="/kolekcja/silk"
                 className="inline-block bg-[#D9A87E] text-[#0D0D0B] hover:bg-white px-8 py-3.5 sm:px-9 sm:py-4 text-xs font-mono font-bold uppercase tracking-[0.2em] transition-colors border border-[#D9A87E]"
               >
                 Sprawdź serię jedwabną
               </Link>
+              <Link
+                href="/o-nas"
+                className="inline-block bg-transparent hover:bg-white/10 border border-white/30 text-white px-7 py-3.5 sm:py-4 text-xs font-mono uppercase tracking-[0.2em] transition-colors"
+              >
+                Historia Atelier →
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Lookbook Gallery Strip */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-16">
+          <div className="flex items-center justify-between pb-3 mb-6 border-b border-white/10">
+            <span className="text-[10px] font-mono text-[#D9A87E] uppercase tracking-[0.25em] font-bold">
+              [ ARCHIWUM SESJI // WARSZAWA ]
+            </span>
+            <Link href="/blog" className="text-xs font-mono text-gray-400 hover:text-white transition-colors">
+              Czytaj Blog &amp; Artykuły →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            <div className="relative aspect-[3/4] border border-white/10 overflow-hidden group">
+              <Image src="/media/wds/wyszol0202.jpg" alt="Warsaw Durag Store Session 01" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+            </div>
+            <div className="relative aspect-[3/4] border border-white/10 overflow-hidden group">
+              <Image src="/media/wds/DSC0653.jpg" alt="Warsaw Durag Store Session 02" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+            </div>
+            <div className="relative aspect-[3/4] border border-white/10 overflow-hidden group">
+              <Image src="/media/wds/czarno-biale-3.jpg" alt="Warsaw Durag Store Session 03" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+            </div>
+            <div className="relative aspect-[3/4] border border-white/10 overflow-hidden group">
+              <Image src="/media/wds/DSC07653.jpg" alt="Warsaw Durag Store Session 04" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
           </div>
         </div>
