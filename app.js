@@ -1113,6 +1113,10 @@ function getActiveLanguage() {
   if (stored && I18N[stored]) {
     return stored;
   }
+  // Domena .com funkcjonuje oddzielnie od .pl – domyślnie w języku angielskim
+  if (window.location.hostname.includes('warsawduragstore.com')) {
+    return 'EN';
+  }
   return 'PL';
 }
 
