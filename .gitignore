@@ -4,6 +4,7 @@
 .DS_Store
 *.DS_Store
 materialy/
+assets/product photos/
 .env*
 !.env*.example
 .gemini/

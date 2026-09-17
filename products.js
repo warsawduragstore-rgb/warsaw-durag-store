@@ -52,8 +52,8 @@ window.products = [
     "description": "Inspirowany architektoniczną lekkością i jasną, otwartą przestrzenią miasta mostów. Wykonany z lśniącej, śnieżnobiałej satyny, która gładko otula głowę, chroniąc jej strukturę. Kontrolowana elastyczność i długie pasy gwarantują stabilność bez uczucia napięcia. Czysta, świetlista forma.",
     "storyDescription": "Wrocław. Inspirowany architektoniczną lekkością i jasną, otwartą przestrzenią miasta mostów. Śnieżnobiała satyna o płynnym kształcie i czystej formie.",
     "images": [
-      "./assets/products/durag-wroclaw_1.png",
-      "./assets/products/durag-wroclaw_2.jpg",
+      "./assets/products/durag-wroclaw_1.webp",
+      "./assets/products/durag-wroclaw_2.webp",
       "./assets/products/durag-wroclaw_3.webp"
     ],
     "colors": [
@@ -83,8 +83,8 @@ window.products = [
     "description": "Nazwany na cześć miasta o głębokich, tekstylnych tradycjach i surowym, postindustrialnym charakterze. Miękki, mięsisty welur w odcieniu głębokiej czerni doskonale magnetyzuje światło. Zapewnia precyzyjne dopasowanie i wyjątkowe poczucie komfortu na co dzień. Teksturowany minimalizm, który broni się sam.",
     "storyDescription": "Łódź. Surowy, postindustrialny charakter i głębokie tradycje tekstylne przełożone na mięsisty welur w odcieniu absolutnej czerni. Teksturowany minimalizm, który nie potrzebuje słów.",
     "images": [
-      "./assets/products/durag-lodz_1.png",
-      "./assets/products/durag-lodz_2.jpg"
+      "./assets/products/durag-lodz_1.webp",
+      "./assets/products/durag-lodz_2.webp"
     ],
     "colors": [
       {
@@ -113,9 +113,9 @@ window.products = [
     "description": "Nazwany na cześć bramy do dzikiej natury i głębokich, leśnych barw Podlasia. Ciepły, czekoladowy odcień weluru nadaje mu szlachetnego, organicznego wyrazu. Wyjątkowo miękki dla skóry i trwały w noszeniu, staje się wyrazistym dopełnieniem Twojego stylu. Estetyka zakorzeniona w klasyce.",
     "storyDescription": "Białystok. Odzwierciedlenie dzikiej natury i głębokich, leśnych barw Podlasia. Ciepły, czekoladowy welur o szlachetnym, organicznym wyrazie.",
     "images": [
-      "./assets/products/durag-bialystok_1.png",
-      "./assets/products/durag-bialystok_2.jpg",
-      "./assets/products/durag-bialystok_3.jpg"
+      "./assets/products/durag-bialystok_1.webp",
+      "./assets/products/durag-bialystok_2.webp",
+      "./assets/products/durag-bialystok_3.webp"
     ],
     "colors": [
       {
@@ -144,9 +144,9 @@ window.products = [
     "description": "Ukłon w stronę historycznej stolicy polskiego lnu i rzemiosła z tradycjami. Naturalna, oddychająca struktura lnianej tkaniny zapewnia bezkompromisową lekkość i przewiewność. Minimalistyczny wariant w czerni lub beżu, idealny na ciepłe dni. Surowa faktura, która z czasem zyskuje charakter.",
     "storyDescription": "Żyrardów. Ukłon w stronę historycznej stolicy polskiego lnu i rzemiosła. Naturalna, oddychająca struktura tkaniny zapewniająca bezkompromisową, surową lekkość.",
     "images": [
-      "./assets/products/durag-zyrardow_1.jpg",
-      "./assets/products/durag-zyrardow_2.jpg",
-      "./assets/products/durag-zyrardow_3.jpg"
+      "./assets/products/durag-zyrardow_1.webp",
+      "./assets/products/durag-zyrardow_2.webp",
+      "./assets/products/durag-zyrardow_3.webp"
     ],
     "colors": [
       {
@@ -179,9 +179,9 @@ window.products = [
     "description": "Nazwany na cześć miasta o silnych, geometrycznych korzeniach i nowoczesnej strukturze. Krepa satynowa (mirella) łączy matowe, subtelnie ziarniste wykończenie z jednej strony z gładkim połyskiem z drugiej. Perfekcyjnie układa się na głowie, łącząc surową formę z techniczną doskonałością.",
     "storyDescription": "Stalowa Wola. Stworzony na cześć miasta o silnych, modernistycznych korzeniach i geometrycznej strukturze. Krepa satynowa łącząca mat z technicznym połyskiem.",
     "images": [
-      "./assets/products/durag-stalowa-wola_1.jpg",
-      "./assets/products/durag-stalowa-wola_2.jpg",
-      "./assets/products/durag-stalowa-wola_3.jpg"
+      "./assets/products/durag-stalowa-wola_1.webp",
+      "./assets/products/durag-stalowa-wola_2.webp",
+      "./assets/products/durag-stalowa-wola_3.webp"
     ],
     "colors": [
       {
@@ -214,9 +214,9 @@ window.products = [
     "description": "Projekt czerpiący z popkulturowej ikony stylu, energii i bezkompromisowej wyrazistości. Satyna w odcieniu intensywnego, magnetycznego różu nadaje mu gładkości i spektakularnego błysku. Chroni i stabilizuje, stanowiąc odważny akcent w codziennym outficie.",
     "storyDescription": "Barbie. Projekt czerpiący z popkulturowej ikony stylu i bezkompromisowej wyrazistości. Intensywny, magnetyczny róż o spektakularnym błysku.",
     "images": [
-      "./assets/products/durag-barbie_1.png",
-      "./assets/products/durag-barbie_2.jpg",
-      "./assets/products/durag-barbie_3.jpg"
+      "./assets/products/durag-barbie_1.webp",
+      "./assets/products/durag-barbie_2.webp",
+      "./assets/products/durag-barbie_3.webp"
     ],
     "colors": [
       {
@@ -245,8 +245,8 @@ window.products = [
     "description": "Inspirowany górskimi szczytami i czystym, geometrycznym minimalizmem. Mięsisty, biały welur łączy w sobie luksusową miękkość z trwałą, solidną konstrukcją. Zapewnia doskonałe otulenie i dopasowanie bez zbędnego nacisku. Ponadczasowy kontrast dla ciemniejszych stylizacji.",
     "storyDescription": "Bielsko-Biała. Inspirowany surowymi, górskimi szczytami i czystym minimalizmem podbeskidzkiej natury. Mięsisty, luksusowo miękki welur w czystej bieli.",
     "images": [
-      "./assets/products/durag-bielsko-biala_1.png",
-      "./assets/products/durag-bielsko-biala_2.jpg",
+      "./assets/products/durag-bielsko-biala_1.webp",
+      "./assets/products/durag-bielsko-biala_2.webp",
       "./assets/products/durag-bielsko-biala_3.webp"
     ],
     "colors": [
@@ -276,9 +276,9 @@ window.products = [
     "description": "Nazwany na cześć miasta o mocnym, robotniczym charakterze i dumnej historii. Głęboki, wieczorny odcień granatu na welurowej fakturze tworzy szlachetną, matową kompozycję. Delikatny dla skóry, niezwykle stabilny dzięki elastycznym pasom. Siła ukryta w prostocie.",
     "storyDescription": "Radom. Nawiązanie do robotniczego charakteru, dumnej historii i autentycznego, miejskiego klimatu. Głęboki, wieczorny granat na stabilnej, welurowej fakturze.",
     "images": [
-      "./assets/products/durag-radom_1.png",
-      "./assets/products/durag-radom_2.jpg",
-      "./assets/products/durag-radom_3.jpg"
+      "./assets/products/durag-radom_1.webp",
+      "./assets/products/durag-radom_2.webp",
+      "./assets/products/durag-radom_3.webp"
     ],
     "colors": [
       {
@@ -307,9 +307,9 @@ window.products = [
     "description": "Inspirowany neonową energią nocnego Śląska i nowoczesną transformacją miasta. Fioletowa satyna intryguje głębią koloru i gładkim, metalicznym połyskiem pod wpływem światła. Lekki, oddychający materiał precyzyjnie przylega do głowy, tworząc wyrafinowany detal.",
     "storyDescription": "Katowice. Czerpie z neonowej energii nocnego Śląska i nowoczesnej transformacji regionu. Fioletowa satyna intrygująca metalicznym refleksem.",
     "images": [
-      "./assets/products/durag-katowice_1.png",
-      "./assets/products/durag-katowice_2.jpg",
-      "./assets/products/durag-katowice_3.jpg"
+      "./assets/products/durag-katowice_1.webp",
+      "./assets/products/durag-katowice_2.webp",
+      "./assets/products/durag-katowice_3.webp"
     ],
     "colors": [
       {
@@ -338,9 +338,9 @@ window.products = [
     "description": "Nazwany na cześć industrialnego serca, gdzie stal i industrialny błysk łączą się z nowoczesnością. Srebrzysta satyna nadaje mu futurystycznego, surowego charakteru. Perfekcyjnie skrojony, gwarantuje optymalną ochronę i płynne dopasowanie. Minimalizm w nowoczesnym wydaniu.",
     "storyDescription": "Zabrze. Hołd dla industrialnego serca, gdzie stal i surowy, fabryczny połysk łączą się z nowoczesnością. Srebrzysta satyna o futurystycznym sznycie.",
     "images": [
-      "./assets/products/durag-zabrze_1.jpg",
-      "./assets/products/durag-zabrze_2.jpg",
-      "./assets/products/durag-zabrze_3.jpg"
+      "./assets/products/durag-zabrze_1.webp",
+      "./assets/products/durag-zabrze_2.webp",
+      "./assets/products/durag-zabrze_3.webp"
     ],
     "colors": [
       {
@@ -369,9 +369,9 @@ window.products = [
     "description": "Inspirowany dynamicznym rytmem miasta i wyrazistym, zdecydowanym charakterem. Intensywna, krwista czerwień satyny przyciąga spojrzenia i doskonale odbija światło. Gładka struktura i szerokie wiązania zapewniają trwałość noszenia bez uczucia napięcia. Energia i styl.",
     "storyDescription": "Kielce. Inspirowany dynamicznym rytmem miasta i jego zdecydowanym, wyrazistym charakterem. Intensywna, krwista czerwień, która natychmiast przyciąga spojrzenia.",
     "images": [
-      "./assets/products/durag-kielce_1.png",
-      "./assets/products/durag-kielce_2.jpg",
-      "./assets/products/durag-kielce_3.jpg"
+      "./assets/products/durag-kielce_1.webp",
+      "./assets/products/durag-kielce_2.webp",
+      "./assets/products/durag-kielce_3.webp"
     ],
     "colors": [
       {
@@ -400,9 +400,9 @@ window.products = [
     "description": "Nazwany na cześć dynamicznie rozwijającej się stolicy innowacji, łączącej technologię z nowoczesną estetyką. Unikalny, geometryczny wzór na fioletowej satynie przełamuje monotonię. Śliska, delikatna tkanina chroni strukturę przed tarciem, tworząc unikalny element rozpoznawczy.",
     "storyDescription": "Rzeszów. Dynamicznie rozwijająca się stolica innowacji, łącząca technologię z nowoczesną estetyką. Unikalny, geometryczny wzór na fioletowej satynie.",
     "images": [
-      "./assets/products/durag-rzeszow_1.png",
-      "./assets/products/durag-rzeszow_2.jpg",
-      "./assets/products/durag-rzeszow_3.jpg"
+      "./assets/products/durag-rzeszow_1.webp",
+      "./assets/products/durag-rzeszow_2.webp",
+      "./assets/products/durag-rzeszow_3.webp"
     ],
     "colors": [
       {
@@ -431,9 +431,9 @@ window.products = [
     "description": "Inspirowany bliskością wody, portowym charakterem i surowym, północnym klimatem. Niebieski motyw military camo naniesiony na gładką satynę nadaje mu technicznego, nowoczesnego wyrazu. Zapewnia precyzyjne trzymanie i odporność na codzienny ruch.",
     "storyDescription": "Elbląg. Inspirowany bliskością wody, portowym rodowodem i surowym, północnym klimatem. Niebieski motyw military camo w technicznym wydaniu.",
     "images": [
-      "./assets/products/durag-elblag_1.png",
-      "./assets/products/durag-elblag_2.jpg",
-      "./assets/products/durag-elblag_3.jpg"
+      "./assets/products/durag-elblag_1.webp",
+      "./assets/products/durag-elblag_2.webp",
+      "./assets/products/durag-elblag_3.webp"
     ],
     "colors": [
       {
@@ -462,9 +462,9 @@ window.products = [
     "description": "Ukłon w stronę wojskowych tradycji miasta i bezkompromisowej, użytkowej klasyki. Tradycyjny wzór moro na satynowej bazie łączy surowy, militarny sznyt z gładkością i delikatnością dla skóry. Funkcjonalność i styl dopracowane do perfekcji.",
     "storyDescription": "Legionowo. Ukłon w stronę wojskowych tradycji miasta i bezkompromisowej, użytkowej klasyki. Tradycyjny wzór moro na gładkiej, satynowej bazie.",
     "images": [
-      "./assets/products/durag-legionowo_1.png",
-      "./assets/products/durag-legionowo_2.jpg",
-      "./assets/products/durag-legionowo_3.jpg"
+      "./assets/products/durag-legionowo_1.webp",
+      "./assets/products/durag-legionowo_2.webp",
+      "./assets/products/durag-legionowo_3.webp"
     ],
     "colors": [
       {
@@ -493,9 +493,9 @@ window.products = [
     "description": "Inspirowany nadmorską wolnością, kultowym klimatem surfingu i bezkresem Bałtyku. Satyna w odcieniu klasycznego, czystego błękitu przynosi lekkość i świeżość. Oddychająca struktura doskonale sprawdza się w ruchu, gwarantując komfort i stabilność.",
     "storyDescription": "Chałupy. Złapany w formę klimat nadmorskiej wolności, surfingu i bezkresu Bałtyku. Satyna w odcieniu czystego, letniego błękitu.",
     "images": [
-      "./assets/products/durag-chalupy_1.png",
-      "./assets/products/durag-chalupy_2.jpg",
-      "./assets/products/durag-chalupy_3.jpg"
+      "./assets/products/durag-chalupy_1.webp",
+      "./assets/products/durag-chalupy_2.webp",
+      "./assets/products/durag-chalupy_3.webp"
     ],
     "colors": [
       {
@@ -525,8 +525,8 @@ window.products = [
     "storyDescription": "Tychy. Odniesienie do precyzyjnie zaplanowanej urbanistyki i głębokich tafli tyskich jezior. Klasyczny, harmonijny granat na gładkiej satynie.",
     "images": [
       "./assets/products/durag-tychy_1.webp",
-      "./assets/products/durag-tychy_2.jpg",
-      "./assets/products/durag-tychy_3.jpg"
+      "./assets/products/durag-tychy_2.webp",
+      "./assets/products/durag-tychy_3.webp"
     ],
     "colors": [
       {
@@ -555,8 +555,8 @@ window.products = [
     "description": "Inspirowany rozległymi parkami miasta i jego wyrazistą, miejską tożsamością. Welur w odcieniu głębokiej, butelkowej zieleni oferuje luksusową mięsistość i miękkość. Świetnie dopasowuje się do kształtu głowy, chroniąc jej strukturę przed szkodliwymi czynnikami otoczenia.",
     "storyDescription": "Sosnowiec. Inspirowany rozległymi parkami miasta i jego wyrazistą, miejską tożsamością. Welur w głębokim odcieniu butelkowej zieleni.",
     "images": [
-      "./assets/products/durag-sosnowiec_1.png",
-      "./assets/products/durag-sosnowiec_2.jpg",
+      "./assets/products/durag-sosnowiec_1.webp",
+      "./assets/products/durag-sosnowiec_2.webp",
       "./assets/products/durag-sosnowiec_3.webp"
     ],
     "colors": [
@@ -586,9 +586,9 @@ window.products = [
     "description": "Nazwany na cześć miasta o bogatej historii rzemiosła fabrycznego i wyrazistym charakterze. Robotnicza, głęboka czerwień weluru nadaje mu unikalnej tekstury i ciężaru. Doskonale izoluje, trzyma się na miejscu przez cały dzień i podkreśla autentyczność Twojego vibe'u.",
     "storyDescription": "Włocławek. Stworzony z myślą o mieście o bogatej historii fabrycznego rzemiosła. Królewska, nasycona czerwień weluru nadająca unikalnej ciężkości.",
     "images": [
-      "./assets/products/durag-wloclawek_1.png",
-      "./assets/products/durag-wloclawek_2.jpg",
-      "./assets/products/durag-wloclawek_3.jpg"
+      "./assets/products/durag-wloclawek_1.webp",
+      "./assets/products/durag-wloclawek_2.webp",
+      "./assets/products/durag-wloclawek_3.webp"
     ],
     "colors": [
       {
@@ -617,8 +617,8 @@ window.products = [
     "description": "Inspirowany głębią wzburzonego, zimowego morza i surową, hanzeatycką architekturą. Welur w odcieniu głębokiego niebieskiego łączy morską melancholię z najwyższym komfortem noszenia. Miękki w dotyku, stabilny i odporny – stworzony, by stawić czoła każdemu wyzwaniu.",
     "storyDescription": "Gdańsk. Inspirowany głębią wzburzonego, zimowego morza i surową, hanzeatycką architekturą. Mięsisty welur w odcieniu głębokiego niebieskiego.",
     "images": [
-      "./assets/products/durag-gdansk_1.png",
-      "./assets/products/durag-gdansk_2.jpg",
+      "./assets/products/durag-gdansk_1.webp",
+      "./assets/products/durag-gdansk_2.webp",
       "./assets/products/durag-gdansk_3.webp"
     ],
     "colors": [
@@ -648,7 +648,7 @@ window.products = [
     "description": "Nazwany na cześć miasta o stoczniowym rodowodzie, otoczonego wodą i nowoczesną architekturą filharmonii. Srebrzysto-szary welur intryguje metalicznym refleksem i grubszą, miękką strukturą. Zapewnia idealny balans między surową formą a delikatnością dla skóry.",
     "storyDescription": "Szczecin. Stoczniowy rodowód otoczony wodą i nowoczesna architektura przełożone na surowy, srebrzysto-szary welur z metalicznym refleksem.",
     "images": [
-      "./assets/products/durag-szczecin_1.png",
+      "./assets/products/durag-szczecin_1.webp",
       "./assets/products/durag-szczecin_2.webp",
       "./assets/products/durag-szczecin_3.webp"
     ],
@@ -679,8 +679,8 @@ window.products = [
     "description": "Inspirowany wielkomiejskim, nowoczesnym rytmem i dumną, geometryczną estetyką stolicy Wielkopolski. Welur w odcieniu nasyconego fioletu to propozycja dla tych, którzy szukają unikalnej faktury. Kontrolowana elastyczność zapewnia pewny chwyt i całodniową wygodę.",
     "storyDescription": "Poznań. Wielkomiejski, nowoczesny rytm i dumna estetyka stolicy Wielkopolski. Welur w odcieniu nasyconego fioletu dla szukających unikalnej faktury.",
     "images": [
-      "./assets/products/durag-poznan_1.jpg",
-      "./assets/products/durag-poznan_2.jpg",
+      "./assets/products/durag-poznan_1.webp",
+      "./assets/products/durag-poznan_2.webp",
       "./assets/products/durag-poznan_3.webp"
     ],
     "colors": [
@@ -710,9 +710,9 @@ window.products = [
     "description": "Inspirowany industrialnymi spichrzami, rzecznymi kanałami i metalicznymi refleksami nad Brdą. Wykonany z innowacyjnego materiału cupro w szlachetnym, miedzianym odcieniu. Łączy jedwabistą gładkość z naturalną przewiewnością i unikalnym, matowo-lśniącym finiszem. Nowa definicja nowoczesnej formy.",
     "storyDescription": "Bydgoszcz. Industrialne spichrze, rzeczne kanały i metaliczne refleksy nad Brdą. Nowoczesne tworzywo cupro w szlachetnym, miedzianym odcieniu.",
     "images": [
-      "./assets/products/durag-bydgoszcz_1.jpg",
-      "./assets/products/durag-bydgoszcz_2.jpg",
-      "./assets/products/durag-bydgoszcz_3.jpg"
+      "./assets/products/durag-bydgoszcz_1.webp",
+      "./assets/products/durag-bydgoszcz_2.webp",
+      "./assets/products/durag-bydgoszcz_3.webp"
     ],
     "colors": [
       {

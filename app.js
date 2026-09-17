@@ -49,9 +49,15 @@ async function loadProductsFromSupabase() {
         
         products = visibleProducts.map(p => {
           const localItem = localMap.get(p.id);
-          const finalImages = (p.images && p.images.length > 0) 
-            ? p.images 
-            : (localItem && localItem.images && localItem.images.length > 0 ? localItem.images : ['./assets/durag_silk_black.png']);
+          let finalImages = (p.images && p.images.length > 0) ? p.images : [];
+          if (finalImages.length > 0 && typeof finalImages[0] === 'string' && finalImages[0].includes('product-photos') && localItem && localItem.images && localItem.images.length > 0) {
+            finalImages = localItem.images;
+          } else if (finalImages.length === 0 && localItem && localItem.images && localItem.images.length > 0) {
+            finalImages = localItem.images;
+          }
+          if (!finalImages || finalImages.length === 0) {
+            finalImages = ['./assets/durag_silk_black.webp'];
+          }
 
           return {
             id: p.id,
@@ -1385,8 +1391,8 @@ function renderProductGrid() {
     card.innerHTML = `
       <div class="product-image-container">
         ${badgeHtml}
-        <img class="product-card-img primary" src="${p.images[0]}" alt="${displayName}" loading="lazy">
-        <img class="product-card-img secondary" src="${p.images[1] || p.images[0]}" alt="${displayName} - detale" loading="lazy">
+        <img class="product-card-img primary" src="${p.images[0]}" alt="${displayName}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='./assets/durag_silk_black.webp';">
+        <img class="product-card-img secondary" src="${p.images[1] || p.images[0]}" alt="${displayName} - detale" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='./assets/durag_silk_black.webp';">
       </div>
       
       <div class="product-info">

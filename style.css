@@ -3047,3 +3047,15 @@ body { background: var(--bg-primary); }
     font-size: 1.5rem;
   }
 }
+
+/* Performance & Rendering Optimizations */
+#filozofia,
+#o-nas,
+.site-footer {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 700px;
+}
+
+img, video {
+  image-rendering: -webkit-optimize-contrast;
+}
