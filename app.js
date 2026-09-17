@@ -62,12 +62,13 @@ async function loadProductsFromSupabase() {
           return {
             id: p.id,
             name: p.name,
-            nameEn: p.name_en || p.name,
+            nameEn: p.name_en || (localItem && localItem.nameEn) || p.name,
             price: parseFloat(p.price),
             category: p.category,
-            categoryLabel: p.category_label || p.category,
-            material: p.material || '',
-            description: p.description || '',
+            categoryLabel: p.category_label || (localItem && localItem.categoryLabel) || p.category,
+            material: p.material || (localItem && localItem.material) || '',
+            description: p.description || (localItem && localItem.description) || '',
+            storyDescription: p.story_description || (localItem && localItem.storyDescription) || p.description || '',
             images: finalImages,
             colors: p.colors && p.colors.length > 0 ? p.colors : (localItem && localItem.colors ? localItem.colors : [{ name: 'Classic', hex: '#0A0A0A' }]),
             reviews: p.reviews || (localItem ? localItem.reviews : []),
@@ -117,6 +118,22 @@ async function loadSiteContent() {
 
 function applySiteContent(content) {
   if (!content) return;
+  window.cachedSiteContent = content;
+
+  // Always update media assets if configured
+  if (content.hero) {
+    const heroVideo = document.querySelector('.hero-bg video');
+    if (heroVideo) {
+      if (content.hero.videoUrl) heroVideo.src = content.hero.videoUrl;
+      if (content.hero.posterUrl) heroVideo.poster = content.hero.posterUrl;
+    }
+  }
+
+  // Do not overwrite non-Polish translations with Polish CMS text
+  const currentLang = typeof getActiveLanguage === 'function' ? getActiveLanguage() : 'PL';
+  if (currentLang !== 'PL') {
+    return;
+  }
 
   // 1. Announcement bar
   if (content.announcement) {
@@ -618,7 +635,15 @@ const I18N = {
       totalLabel: 'Łącznie:',
       couponPlaceholder: 'Kod rabatowy (np. WARSAW10)',
       couponApplyBtn: 'Użyj',
+      removeBtn: 'Usuń', colorLabel: 'Kolor',
       checkoutBtn: 'Przejdź do dostawy'
+    },
+    modalDetails: 'Szczegóły',
+    modalReviews: 'Opinie',
+    legal: {
+      terms: 'Regulamin',
+      privacy: 'Polityka Prywatności',
+      contact: 'Kontakt'
     }
   },
   EN: {
@@ -698,7 +723,15 @@ const I18N = {
       totalLabel: 'Total:',
       couponPlaceholder: 'Discount code (e.g. WARSAW10)',
       couponApplyBtn: 'Apply',
+      removeBtn: 'Remove', colorLabel: 'Color',
       checkoutBtn: 'Proceed to Checkout'
+    },
+    modalDetails: 'Details',
+    modalReviews: 'Reviews',
+    legal: {
+      terms: 'Terms & Conditions',
+      privacy: 'Privacy Policy',
+      contact: 'Contact'
     }
   },
   CZ: {
@@ -778,7 +811,15 @@ const I18N = {
       totalLabel: 'Celkem:',
       couponPlaceholder: 'Slevový kód (např. WARSAW10)',
       couponApplyBtn: 'Použít',
+      removeBtn: 'Odstranit', colorLabel: 'Barva',
       checkoutBtn: 'Přejít k objednávce'
+    },
+    modalDetails: 'Podrobnosti',
+    modalReviews: 'Recenze',
+    legal: {
+      terms: 'Obchodní podmínky',
+      privacy: 'Zásady ochrany soukromí',
+      contact: 'Kontakt'
     }
   },
   LT: {
@@ -858,7 +899,15 @@ const I18N = {
       totalLabel: 'Iš viso:',
       couponPlaceholder: 'Nuolaidos kodas (pvz. WARSAW10)',
       couponApplyBtn: 'Pritaikyti',
+      removeBtn: 'Pašalinti', colorLabel: 'Spalva',
       checkoutBtn: 'Apmokėti užsakymą'
+    },
+    modalDetails: 'Detalės',
+    modalReviews: 'Atsiliepimai',
+    legal: {
+      terms: 'Taisyklės ir sąlygos',
+      privacy: 'Privatumo politika',
+      contact: 'Kontaktai'
     }
   },
   DE: {
@@ -938,7 +987,15 @@ const I18N = {
       totalLabel: 'Gesamtsumme:',
       couponPlaceholder: 'Gutscheincode (z.B. WARSAW10)',
       couponApplyBtn: 'Einlösen',
+      removeBtn: 'Entfernen', colorLabel: 'Farbe',
       checkoutBtn: 'Zur Kasse'
+    },
+    modalDetails: 'Details',
+    modalReviews: 'Bewertungen',
+    legal: {
+      terms: 'AGB',
+      privacy: 'Datenschutzerklärung',
+      contact: 'Kontakt'
     }
   },
   FR: {
@@ -1018,7 +1075,15 @@ const I18N = {
       totalLabel: 'Total :',
       couponPlaceholder: 'Code promo (ex: WARSAW10)',
       couponApplyBtn: 'Appliquer',
+      removeBtn: 'Supprimer', colorLabel: 'Couleur',
       checkoutBtn: 'Passer la commande'
+    },
+    modalDetails: 'Détails',
+    modalReviews: 'Avis',
+    legal: {
+      terms: 'Conditions Générales',
+      privacy: 'Politique de Confidentialité',
+      contact: 'Contact'
     }
   },
   ES: {
@@ -1098,7 +1163,15 @@ const I18N = {
       totalLabel: 'Total:',
       couponPlaceholder: 'Código de descuento (ej: WARSAW10)',
       couponApplyBtn: 'Aplicar',
+      removeBtn: 'Eliminar', colorLabel: 'Color',
       checkoutBtn: 'Tramitar pedido'
+    },
+    modalDetails: 'Detalles',
+    modalReviews: 'Reseñas',
+    legal: {
+      terms: 'Términos y Condiciones',
+      privacy: 'Política de Privacidad',
+      contact: 'Contacto'
     }
   }
 };
@@ -1113,9 +1186,14 @@ function getActiveLanguage() {
   if (stored && I18N[stored]) {
     return stored;
   }
-  // Domena .com funkcjonuje oddzielnie od .pl – domyślnie w języku angielskim
+  // Język polski (PL) jest w 100% dostępny i równorzędny na obu domenach (.pl i .com)
+  const browserLang = (navigator.language || navigator.userLanguage || '').slice(0, 2).toUpperCase();
+  if (browserLang === 'PL') {
+    return 'PL';
+  }
+  // Dla odwiedzających z zagranicy na domenie .com sugerujemy ich język lokalny lub EN
   if (window.location.hostname.includes('warsawduragstore.com')) {
-    return 'EN';
+    return I18N[browserLang] ? browserLang : 'EN';
   }
   return 'PL';
 }
@@ -1263,8 +1341,39 @@ function applyLanguage(lang) {
   const cartPromoInput = document.getElementById('cartPromoInput');
   if (cartPromoInput) cartPromoInput.placeholder = dict.cart.couponPlaceholder;
 
-  // 12. Re-render product grid
+  // 12. Cart Title
+  const totalCount = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartTitleText = document.getElementById('cartTitleText');
+  if (cartTitleText) cartTitleText.innerHTML = `${dict.cart.title} (<span id="cartHeaderCount">${totalCount}</span>)`;
+
+  // 13. Footer Legal Links
+  const linkAbout = document.getElementById('linkAboutLegal');
+  if (linkAbout) linkAbout.textContent = dict.nav.about;
+  const linkTerms = document.getElementById('linkTerms');
+  if (linkTerms) linkTerms.textContent = (dict.legal && dict.legal.terms) ? dict.legal.terms : (lang === 'PL' ? 'Regulamin' : 'Terms & Conditions');
+  const linkPrivacy = document.getElementById('linkPrivacy');
+  if (linkPrivacy) linkPrivacy.textContent = (dict.legal && dict.legal.privacy) ? dict.legal.privacy : (lang === 'PL' ? 'Polityka Prywatności' : 'Privacy Policy');
+  const linkContact = document.getElementById('linkContactLegal');
+  if (linkContact) linkContact.textContent = (dict.legal && dict.legal.contact) ? dict.legal.contact : (lang === 'PL' ? 'Kontakt' : 'Contact');
+
+  // 14. Modal Static Elements
+  const modalAddBtn = document.getElementById('modalAddBtn');
+  if (modalAddBtn) modalAddBtn.textContent = dict.addToCart;
+  const modalDealBadge = document.querySelector('#productModal .deal-badge');
+  if (modalDealBadge) modalDealBadge.textContent = dict.dealBadge;
+  const modalTabDetailsBtn = document.querySelector('.tab-header[data-tab="details"]');
+  if (modalTabDetailsBtn) modalTabDetailsBtn.textContent = dict.modalDetails || (lang === 'PL' ? 'Szczegóły' : 'Details');
+  const modalTabReviewsBtn = document.querySelector('.tab-header[data-tab="reviews"]');
+  if (modalTabReviewsBtn) modalTabReviewsBtn.textContent = dict.modalReviews || (lang === 'PL' ? 'Opinie' : 'Reviews');
+
+  // 15. If switched to PL and admin customized CMS content exists, re-apply it
+  if (lang === 'PL' && window.cachedSiteContent) {
+    applySiteContent(window.cachedSiteContent);
+  }
+
+  // 16. Re-render product grid & cart
   renderProductGrid();
+  renderCart();
 }
 
 function updateCategoryDescription(category) {
@@ -1558,9 +1667,11 @@ function calculateTotals() {
 
 function renderCart() {
   DOM.cartItemsContainer.innerHTML = '';
+  const lang = getActiveLanguage();
+  const dict = I18N[lang] || I18N.PL;
   
   if (state.cart.length === 0) {
-    DOM.cartItemsContainer.innerHTML = `<p class="cart-empty-message">Twój koszyk jest obecnie pusty.</p>`;
+    DOM.cartItemsContainer.innerHTML = `<p class="cart-empty-message">${dict.cart.emptyText || 'Twój koszyk jest pusty.'}</p>`;
     // Hide footer details
     DOM.cartFooter.style.opacity = '0.5';
     DOM.cartFooter.style.pointerEvents = 'none';
@@ -1577,11 +1688,16 @@ function renderCart() {
   state.cart.forEach((item, idx) => {
     const itemEl = document.createElement('div');
     itemEl.className = 'cart-item';
+    const prod = products.find(p => p.id === item.id);
+    const displayName = (lang !== 'PL' && prod && prod.nameEn) ? prod.nameEn : item.name;
+    const removeLabel = (dict.cart && dict.cart.removeBtn) ? dict.cart.removeBtn : (lang === 'PL' ? 'Usuń' : 'Remove');
+    const colorLabel = (dict.cart && dict.cart.colorLabel) ? dict.cart.colorLabel : (lang === 'PL' ? 'Kolor' : 'Color');
+
     itemEl.innerHTML = `
-      <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+      <img src="${item.image}" alt="${displayName}" class="cart-item-image">
       <div class="cart-item-info">
-        <h4 class="cart-item-name">${item.name}</h4>
-        <span class="cart-item-meta">Kolor: ${item.color}</span>
+        <h4 class="cart-item-name">${displayName}</h4>
+        <span class="cart-item-meta">${colorLabel}: ${item.color}</span>
         
         <div class="cart-item-controls">
           <div class="quantity-selector">
@@ -1592,7 +1708,7 @@ function renderCart() {
           <span class="cart-item-price">${(item.price * item.quantity).toFixed(2)} PLN</span>
         </div>
         <div>
-          <button class="cart-item-remove" data-action="remove" data-idx="${idx}">Usuń</button>
+          <button class="cart-item-remove" data-action="remove" data-idx="${idx}">${removeLabel}</button>
         </div>
       </div>
     `;
@@ -1746,16 +1862,34 @@ function openProductModal(productId) {
   state.activeProductInModal = p;
   state.activeImageIndexInModal = 0;
   
+  const lang = getActiveLanguage();
+  const dict = I18N[lang] || I18N.PL;
+  const displayName = (lang !== 'PL' && p.nameEn) ? p.nameEn : p.name;
+  const catLabel = p.category === 'silk' ? dict.filterSilk 
+                 : (p.category === 'satin' ? dict.filterSatin 
+                 : (p.category === 'velvet' ? dict.filterVelvet 
+                 : (p.category === 'seasonal' ? dict.filterSeasonal 
+                 : (p.category === 'accessories' ? dict.filterAccessories : p.categoryLabel))));
+
   // Inject details
   DOM.modalImg.src = p.images[0];
-  DOM.modalImg.alt = p.name;
-  DOM.modalCategory.textContent = p.categoryLabel;
-  DOM.modalTitle.textContent = p.name;
+  DOM.modalImg.alt = displayName;
+  DOM.modalCategory.textContent = catLabel;
+  DOM.modalTitle.textContent = displayName;
   DOM.modalPrice.textContent = `${p.price.toFixed(2)} PLN`;
   DOM.modalMaterial.textContent = p.material;
   DOM.modalDesc.textContent = p.description;
   DOM.modalQtyVal.textContent = '1';
-  DOM.modalReviewsCount.textContent = p.reviews.length;
+  DOM.modalReviewsCount.textContent = (p.reviews && p.reviews.length) || 0;
+  
+  const modalAddBtn = document.getElementById('modalAddBtn');
+  if (modalAddBtn) modalAddBtn.textContent = dict.addToCart;
+  const modalDealBadge = document.querySelector('#productModal .deal-badge');
+  if (modalDealBadge) modalDealBadge.textContent = dict.dealBadge;
+  const modalTabDetailsBtn = document.querySelector('.tab-header[data-tab="details"]');
+  if (modalTabDetailsBtn) modalTabDetailsBtn.textContent = dict.modalDetails || (lang === 'PL' ? 'Szczegóły' : 'Details');
+  const modalTabReviewsBtn = document.querySelector('.tab-header[data-tab="reviews"]');
+  if (modalTabReviewsBtn) modalTabReviewsBtn.textContent = dict.modalReviews || (lang === 'PL' ? 'Opinie' : 'Reviews');
   
   // Render thumbnails
   DOM.modalThumbnails.innerHTML = '';
