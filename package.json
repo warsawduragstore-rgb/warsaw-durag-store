@@ -1,0 +1,10 @@
+{
+  "name": "warsaw-durag-store",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Warsaw Durag Store — Jedyne duragi szyte w Polsce",
+  "scripts": {
+    "build": "echo 'Static storefront ready'",
+    "vercel-build": "echo 'Static storefront ready'"
+  }
+}
