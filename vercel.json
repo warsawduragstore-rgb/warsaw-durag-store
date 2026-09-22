@@ -4,8 +4,7 @@
   "buildCommand": "echo 'Static storefront ready'",
   "outputDirectory": ".",
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/koszyk", "destination": "/koszyk.html" },
-    { "source": "/cart", "destination": "/koszyk.html" }
+  "redirects": [
+    { "source": "/cart", "destination": "/koszyk", "permanent": true }
   ]
 }
