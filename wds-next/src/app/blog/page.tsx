@@ -32,11 +32,14 @@ export default function BlogListingPage() {
       {/* Blog Hero Header */}
       <section className="bg-[#0D0D0B] text-white py-16 sm:py-24 border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <span className="text-[#D9A87E] text-[10px] sm:text-xs font-mono uppercase tracking-[0.3em] font-bold block mb-3">
-            [ WDS EDITORIAL &amp; KNOWLEDGE BASE ]
-          </span>
-          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-medium tracking-tight mb-5">
-            Dziennik Atelier i Fale 360
+          <div className="inline-flex items-center gap-2 mb-3">
+            <span className="w-1.5 h-1.5 bg-[#D9A87E] rounded-full inline-block animate-pulse" />
+            <span className="text-[#D9A87E] text-[10px] sm:text-xs font-mono uppercase tracking-[0.3em] font-semibold">
+              WDS Editorial • Kompendium Wiedzy
+            </span>
+          </div>
+          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-normal tracking-tight mb-5">
+            Dziennik Atelier <span className="italic text-[#D9A87E]">i Fale 360</span>
           </h1>
           <p className="text-xs sm:text-sm md:text-base text-gray-300 font-light max-w-2xl mx-auto leading-relaxed">
             Praktyczna wiedza o technice szczotkowania, historii i symbolice duraga oraz pielęgnacji naturalnego jedwabiu morwowego.
@@ -63,7 +66,7 @@ export default function BlogListingPage() {
                 />
                 <div className="absolute top-4 left-4 z-10">
                   <span className="bg-[#0D0D0B] text-[#D9A87E] text-[10px] font-mono uppercase tracking-widest px-3 py-1 border border-white/10 font-bold">
-                    [ WYRÓŻNIONY WPIS ]
+                    Wyróżniony Artykuł //
                   </span>
                 </div>
               </div>
@@ -81,7 +84,7 @@ export default function BlogListingPage() {
                   </div>
 
                   <Link href={`/blog/${featuredPost.slug}`}>
-                    <h2 className="font-serif text-2xl sm:text-3xl text-[#0D0D0B] font-medium leading-tight group-hover:text-[#734C1D] transition-colors">
+                    <h2 className="font-serif text-2xl sm:text-3xl text-[#0D0D0B] font-normal leading-tight group-hover:text-[#734C1D] group-hover:italic transition-all">
                       {featuredPost.title}
                     </h2>
                   </Link>
@@ -95,10 +98,10 @@ export default function BlogListingPage() {
                   <span className="text-xs font-mono text-gray-500">{featuredPost.date}</span>
                   <Link
                     href={`/blog/${featuredPost.slug}`}
-                    className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#0D0D0B] hover:text-[#734C1D] transition-colors"
+                    className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#0D0D0B] hover:text-[#734C1D] transition-colors group/link"
                   >
-                    <span>[ CZYTAJ ARTYKUŁ ]</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <span className="group-hover/link:italic">Czytaj artykuł</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               </div>
@@ -109,7 +112,7 @@ export default function BlogListingPage() {
         {/* Section Header */}
         <div className="flex items-center justify-between border-b border-[#0D0D0B] pb-3">
           <span className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-[#0D0D0B]">
-            [ WSZYSTKIE PUBLIKACJE // ARCHIWUM WDS ]
+            Wszystkie Publikacje • Archiwum WDS
           </span>
           <span className="text-xs font-mono text-[#5A5B60]">
             {BLOG_POSTS.length} ARTYKUŁÓW
@@ -149,7 +152,7 @@ export default function BlogListingPage() {
                   </div>
 
                   <Link href={`/blog/${post.slug}`}>
-                    <h3 className="font-serif text-lg text-[#0D0D0B] font-medium leading-snug group-hover:text-[#734C1D] transition-colors line-clamp-2">
+                    <h3 className="font-serif text-lg text-[#0D0D0B] font-normal leading-snug group-hover:text-[#734C1D] group-hover:italic transition-all line-clamp-2">
                       {post.title}
                     </h3>
                   </Link>
@@ -165,7 +168,7 @@ export default function BlogListingPage() {
                   href={`/blog/${post.slug}`}
                   className="w-full inline-flex items-center justify-center py-2.5 bg-[#F6F5F2] hover:bg-[#0D0D0B] hover:text-white text-[#0D0D0B] text-[11px] font-mono uppercase tracking-wider font-semibold transition-colors border border-[#E5E2DC]"
                 >
-                  [ CZYTAJ WIĘCEJ ]
+                  Czytaj artykuł →
                 </Link>
               </div>
             </article>

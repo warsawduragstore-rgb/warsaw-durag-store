@@ -44,6 +44,12 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
         className="relative aspect-[3/4] overflow-hidden bg-[#F6F5F2] block cursor-pointer"
         aria-label={displayName}
       >
+        {/* Atelier Woven Corner Tag */}
+        <div className="absolute top-2.5 left-2.5 z-10 bg-[#0D0D0B]/85 text-[#D9A87E] text-[9px] font-mono tracking-widest px-2 py-0.5 border border-[#D9A87E]/30 uppercase flex items-center gap-1 shadow-sm">
+          <span className="w-1 h-1 bg-[#D9A87E] rounded-full inline-block" />
+          <span>{product.category === 'silk' ? '19 Momme' : product.category === 'velvet' ? 'Kompresja' : 'Atelier WAW'}</span>
+        </div>
+
         {/* Primary Image */}
         <Image
           src={primaryImage}
@@ -82,9 +88,9 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             </span>
           </div>
 
-          {/* Product Name */}
-          <Link href={`/produkt/${product.slug}`} className="block group-hover:text-[#734C1D] transition-colors">
-            <h3 className="font-serif text-sm sm:text-base font-medium text-[#0D0D0B] leading-snug line-clamp-2 min-h-[2.4rem]">
+          {/* Product Name with Serif + Italic Hover */}
+          <Link href={`/produkt/${product.slug}`} className="block transition-colors">
+            <h3 className="font-serif text-sm sm:text-base font-normal text-[#0D0D0B] leading-snug line-clamp-2 min-h-[2.4rem] group-hover:text-[#734C1D] group-hover:italic transition-all">
               {displayName}
             </h3>
           </Link>
@@ -112,15 +118,15 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
           <button
             onClick={handleAddToCart}
-            className={`cursor-pointer px-3 py-2 sm:px-3.5 sm:py-2 text-[10px] sm:text-[11px] uppercase tracking-[0.16em] font-mono font-bold transition-colors border ${
+            className={`cursor-pointer px-3 py-2 sm:px-3.5 sm:py-2 text-[10px] sm:text-[11px] uppercase tracking-[0.16em] font-mono font-bold transition-all border ${
               isAdded
                 ? 'bg-[#0D0D0B] border-[#0D0D0B] text-[#D9A87E]'
-                : 'bg-[#0D0D0B] border-[#0D0D0B] text-white hover:bg-[#D9A87E] hover:border-[#D9A87E] hover:text-[#0D0D0B]'
+                : 'bg-[#0D0D0B] border-[#0D0D0B] text-white hover:bg-[#D9A87E] hover:border-[#D9A87E] hover:text-[#0D0D0B] hover:translate-x-0.5'
             }`}
             title={isAdded ? 'Dodano do koszyka' : t.addToCart}
             aria-label={t.addToCart}
           >
-            {isAdded ? '[ DODANO ]' : '+ KOSZYK'}
+            {isAdded ? 'DODANO ✓' : '+ KOSZYK'}
           </button>
         </div>
       </div>

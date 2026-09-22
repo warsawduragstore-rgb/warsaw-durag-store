@@ -146,11 +146,11 @@ function logFallbackOnce(reason: string) {
   }
 }
 
-// SSR Data Fetcher: All products
+// SSR Data Fetcher: All products strictly from Supabase
 export async function fetchServerProducts(): Promise<Product[]> {
   const client = getSupabaseServerClient();
   if (!client) {
-    return getAllProducts();
+    return [];
   }
 
   try {
@@ -162,21 +162,21 @@ export async function fetchServerProducts(): Promise<Product[]> {
 
     if (error || !data || data.length === 0) {
       if (error) logFallbackOnce(error.message);
-      return getAllProducts();
+      return [];
     }
 
     return data.map(mapSupabaseRowToProduct);
   } catch (err: any) {
     logFallbackOnce(err?.message || 'Brak łączności');
-    return getAllProducts();
+    return [];
   }
 }
 
-// SSR Data Fetcher: Single product by slug
+// SSR Data Fetcher: Single product by slug strictly from Supabase
 export async function fetchServerProductBySlug(slug: string): Promise<Product | undefined> {
   const client = getSupabaseServerClient();
   if (!client) {
-    return getProductBySlug(slug);
+    return undefined;
   }
 
   try {
@@ -195,11 +195,11 @@ export async function fetchServerProductBySlug(slug: string): Promise<Product | 
 
     return mapSupabaseRowToProduct(data);
   } catch {
-    return getProductBySlug(slug);
+    return undefined;
   }
 }
 
-// SSR Data Fetcher: Products by category
+// SSR Data Fetcher: Products by category strictly from Supabase
 export async function fetchServerProductsByCategory(category: string): Promise<Product[]> {
   if (category === 'all') {
     return fetchServerProducts();
@@ -207,7 +207,7 @@ export async function fetchServerProductsByCategory(category: string): Promise<P
 
   const client = getSupabaseServerClient();
   if (!client) {
-    return getProductsByCategory(category);
+    return [];
   }
 
   try {
@@ -219,12 +219,12 @@ export async function fetchServerProductsByCategory(category: string): Promise<P
       .order('id', { ascending: true });
 
     if (error || !data || data.length === 0) {
-      return getProductsByCategory(category);
+      return [];
     }
 
     return data.map(mapSupabaseRowToProduct);
   } catch (err) {
-    return getProductsByCategory(category);
+    return [];
   }
 }
 

@@ -22,14 +22,13 @@ export function slugify(text: string): string {
 }
 
 /**
- * Normalizes any database row (or fallback product) into the strict Product interface
+ * Normalizes any database row into the strict Product interface (100% DB, no mockups)
  */
 export function normalizeProduct(row: Record<string, unknown>): Product {
   const id = Number(row.id) || 0;
-  const fallback = PRODUCTS.find((p) => p.id === id);
 
   // Slug determination
-  let slug = (row.slug as string) || fallback?.slug || '';
+  let slug = (row.slug as string) || '';
   if (!slug) {
     slug = slugify((row.name as string) || `produkt-${id}`);
   }
@@ -45,9 +44,6 @@ export function normalizeProduct(row: Record<string, unknown>): Product {
       images = [row.images];
     }
   }
-  if (images.length === 0 && fallback) {
-    images = fallback.images;
-  }
   if (images.length === 0) {
     images = ['/assets/durag_silk_black.png'];
   }
@@ -62,9 +58,6 @@ export function normalizeProduct(row: Record<string, unknown>): Product {
     } catch {
       colors = [];
     }
-  }
-  if (colors.length === 0 && fallback?.colors) {
-    colors = fallback.colors;
   }
 
   // Parse or synthesize variants
@@ -99,18 +92,15 @@ export function normalizeProduct(row: Record<string, unknown>): Product {
       reviews = [];
     }
   }
-  if (reviews.length === 0 && fallback?.reviews) {
-    reviews = fallback.reviews;
-  }
 
   // Determine if featured (bestseller)
   const isFeatured = Boolean(
     row.is_featured ??
       row.isFeatured ??
-      (fallback?.isFeatured || [1160, 1161, 1335, 1365].includes(id))
+      ([1160, 1161, 1335, 1365].includes(id))
   );
 
-  const price = Number(row.price) || fallback?.price || 79.0;
+  const price = Number(row.price) || 79.0;
   const compareAtPrice = row.compare_at_price
     ? Number(row.compare_at_price)
     : (row.compareAtPrice ? Number(row.compareAtPrice) : undefined);
@@ -118,25 +108,25 @@ export function normalizeProduct(row: Record<string, unknown>): Product {
   return {
     id,
     slug,
-    name: (row.name as string) || fallback?.name || 'Warsaw Durag',
-    nameEn: (row.name_en as string) || (row.nameEn as string) || fallback?.nameEn || (row.name as string),
-    description: (row.description as string) || fallback?.description || '',
+    name: (row.name as string) || 'Warsaw Durag',
+    nameEn: (row.name_en as string) || (row.nameEn as string) || (row.name as string) || 'Warsaw Durag',
+    description: (row.description as string) || '',
     price,
     compareAtPrice,
     images,
-    category: ((row.category as string) || fallback?.category || 'silk') as Product['category'],
-    categoryLabel: (row.category_label as string) || (row.categoryLabel as string) || fallback?.categoryLabel || 'Durag Premium',
-    material: (row.material as string) || fallback?.material || '100% Jedwab Morwowy',
-    storyDescription: (row.story_description as string) || fallback?.storyDescription,
+    category: ((row.category as string) || 'silk') as Product['category'],
+    categoryLabel: (row.category_label as string) || (row.categoryLabel as string) || 'Durag Premium',
+    material: (row.material as string) || '100% Jedwab Morwowy',
+    storyDescription: (row.story_description as string) || undefined,
     variants,
     colors,
     reviews,
-    stock: row.stock !== undefined ? Number(row.stock) : (fallback?.stock ?? 10),
+    stock: row.stock !== undefined ? Number(row.stock) : 10,
     isFeatured,
     promoEligible: row.promo_eligible !== undefined
       ? Boolean(row.promo_eligible)
-      : (fallback?.promoEligible ?? (((row.category as string) || fallback?.category) !== 'accessories')),
-    createdAt: (row.created_at as string) || fallback?.createdAt || new Date().toISOString(),
+      : (((row.category as string) || 'silk') !== 'accessories'),
+    createdAt: (row.created_at as string) || new Date().toISOString(),
     updatedAt: (row.updated_at as string) || undefined,
     visible: row.visible !== undefined ? Boolean(row.visible) : true,
   };
@@ -181,13 +171,13 @@ async function querySupabaseProducts(queryString: string): Promise<Record<string
 
     return data as Record<string, unknown>[];
   } catch (error) {
-    console.warn('[Supabase DB] Network error, falling back to local dataset:', error);
+    console.warn('[Supabase DB] Network error, no connection to Supabase:', error);
     return null;
   }
 }
 
 /**
- * Fetch all visible products with optional filters (category, featured, limit, search)
+ * Fetch all visible products strictly from Supabase (Zero mockups)
  */
 export async function fetchProducts(options?: FetchProductsOptions): Promise<Product[]> {
   const queryParams = new URLSearchParams();
@@ -205,18 +195,12 @@ export async function fetchProducts(options?: FetchProductsOptions): Promise<Pro
 
   const rawData = await querySupabaseProducts(queryParams.toString());
 
-  let products: Product[];
-
-  if (rawData && rawData.length > 0) {
-    products = rawData.map(normalizeProduct);
-  } else {
-    // Graceful fallback to static product catalog
-    products = PRODUCTS.map((p) => normalizeProduct(p as unknown as Record<string, unknown>));
-
-    if (options?.category && options.category !== 'all') {
-      products = products.filter((p) => p.category === options.category);
-    }
+  // Strict: If database is disconnected or empty, return empty list (no mockups)
+  if (!rawData || rawData.length === 0) {
+    return [];
   }
+
+  let products = rawData.map(normalizeProduct);
 
   if (options?.featuredOnly) {
     products = products.filter((p) => p.isFeatured);
@@ -241,7 +225,7 @@ export async function fetchProducts(options?: FetchProductsOptions): Promise<Pro
 }
 
 /**
- * Fetch single product by slug
+ * Fetch single product by slug strictly from Supabase
  */
 export async function fetchProductBySlug(slug: string): Promise<Product | undefined> {
   const normalizedSlug = slug.toLowerCase().trim();
@@ -251,14 +235,11 @@ export async function fetchProductBySlug(slug: string): Promise<Product | undefi
     `select=*&visible=eq.true`
   );
 
-  let allProducts: Product[];
-
-  if (rawData && rawData.length > 0) {
-    allProducts = rawData.map(normalizeProduct);
-  } else {
-    allProducts = PRODUCTS.map((p) => normalizeProduct(p as unknown as Record<string, unknown>));
+  if (!rawData || rawData.length === 0) {
+    return undefined;
   }
 
+  const allProducts = rawData.map(normalizeProduct);
   return allProducts.find((p) => p.slug === normalizedSlug);
 }
 

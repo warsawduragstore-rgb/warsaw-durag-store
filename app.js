@@ -12,8 +12,8 @@
   const seedProductsIfEmpty = window.seedProductsIfEmpty;
   const EDGE_FUNCTION_URL = window.EDGE_FUNCTION_URL;
 
-/// --- Products array (populated synchronously from window.products, updated from Supabase async) ---
-let products = (typeof window !== 'undefined' && window.products && window.products.length > 0) ? [...window.products] : [];
+/// --- Products array (populated strictly from Supabase database, zero mockups) ---
+let products = [];
 
 // --- Application State ---
 let state = {
@@ -25,18 +25,9 @@ let state = {
   activeImageIndexInModal: 0
 };
 
-// --- Load products from Supabase (async background sync) ---
+// --- Load products from Supabase (strict database source) ---
 async function loadProductsFromSupabase() {
-  const localMap = new Map();
-  if (typeof window !== 'undefined' && window.products) {
-    window.products.forEach(p => localMap.set(p.id, p));
-  }
-
   try {
-    if (typeof window.seedProductsIfEmpty === 'function') {
-      await window.seedProductsIfEmpty();
-    }
-
     if (window.supabaseClient) {
       const { data, error } = await window.supabaseClient
         .from('products')
@@ -48,30 +39,21 @@ async function loadProductsFromSupabase() {
         const visibleProducts = data.filter(p => p.visible !== false);
         
         products = visibleProducts.map(p => {
-          const localItem = localMap.get(p.id);
-          let finalImages = (p.images && p.images.length > 0) ? p.images : [];
-          if (finalImages.length > 0 && typeof finalImages[0] === 'string' && finalImages[0].includes('product-photos') && localItem && localItem.images && localItem.images.length > 0) {
-            finalImages = localItem.images;
-          } else if (finalImages.length === 0 && localItem && localItem.images && localItem.images.length > 0) {
-            finalImages = localItem.images;
-          }
-          if (!finalImages || finalImages.length === 0) {
-            finalImages = ['./assets/durag_silk_black.webp'];
-          }
+          let finalImages = (p.images && p.images.length > 0) ? p.images : ['./assets/durag_silk_black.webp'];
 
           return {
             id: p.id,
             name: p.name,
-            nameEn: p.name_en || (localItem && localItem.nameEn) || p.name,
+            nameEn: p.name_en || p.name,
             price: parseFloat(p.price),
             category: p.category,
-            categoryLabel: p.category_label || (localItem && localItem.categoryLabel) || p.category,
-            material: p.material || (localItem && localItem.material) || '',
-            description: p.description || (localItem && localItem.description) || '',
-            storyDescription: p.story_description || (localItem && localItem.storyDescription) || p.description || '',
+            categoryLabel: p.category_label || p.category,
+            material: p.material || '',
+            description: p.description || '',
+            storyDescription: p.story_description || p.description || '',
             images: finalImages,
-            colors: p.colors && p.colors.length > 0 ? p.colors : (localItem && localItem.colors ? localItem.colors : [{ name: 'Classic', hex: '#0A0A0A' }]),
-            reviews: p.reviews || (localItem ? localItem.reviews : []),
+            colors: p.colors && p.colors.length > 0 ? p.colors : [{ name: 'Classic', hex: '#0A0A0A' }],
+            reviews: p.reviews || [],
             stock: typeof p.stock === 'number' ? p.stock : 10,
             visible: p.visible !== false
           };
@@ -84,12 +66,11 @@ async function loadProductsFromSupabase() {
       }
     }
   } catch (err) {
-    console.warn('[WDS] Supabase fallback to local products:', err);
+    console.warn('[WDS] Supabase fetch error:', err);
   }
 
-  if (!products || products.length === 0) {
-    products = (typeof window !== 'undefined' && window.products) ? [...window.products] : [];
-  }
+  // Strict mode: if database is unavailable or empty, do not show fake mockups
+  products = [];
   renderProductGrid();
 }
 

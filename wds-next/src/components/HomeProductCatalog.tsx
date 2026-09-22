@@ -30,11 +30,14 @@ export default function HomeProductCatalog({ initialProducts }: HomeProductCatal
       {/* Heading */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-4 pb-6 border-b border-[#E5E2DC]">
         <div>
-          <span className="text-[#734C1D] text-[10px] sm:text-xs uppercase font-mono tracking-[0.25em] font-semibold block mb-1.5">
-            [ PEŁNA OFERTA ATELIER ]
-          </span>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="w-1.5 h-1.5 bg-[#734C1D] inline-block rotate-45" />
+            <span className="text-[#734C1D] text-[10px] sm:text-xs uppercase font-mono tracking-[0.25em] font-semibold">
+              Kolekcja Atelier • Warszawa
+            </span>
+          </div>
           <h2 className="font-serif text-2xl sm:text-4xl text-[#0D0D0B] font-medium tracking-tight">
-            Kolekcja Warsaw Durag Store
+            Katalog <span className="italic text-[#734C1D]">Warsaw Durag Store</span>
           </h2>
         </div>
         <p className="text-xs sm:text-sm text-[#6B6D74] font-light max-w-md">
@@ -62,7 +65,7 @@ export default function HomeProductCatalog({ initialProducts }: HomeProductCatal
                   : 'bg-white text-[#0D0D0B] border-[#E5E2DC] hover:border-[#0D0D0B]'
               }`}
             >
-              {cat.label} {cat.key === 'all' ? `[${count}]` : count > 0 ? `[${count}]` : ''}
+              {cat.label} <span className="text-[10px] opacity-70 ml-1 font-mono">({count})</span>
             </button>
           );
         })}
@@ -78,7 +81,7 @@ export default function HomeProductCatalog({ initialProducts }: HomeProductCatal
       ) : (
         <div className="text-center py-16 bg-[#F6F5F2] border border-[#E5E2DC]">
           <p className="text-[#6B6D74] text-xs font-mono uppercase tracking-widest">
-            Brak modeli w wybranej kategorii.
+            Katalog modeli w trakcie aktualizacji w atelier.
           </p>
         </div>
       )}

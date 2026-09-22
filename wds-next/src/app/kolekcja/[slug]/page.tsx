@@ -145,10 +145,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       {/* Category Hero Header */}
       <section className="bg-[#0D0D0B] text-white py-16">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <span className="text-[#D9A87E] text-xs uppercase tracking-[0.3em] font-semibold block mb-3">
-            [ warsaw durag store collection ]
-          </span>
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium mb-4">
+          <div className="inline-flex items-center gap-2 mb-3">
+            <span className="w-1.5 h-1.5 bg-[#D9A87E] rounded-full inline-block animate-pulse" />
+            <span className="text-[#D9A87E] text-xs uppercase font-mono tracking-[0.3em] font-semibold">
+              Kolekcja Atelier • Warszawa
+            </span>
+          </div>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal mb-4">
             {categoryInfo.title}
           </h1>
           <p className="text-sm text-gray-300 font-light max-w-2xl mx-auto leading-relaxed">
@@ -176,7 +179,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                     : 'bg-white text-[#0D0D0B] hover:bg-[#0D0D0B] hover:text-white border border-[#0D0D0B]'
                 }`}
               >
-                [{catVal.label.toUpperCase()}] <span className="text-[10px] opacity-70">({count})</span>
+                {catVal.label.toUpperCase()} <span className="text-[10px] opacity-70">({count})</span>
               </Link>
             );
           })}
@@ -189,9 +192,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6">
         {products.length === 0 ? (
           <div className="text-center py-20 bg-[#F6F5F2] border border-[#0D0D0B] p-8">
-            <span className="font-mono text-xs text-[#734C1D] uppercase tracking-widest block mb-2">[ STATUS ]</span>
+            <span className="font-mono text-xs text-[#734C1D] uppercase tracking-widest block mb-2">Atelier Status //</span>
             <p className="font-serif text-xl text-[#0D0D0B]">Brak produktów w tej kategorii atelier.</p>
-            <p className="text-xs text-[#5A5B60] mt-1 font-light">Nowy drop w przygotowaniu.</p>
+            <p className="text-xs text-[#5A5B60] mt-1 font-light">Nowy drop w przygotowaniu w Warszawie.</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">

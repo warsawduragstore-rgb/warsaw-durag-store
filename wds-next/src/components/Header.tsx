@@ -115,15 +115,32 @@ export default function Header() {
             />
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className={`hidden lg:flex items-center gap-5 xl:gap-6 text-xs font-semibold uppercase tracking-[0.12em] ${isScrolled ? 'text-gray-200' : 'text-[#3B3C40]'}`}>
-            <Link href="/kolekcja/all" className="hover:text-[#D9A87E] transition-colors py-2">{t.navAll}</Link>
-            <Link href="/kolekcja/silk" className="hover:text-[#D9A87E] transition-colors py-2">{t.navSilk}</Link>
-            <Link href="/kolekcja/satin" className="hover:text-[#D9A87E] transition-colors py-2">{t.navSatin}</Link>
-            <Link href="/kolekcja/velvet" className="hover:text-[#D9A87E] transition-colors py-2">{t.navVelvet}</Link>
-            <Link href="/o-nas" className="hover:text-[#D9A87E] transition-colors py-2">O nas</Link>
-            <Link href="/blog" className="hover:text-[#D9A87E] transition-colors py-2">Blog</Link>
-            <Link href="/poradnik/wave-guide" className="hover:text-[#D9A87E] transition-colors py-2 text-[#D9A87E]">{t.navGuide}</Link>
+          {/* Desktop Navigation with Atelier Numbering & Serif Italic Hover */}
+          <nav className={`hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-medium tracking-[0.14em] ${isScrolled ? 'text-gray-300' : 'text-[#3B3C40]'}`}>
+            {[
+              { href: '/kolekcja/all', num: '01', label: t.navAll },
+              { href: '/kolekcja/silk', num: '02', label: t.navSilk },
+              { href: '/kolekcja/satin', num: '03', label: t.navSatin },
+              { href: '/kolekcja/velvet', num: '04', label: t.navVelvet },
+              { href: '/poradnik/wave-guide', num: '05', label: t.navGuide, highlight: true },
+              { href: '/o-nas', num: '06', label: 'Atelier' },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="group relative flex items-baseline gap-1.5 py-2 uppercase transition-all duration-300"
+              >
+                <span className="text-[9px] font-mono text-[#D9A87E]/70 group-hover:text-[#D9A87E] transition-colors">
+                  {item.num}
+                </span>
+                <span className={`transition-all duration-200 group-hover:text-[#D9A87E] group-hover:font-serif group-hover:italic ${
+                  item.highlight ? 'text-[#D9A87E] font-semibold' : ''
+                }`}>
+                  {item.label}
+                </span>
+                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#D9A87E] transition-all duration-300 group-hover:w-full" />
+              </Link>
+            ))}
           </nav>
 
           {/* Cart & Language Selector & Hamburger */}
@@ -157,7 +174,7 @@ export default function Header() {
                       }`}
                     >
                       <span>{label}</span>
-                      <span className="text-[10px] text-gray-400 font-mono">[{code}]</span>
+                      <span className="text-[10px] text-[#D9A87E] font-mono tracking-wider">{code}</span>
                     </button>
                   ))}
                 </div>
@@ -252,8 +269,11 @@ export default function Header() {
 
             {/* Promo Bar */}
             <div className="bg-[#161614] border-b border-white/10 px-5 py-2.5 flex items-center justify-between text-[11px] font-mono text-[#D9A87E]">
-              <span>[ PROMOCJA 2+1 GRATIS ]</span>
-              <span className="text-gray-400">WARSZAWA 24H</span>
+              <span className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-[#D9A87E] rounded-full inline-block animate-pulse"></span>
+                Zestaw 2+1 Gratis
+              </span>
+              <span className="text-gray-400">Atelier Warszawa</span>
             </div>
 
             {/* Scrollable Nav Content */}
@@ -276,8 +296,9 @@ export default function Header() {
 
               {/* Main Categories */}
               <div>
-                <p className="text-[10px] uppercase font-mono font-bold tracking-[0.2em] text-[#D9A87E] mb-3">
-                  [ KOLEKCJE & MATERIAŁY ]
+                <p className="text-[10px] uppercase font-mono font-semibold tracking-[0.2em] text-[#D9A87E] mb-3 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-[#D9A87E] inline-block rounded-full"></span>
+                  Kolekcje &amp; Tkaniny
                 </p>
                 <div className="space-y-1">
                   {categories.map((cat) => (
@@ -289,7 +310,7 @@ export default function Header() {
                     >
                       <span className="font-medium">{cat.label}</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-mono px-1.5 py-0.5 border border-white/10 text-[#D9A87E] font-medium">
+                        <span className="text-[9px] font-mono px-2 py-0.5 border border-white/15 text-[#D9A87E] font-medium">
                           {cat.badge}
                         </span>
                         <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-[#D9A87E] transition-colors" />
@@ -319,8 +340,9 @@ export default function Header() {
 
               {/* Information & Store links */}
               <div>
-                <p className="text-[10px] uppercase font-mono font-bold tracking-[0.2em] text-gray-400 mb-3">
-                  [ INFORMACJE & ATELIER ]
+                <p className="text-[10px] uppercase font-mono font-semibold tracking-[0.2em] text-gray-400 mb-3 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-gray-500 inline-block rounded-full"></span>
+                  Informacje &amp; Atelier
                 </p>
                 <div className="space-y-1">
                   {infoLinks.map((item) => (
@@ -338,9 +360,9 @@ export default function Header() {
 
               {/* Language Switcher in Mobile Menu */}
               <div>
-                <p className="text-[10px] uppercase font-mono font-bold tracking-[0.2em] text-[#D9A87E] mb-2 flex items-center gap-1.5">
+                <p className="text-[10px] uppercase font-mono font-semibold tracking-[0.2em] text-[#D9A87E] mb-2 flex items-center gap-1.5">
                   <Globe className="w-3.5 h-3.5 text-[#D9A87E]" />
-                  <span>[ WYBIERZ JĘZYK ]</span>
+                  <span>Wybierz Język</span>
                 </p>
                 <div className="flex flex-wrap gap-1.5 font-mono">
                   {languages.map(({ code, label }) => (
