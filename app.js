@@ -3218,6 +3218,7 @@ function initCheckoutFlow() {
       placeOrderBtn.disabled = false;
     }
   });
+  }
 }
 
 
