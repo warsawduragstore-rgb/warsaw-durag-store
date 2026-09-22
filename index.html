@@ -589,35 +589,128 @@
         <button class="cart-close-btn" id="cartCloseBtn" aria-label="Zamknij koszyk">&times;</button>
       </div>
 
-      <div class="cart-items-container" id="cartItemsContainer">
-        <!-- Dynamic Cart Items rendered via app.js -->
+      <!-- Cart Step 1: Cart Items & Totals -->
+      <div id="cartStepCart" style="display: flex; flex-direction: column; flex-grow: 1; overflow: hidden;">
+        <div class="cart-items-container" id="cartItemsContainer">
+          <!-- Dynamic Cart Items rendered via app.js -->
+        </div>
+
+        <div class="cart-footer" id="cartFooter">
+          <div class="promo-box">
+            <input type="text" id="cartPromoInput" placeholder="Kod rabatowy (np. WARSAW10)">
+            <button id="cartPromoApplyBtn" class="btn-minimal">Użyj</button>
+          </div>
+          <div id="promoStatusMsg" class="promo-status"></div>
+
+          <div class="cart-summary-row">
+            <span id="cartSubtotalLabel">Suma częściowa:</span>
+            <span id="cartSubtotal">0.00 PLN</span>
+          </div>
+          <div class="cart-summary-row discount-row" id="cartDiscountRow" style="display: none;">
+            <span id="cartDiscountLabel">Rabat (<span id="cartDiscountPercent">0</span>%):</span>
+            <span id="cartDiscountVal">-0.00 PLN</span>
+          </div>
+          <div class="cart-summary-row">
+            <span id="cartShippingLabel">Dostawa:</span>
+            <span id="cartShipping" style="color: #2E7D32; font-weight: bold;">Darmowa (EU Express)</span>
+          </div>
+          <div class="cart-summary-row total-row">
+            <span id="cartTotalLabel">Łącznie:</span>
+            <span id="cartTotal">0.00 PLN</span>
+          </div>
+
+          <button class="btn-minimal checkout-btn" id="checkoutBtn" style="width: 100%; margin-top: 16px; background-color: var(--color-primary); color: var(--color-black); font-weight: 700;">Przejdź do dostawy</button>
+        </div>
       </div>
 
-      <div class="cart-footer" id="cartFooter">
-        <div class="promo-box">
-          <input type="text" id="cartPromoInput" placeholder="Kod rabatowy (np. WARSAW10)">
-          <button id="cartPromoApplyBtn" class="btn-minimal">Użyj</button>
-        </div>
-        <div id="promoStatusMsg" class="promo-status"></div>
+      <!-- Cart Step 2: Shipping Form & Checkout -->
+      <div id="cartStepCheckout" style="display: none; flex-direction: column; flex-grow: 1; overflow: hidden;">
+        <div class="checkout-form-container" style="flex-grow: 1; overflow-y: auto; padding: 24px 30px; display: flex; flex-direction: column; gap: 16px;">
+          <button class="btn-text" id="btnBackToCart" style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; width: fit-content; background: none; border: none; cursor: pointer; color: var(--color-secondary);">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 14px; height: 14px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Powrót do koszyka
+          </button>
 
-        <div class="cart-summary-row">
-          <span id="cartSubtotalLabel">Suma częściowa:</span>
-          <span id="cartSubtotal">0.00 PLN</span>
-        </div>
-        <div class="cart-summary-row discount-row" id="cartDiscountRow" style="display: none;">
-          <span id="cartDiscountLabel">Rabat (<span id="cartDiscountPercent">0</span>%):</span>
-          <span id="cartDiscountVal">-0.00 PLN</span>
-        </div>
-        <div class="cart-summary-row">
-          <span id="cartShippingLabel">Dostawa:</span>
-          <span id="cartShipping" style="color: #2E7D32; font-weight: bold;">Darmowa (EU Express)</span>
-        </div>
-        <div class="cart-summary-row total-row">
-          <span id="cartTotalLabel">Łącznie:</span>
-          <span id="cartTotal">0.00 PLN</span>
+          <h3 style="font-family: var(--font-serif); font-size: 1.3rem; color: var(--color-primary); margin: 0;">Dane dostawy</h3>
+
+          <form id="checkoutForm" novalidate style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="form-group-minimal">
+              <label for="checkoutName" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-secondary); display: block; margin-bottom: 4px;">Imię i Nazwisko</label>
+              <input type="text" id="checkoutName" required placeholder="np. Jan Kowalski" style="width: 100%; padding: 10px 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--color-primary); outline: none;">
+            </div>
+
+            <div class="form-group-minimal">
+              <label for="checkoutEmail" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-secondary); display: block; margin-bottom: 4px;">Adres E-mail</label>
+              <input type="email" id="checkoutEmail" required placeholder="np. jan.kowalski@gmail.com" style="width: 100%; padding: 10px 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--color-primary); outline: none;">
+            </div>
+
+            <div class="form-group-minimal">
+              <label for="checkoutPhone" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-secondary); display: block; margin-bottom: 4px;">Numer telefonu (do powiadomień InPost)</label>
+              <input type="tel" id="checkoutPhone" required placeholder="np. 500600700" style="width: 100%; padding: 10px 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--color-primary); outline: none;">
+            </div>
+
+            <div style="margin-top: 6px;">
+              <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; color: var(--color-secondary); display: block; margin-bottom: 8px;">Metoda dostawy</span>
+              <div class="delivery-tabs">
+                <button type="button" class="delivery-tab-btn active" data-method="courier">
+                  <strong>Kurier WDS</strong>
+                  <span>1-2 dni • Gratis</span>
+                </button>
+                <button type="button" class="delivery-tab-btn" data-method="paczkomat">
+                  <strong>Paczkomat InPost</strong>
+                  <span>1-2 dni • Gratis</span>
+                </button>
+              </div>
+            </div>
+
+            <div id="inpostSelectionContainer" style="display: none; border: 1px solid var(--border-color); padding: 14px; background-color: var(--bg-secondary); margin-top: 6px; flex-direction: column; gap: 10px;">
+              <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; color: var(--color-secondary);">Wyszukaj Paczkomat</span>
+
+              <div class="inpost-search-box">
+                <input type="text" id="inpostSearchInput" placeholder="Miasto, ulica lub kod (np. Mokotowska)">
+                <button type="button" id="inpostSearchBtn">Szukaj</button>
+              </div>
+
+              <div id="selectedPaczkomatCard" style="display: none; border: 1px solid #2E7D32; background-color: rgba(46, 125, 50, 0.05); padding: 12px; position: relative;">
+                <div style="display: flex; gap: 10px; align-items: flex-start;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#2E7D32" style="width: 20px; height: 20px; flex-shrink: 0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <div>
+                    <h5 style="color: #2E7D32; font-size: 0.85rem; font-weight: 600; margin: 0 0 4px 0;" id="paczkomatCardCode">WAW15A</h5>
+                    <p style="font-size: 0.8rem; margin: 0 0 2px 0; color: var(--color-primary);" id="paczkomatCardAddress">Mokotowska 42, Warszawa</p>
+                    <p style="font-size: 0.75rem; color: var(--color-secondary); font-weight: 300; margin: 0;" id="paczkomatCardDesc">Obok Żabki</p>
+                  </div>
+                </div>
+                <button type="button" id="btnChangePaczkomat" style="position: absolute; top: 10px; right: 12px; background: none; border: none; font-size: 0.75rem; text-decoration: underline; color: var(--color-secondary); cursor: pointer;">Zmień</button>
+              </div>
+
+              <div id="inpostResultsList" style="max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+            </div>
+
+            <div id="checkoutErrorMsg" style="color: #D32F2F; font-size: 0.8rem; min-height: 16px;"></div>
+          </form>
         </div>
 
-        <button class="btn-minimal checkout-btn" id="checkoutBtn" style="width: 100%; margin-top: 16px; background-color: var(--color-primary); color: var(--color-black);">Przejdź do dostawy</button>
+        <div class="cart-footer">
+          <div class="cart-summary" style="margin-bottom: 12px;">
+            <div class="cart-summary-row" style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <span>Suma zakupów:</span>
+              <span id="checkoutSubtotal">0.00 PLN</span>
+            </div>
+            <div class="cart-summary-row" id="checkoutDiscountRow" style="display: none; justify-content: space-between; font-size: 0.85rem; color: #D9A87E;">
+              <span>Rabat:</span>
+              <span id="checkoutDiscountVal">-0.00 PLN</span>
+            </div>
+            <div class="cart-summary-row" style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <span>Dostawa:</span>
+              <span style="color: #2E7D32; font-weight: 600;">Darmowa</span>
+            </div>
+            <div class="cart-summary-row total" style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-color);">
+              <span>Razem do zapłaty:</span>
+              <span id="checkoutTotal">0.00 PLN</span>
+            </div>
+          </div>
+          <button class="btn-minimal checkout-btn" id="placeOrderBtn" style="width: 100%; background-color: var(--color-primary); color: var(--color-black); font-weight: bold; padding: 14px;">Kupuję i płacę</button>
+        </div>
       </div>
     </div>
   </div>

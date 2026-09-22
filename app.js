@@ -1813,22 +1813,26 @@ function handleCheckoutProcess() {
   const cartStepCheckout = document.getElementById('cartStepCheckout');
   
   // Hide Cart View, Show Checkout View
-  cartStepCart.style.display = 'none';
-  cartStepCheckout.style.display = 'flex';
+  if (cartStepCart) cartStepCart.style.display = 'none';
+  if (cartStepCheckout) cartStepCheckout.style.display = 'flex';
   
   // Update Checkout Invoice Summaries
   const totals = calculateTotals();
-  document.getElementById('checkoutSubtotal').textContent = totals.subtotal.toFixed(2) + ' PLN';
+  const subtotalEl = document.getElementById('checkoutSubtotal');
+  if (subtotalEl) subtotalEl.textContent = totals.subtotal.toFixed(2) + ' PLN';
   
   const checkoutDiscountRow = document.getElementById('checkoutDiscountRow');
   const checkoutDiscountVal = document.getElementById('checkoutDiscountVal');
-  if (totals.discount > 0) {
-    checkoutDiscountRow.style.display = 'flex';
-    checkoutDiscountVal.textContent = '-' + totals.discount.toFixed(2) + ' PLN';
-  } else {
-    checkoutDiscountRow.style.display = 'none';
+  if (checkoutDiscountRow && checkoutDiscountVal) {
+    if (totals.discount > 0) {
+      checkoutDiscountRow.style.display = 'flex';
+      checkoutDiscountVal.textContent = '-' + totals.discount.toFixed(2) + ' PLN';
+    } else {
+      checkoutDiscountRow.style.display = 'none';
+    }
   }
-  document.getElementById('checkoutTotal').textContent = totals.total.toFixed(2) + ' PLN';
+  const totalEl = document.getElementById('checkoutTotal');
+  if (totalEl) totalEl.textContent = totals.total.toFixed(2) + ' PLN';
 }
 
 // ========================================================================
@@ -2831,10 +2835,12 @@ function initCheckoutFlow() {
   if (!checkoutBtn) return;
 
   // Toggle Back from Checkout to Cart
-  btnBackToCart.addEventListener('click', () => {
-    cartStepCheckout.style.display = 'none';
-    cartStepCart.style.display = 'flex';
-  });
+  if (btnBackToCart) {
+    btnBackToCart.addEventListener('click', () => {
+      if (cartStepCheckout) cartStepCheckout.style.display = 'none';
+      if (cartStepCart) cartStepCart.style.display = 'flex';
+    });
+  }
 
   // Delivery Method Selection Buttons
   deliveryTabBtns.forEach(btn => {
@@ -2898,13 +2904,15 @@ function initCheckoutFlow() {
     }
   };
 
-  inpostSearchBtn.addEventListener('click', performInPostSearch);
-  inpostSearchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      performInPostSearch();
-    }
-  });
+  if (inpostSearchBtn) inpostSearchBtn.addEventListener('click', performInPostSearch);
+  if (inpostSearchInput) {
+    inpostSearchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        performInPostSearch();
+      }
+    });
+  }
 
   // Render search results
   function renderPaczkomatyResults(lockers) {
@@ -2941,20 +2949,23 @@ function initCheckoutFlow() {
   }
 
   // Change Paczkomat
-  btnChangePaczkomat.addEventListener('click', () => {
-    selectedPaczkomat = null;
-    selectedPaczkomatCard.style.display = 'none';
-    inpostResultsList.style.display = 'flex';
-    inpostSearchInput.style.display = 'block';
-    inpostSearchBtn.style.display = 'block';
-    inpostSearchInput.value = '';
-    renderPaczkomatyResults(fallbackLockers);
-  });
+  if (btnChangePaczkomat) {
+    btnChangePaczkomat.addEventListener('click', () => {
+      selectedPaczkomat = null;
+      if (selectedPaczkomatCard) selectedPaczkomatCard.style.display = 'none';
+      if (inpostResultsList) inpostResultsList.style.display = 'flex';
+      if (inpostSearchInput) inpostSearchInput.style.display = 'block';
+      if (inpostSearchBtn) inpostSearchBtn.style.display = 'block';
+      if (inpostSearchInput) inpostSearchInput.value = '';
+      renderPaczkomatyResults(fallbackLockers);
+    });
+  }
 
   // Place Order Action Validation — zapisuje do Supabase i wysyła maile
-  placeOrderBtn.addEventListener('click', async (e) => {
-    e.preventDefault();
-    checkoutErrorMsg.textContent = '';
+  if (placeOrderBtn) {
+    placeOrderBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      if (checkoutErrorMsg) checkoutErrorMsg.textContent = '';
     
     const nameVal = checkoutName.value.trim();
     const emailVal = checkoutEmail.value.trim();
