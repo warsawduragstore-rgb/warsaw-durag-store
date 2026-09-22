@@ -66,7 +66,7 @@ export default function Header() {
   ];
 
   const categories = [
-    { href: '/kolekcja/all', label: t.navAll || 'Wszystkie Duragi', badge: '31 modeli' },
+    { href: '/produkty', label: 'Pełny Katalog', badge: 'Wszystkie' },
     { href: '/kolekcja/silk', label: t.navSilk || 'Jedwab Morwowy', badge: '19 Momme' },
     { href: '/kolekcja/satin', label: t.navSatin || 'Satyna Premium', badge: 'Bestseller' },
     { href: '/kolekcja/velvet', label: t.navVelvet || 'Welur Luksusowy', badge: 'Ciepły & Mięsisty' },
@@ -79,7 +79,7 @@ export default function Header() {
     { href: '/blog', label: 'Blog & Kompendium' },
     { href: '/poradnik/wave-guide', label: 'Poradnik 360 Waves' },
     { href: '/strona/kontakt', label: 'Kontakt & Odbiór w Warszawie' },
-    { href: '/strona/dostawa-i-zwroty', label: 'Wysyłka i Zwroty 14 dni' },
+    { href: '/zwroty', label: 'Wysyłka i Zwroty 14 dni' },
   ];
 
   return (

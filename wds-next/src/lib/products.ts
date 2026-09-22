@@ -38,6 +38,7 @@ export interface Product {
   reviews?: ProductReview[];
   stock?: number;
   isFeatured?: boolean;
+  promoEligible?: boolean;
   createdAt?: string;
   updatedAt?: string;
   visible?: boolean;

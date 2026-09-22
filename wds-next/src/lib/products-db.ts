@@ -133,6 +133,9 @@ export function normalizeProduct(row: Record<string, unknown>): Product {
     reviews,
     stock: row.stock !== undefined ? Number(row.stock) : (fallback?.stock ?? 10),
     isFeatured,
+    promoEligible: row.promo_eligible !== undefined
+      ? Boolean(row.promo_eligible)
+      : (fallback?.promoEligible ?? (((row.category as string) || fallback?.category) !== 'accessories')),
     createdAt: (row.created_at as string) || fallback?.createdAt || new Date().toISOString(),
     updatedAt: (row.updated_at as string) || undefined,
     visible: row.visible !== undefined ? Boolean(row.visible) : true,
@@ -359,3 +362,12 @@ export async function seedProductsIfEmpty(): Promise<{ seeded: boolean; count: n
     };
   }
 }
+
+/**
+ * Fetch a single product by its numeric ID
+ */
+export async function fetchProductById(id: number): Promise<Product | undefined> {
+  const all = await fetchProducts();
+  return all.find((p) => p.id === id);
+}
+

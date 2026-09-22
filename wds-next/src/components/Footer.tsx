@@ -27,6 +27,7 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#D9A87E] mb-4">{t.footerShop}</h4>
             <ul className="space-y-2.5 text-xs text-[#CFCFCF] font-light">
+              <li><Link href="/produkty" className="hover:text-white font-medium text-white transition-colors">Pełny Katalog Duragów</Link></li>
               <li><Link href="/kolekcja/silk" className="hover:text-white transition-colors">{t.navSilk}</Link></li>
               <li><Link href="/kolekcja/satin" className="hover:text-white transition-colors">{t.navSatin}</Link></li>
               <li><Link href="/kolekcja/velvet" className="hover:text-white transition-colors">{t.navVelvet}</Link></li>
@@ -43,7 +44,7 @@ export default function Footer() {
               <li><Link href="/blog" className="hover:text-white transition-colors">Blog &amp; Kompendium</Link></li>
               <li><Link href="/strona/kontakt" className="hover:text-white transition-colors">Kontakt &amp; Odbiór Osobisty</Link></li>
               <li><Link href="/poradnik/wave-guide" className="hover:text-white transition-colors text-[#D9A87E]">{t.navGuide}</Link></li>
-              <li><Link href="/strona/dostawa-i-zwroty" className="hover:text-white transition-colors">Dostawa i Zwroty</Link></li>
+              <li><Link href="/zwroty" className="hover:text-white transition-colors">Zwroty i Reklamacje (14 dni)</Link></li>
             </ul>
           </div>
 
@@ -67,12 +68,14 @@ export default function Footer() {
           <div>
             &copy; 2026 Warsaw Durag Store. {t.footerRights}
           </div>
-          <div className="flex gap-6 text-gray-400">
+          <div className="flex flex-wrap gap-6 text-gray-400">
+            <Link href="/produkty" className="hover:text-white transition-colors">Katalog</Link>
             <Link href="/o-nas" className="hover:text-white transition-colors">O nas</Link>
             <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
             <Link href="/strona/kontakt" className="hover:text-white transition-colors">Kontakt</Link>
-            <Link href="/strona/regulamin" className="hover:text-white transition-colors">Regulamin</Link>
-            <Link href="/strona/polityka-prywatnosci" className="hover:text-white transition-colors">Polityka Prywatności</Link>
+            <Link href="/regulamin" className="hover:text-white transition-colors">Regulamin</Link>
+            <Link href="/polityka-prywatnosci" className="hover:text-white transition-colors">Polityka Prywatności</Link>
+            <Link href="/zwroty" className="hover:text-white transition-colors">Zwroty</Link>
           </div>
         </div>
 

@@ -7,12 +7,19 @@ import { SITE_URL } from '@/lib/siteConfig';
 import ProductDetailsClient from '@/components/ProductDetailsClient';
 import ProductCard from '@/components/ProductCard';
 
-export const revalidate = 60; // ISR cache 60s
+export const revalidate = 3600; // ISR cache 1h
 
 interface ProductPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+export async function generateStaticParams() {
+  const products = await fetchProducts();
+  return products.map((product) => ({
+    slug: product.slug,
+  }));
 }
 
 

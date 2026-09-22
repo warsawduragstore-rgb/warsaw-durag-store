@@ -320,9 +320,10 @@ export interface SupabaseOrder {
   customer_name: string;
   customer_email: string;
   customer_phone: string;
-  delivery_method: 'paczkomat' | 'courier';
+  delivery_method: 'paczkomat' | 'courier' | 'pickup';
   locker_code?: string | null;
   locker_address?: string | null;
+  point_id?: string | null;
   items: any[];
   items_summary?: string;
   subtotal: number;
@@ -337,7 +338,7 @@ export interface SupabaseOrder {
 }
 
 export async function createOrderInSupabase(order: Omit<SupabaseOrder, 'id' | 'created_at'>): Promise<{ success: boolean; orderNo?: string; error?: string }> {
-  const client = getSupabaseBrowserClient();
+  const client = getSupabaseServerClient() || getSupabaseBrowserClient();
   if (!client) {
     return { success: true, orderNo: order.order_no }; // Offline/fallback simulation
   }

@@ -7,12 +7,18 @@ import TrustBanner from '@/components/TrustBanner';
 import { fetchProducts } from '@/lib/products-db';
 import { SITE_URL } from '@/lib/siteConfig';
 
-export const revalidate = 60; // ISR cache 60s
+export const revalidate = 3600; // ISR cache 1h
 
 interface CategoryPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+export function generateStaticParams() {
+  return ['all', 'silk', 'satin', 'velvet', 'seasonal', 'accessories'].map((slug) => ({
+    slug,
+  }));
 }
 
 const CATEGORY_NAMES: Record<string, { title: string; desc: string; label: string }> = {

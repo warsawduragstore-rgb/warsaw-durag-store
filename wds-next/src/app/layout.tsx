@@ -1,11 +1,27 @@
 import type { Metadata } from 'next';
+import { Cormorant_Garamond, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
+import CookieBanner from '@/components/CookieBanner';
 import { SITE_URL } from '@/lib/siteConfig';
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '600'],
+  variable: '--font-cormorant',
+  display: 'swap',
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin', 'latin-ext'],
+  weight: ['400', '500', '700'],
+  variable: '--font-jakarta',
+  display: 'swap',
+});
 
 const isProduction = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
 
@@ -143,20 +159,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl">
+    <html lang="pl" className={`${cormorant.variable} ${jakarta.variable}`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
         />
       </head>
-      <body className="bg-white text-[#0D0D0B] font-sans antialiased selection:bg-[#734C1D] selection:text-white">
+      <body className="bg-white text-[#0D0D0B] font-sans antialiased selection:bg-[#D9A87E] selection:text-black">
         <LanguageProvider>
           <CartProvider>
             <Header />
             <CartDrawer />
             <main className="min-h-screen">{children}</main>
             <Footer />
+            <CookieBanner />
           </CartProvider>
         </LanguageProvider>
       </body>

@@ -1,544 +1,238 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { X, Trash2, Plus, Minus, CheckCircle2, Package, Truck, ArrowRight, Loader2 } from 'lucide-react';
-import InPostPicker, { InPostPoint } from './InPostPicker';
+import { X, Trash2, Plus, Minus, ArrowRight, ShoppingBag, Sparkles, Check } from 'lucide-react';
 
 export default function CartDrawer() {
   const { t } = useLanguage();
   const {
     cart,
+    cartCount,
     isCartOpen,
     setIsCartOpen,
     removeFromCart,
     updateQuantity,
     subtotal,
     promoDiscount,
-    promoRate,
-    appliedPromoCode,
-    applyPromoCode,
+    freeItemsCount,
+    freeItemsDiscount,
     total,
-    clearCart,
+    appliedPromoCode,
   } = useCart();
-
-  const [promoInput, setPromoInput] = useState('');
-  const [promoError, setPromoError] = useState('');
-  const [isApplyingPromo, setIsApplyingPromo] = useState(false);
-
-  // Checkout form state
-  const [deliveryMethod, setDeliveryMethod] = useState<'paczkomat' | 'courier'>('paczkomat');
-  const [selectedInpost, setSelectedInpost] = useState<InPostPoint | null>(null);
-  const [customerName, setCustomerName] = useState('');
-  const [customerEmail, setCustomerEmail] = useState('');
-  const [customerPhone, setCustomerPhone] = useState('');
-
-  // Courier fields
-  const [courierStreet, setCourierStreet] = useState('');
-  const [courierCity, setCourierCity] = useState('');
-  const [courierPostCode, setCourierPostCode] = useState('');
-
-  // Submission state
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-  const [placedOrderNo, setPlacedOrderNo] = useState<string | null>(null);
-  const [placedOrderDetails, setPlacedOrderDetails] = useState<{
-    method: 'paczkomat' | 'courier';
-    pointName?: string;
-    address?: string;
-    total: number;
-  } | null>(null);
 
   if (!isCartOpen) return null;
 
-  const handleApplyPromo = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setPromoError('');
-    if (!promoInput.trim()) return;
-
-    setIsApplyingPromo(true);
-    const ok = await applyPromoCode(promoInput);
-    setIsApplyingPromo(false);
-
-    if (ok) {
-      setPromoInput('');
-    } else {
-      setPromoError('Nieprawidłowy lub nieaktywny kod rabatowy.');
-    }
-  };
-
-  const handleCheckoutSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormError(null);
-
-    // Validations
-    if (!customerName.trim() || !customerEmail.trim() || !customerPhone.trim()) {
-      setFormError('Wypełnij imię, adres e-mail oraz numer telefonu.');
-      return;
-    }
-
-    if (deliveryMethod === 'paczkomat' && !selectedInpost) {
-      setFormError('Wybierz Paczkomat InPost, do którego mamy dostarczyć zamówienie.');
-      return;
-    }
-
-    if (deliveryMethod === 'courier' && (!courierStreet.trim() || !courierCity.trim() || !courierPostCode.trim())) {
-      setFormError('Wypełnij pełny adres do wysyłki kurierem (ulica, kod pocztowy, miasto).');
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    const lockerAddress = selectedInpost
-      ? `${selectedInpost.street} ${selectedInpost.buildingNumber}, ${selectedInpost.postCode} ${selectedInpost.city}`
-      : `${courierStreet}, ${courierPostCode} ${courierCity}`;
-
-    try {
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          customerName: customerName.trim(),
-          customerEmail: customerEmail.trim(),
-          customerPhone: customerPhone.trim(),
-          deliveryMethod,
-          lockerCode: deliveryMethod === 'paczkomat' ? selectedInpost?.name : null,
-          lockerAddress,
-          items: cart.map((i) => ({
-            id: i.product.id,
-            name: i.product.name,
-            price: i.product.price,
-            quantity: i.quantity,
-            category: i.product.category,
-            material: i.product.material,
-            image: i.product.images[0],
-          })),
-          subtotal,
-          discountCode: appliedPromoCode || null,
-          discountPct: promoRate ? promoRate * 100 : 0,
-          discountVal: promoDiscount,
-          total,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Wystąpił błąd podczas inicjalizacji płatności Stripe.');
-      }
-
-      if (data.url) {
-        // Redirect to Stripe Checkout Session
-        window.location.href = data.url;
-      } else {
-        throw new Error('Brak adresu przekierowania płatności.');
-      }
-    } catch (err: any) {
-      setIsSubmitting(false);
-      setFormError(err.message || 'Wystąpił błąd przy składaniu zamówienia. Spróbuj ponownie.');
-    }
-  };
-
-  const handleCloseSuccess = () => {
-    setPlacedOrderNo(null);
-    setPlacedOrderDetails(null);
-    setIsCartOpen(false);
-  };
+  // Calculate progress towards next free durag in "Kup 2, trzeci gratis" promo
+  const eligibleCount = cart.filter((i) => i.promoEligible).reduce((s, i) => s + i.quantity, 0);
+  const neededForNextFree = 3 - (eligibleCount % 3);
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-[100] flex justify-end">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={() => setIsCartOpen(false)}
       />
 
-      {/* Drawer Container */}
-      <div className="relative w-full max-w-lg bg-white h-full shadow-2xl flex flex-col z-10 animate-slide-left border-l border-[#CFCFCF]/50">
-        
+      {/* Drawer Panel */}
+      <div className="relative w-full max-w-md bg-[#0D0D0B] text-[#F7F5F2] shadow-2xl flex flex-col h-full z-10 border-l border-[#262624]">
         {/* Header */}
-        <div className="px-6 py-5 border-b border-[#0D0D0B] flex items-center justify-between bg-[#F6F5F2]">
-          <div className="flex items-center gap-2.5">
-            <span className="text-[10px] font-mono tracking-widest uppercase bg-[#0D0D0B] text-white px-2 py-0.5">
-              ATELIER WDS
-            </span>
-            <h2 className="font-mono text-sm tracking-wider uppercase font-semibold text-[#0D0D0B]">
-              {t.cartTitle} [{cart.length}]
+        <div className="p-5 border-b border-[#262624] flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <ShoppingBag className="w-5 h-5 text-[#D9A87E]" />
+            <h2 className="font-serif text-xl tracking-wide uppercase font-semibold text-white">
+              Twój Koszyk <span className="text-[#D9A87E] text-base">({cartCount})</span>
             </h2>
           </div>
           <button
             onClick={() => setIsCartOpen(false)}
-            className="p-1.5 text-[#0D0D0B] hover:bg-[#0D0D0B] hover:text-white transition-colors"
+            className="p-2 text-gray-400 hover:text-white rounded-full hover:bg-white/10 transition-colors"
             aria-label="Zamknij koszyk"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Success View */}
-        {placedOrderNo ? (
-          <div className="flex-grow p-8 flex flex-col items-center justify-center text-center bg-[#F6F5F2] space-y-6 overflow-y-auto">
-            <div className="w-14 h-14 border-2 border-[#0D0D0B] text-[#0D0D0B] flex items-center justify-center">
-              <CheckCircle2 className="w-7 h-7" />
-            </div>
-
-            <div>
-              <span className="text-[11px] uppercase tracking-[0.25em] font-mono text-[#734C1D] font-bold block mb-1">
-                [ ZAMÓWIENIE PRZYJĘTE ]
+        {/* BOGO Promo Banner */}
+        <div className="bg-[#171715] px-5 py-3 border-b border-[#262624]">
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#D9A87E]">
+            <Sparkles className="w-4 h-4 shrink-0 text-[#D9A87E]" />
+            <span>Promocja: Kup 2, trzeci durag GRATIS</span>
+          </div>
+          <p className="text-xs text-gray-400 mt-1">
+            {freeItemsCount > 0 ? (
+              <span className="text-emerald-400 font-medium flex items-center gap-1.5 mt-0.5">
+                <Check className="w-3.5 h-3.5" /> Naliczono {freeItemsCount}x darmowy durag w koszyku!
               </span>
-              <h3 className="font-serif text-3xl text-[#0D0D0B] tracking-tight">
-                Dziękujemy za zaufanie.
-              </h3>
-              <p className="text-xs text-[#5A5B60] mt-2 max-w-sm mx-auto font-light leading-relaxed">
-                Zamówienie zostało zarejestrowane w naszym warszawskim atelier i trafiło do realizacji.
+            ) : neededForNextFree === 3 ? (
+              'Dodaj 3 duragi do koszyka, a najtańszy otrzymasz automatycznie za 0 zł.'
+            ) : neededForNextFree === 1 ? (
+              'Dodaj jeszcze tylko 1 durag, aby odebrać go całkowicie GRATIS!'
+            ) : (
+              'Dodaj jeszcze 2 duragi, aby 3. otrzymać GRATIS!'
+            )}
+          </p>
+        </div>
+
+        {/* Items List */}
+        <div className="flex-1 overflow-y-auto p-5 space-y-4 divide-y divide-[#262624]/60">
+          {cart.length === 0 ? (
+            <div className="h-full flex flex-col items-center justify-center text-center py-16 text-gray-400 space-y-4">
+              <ShoppingBag className="w-12 h-12 stroke-[1.2] text-gray-600" />
+              <p className="font-serif text-lg text-gray-300">Twój koszyk jest pusty</p>
+              <p className="text-xs text-gray-500 max-w-xs">
+                Odkryj naszą kolekcję ręcznie szytych duragów z jedwabiu morwowego, satyny i aksamitu.
               </p>
+              <Link
+                href="/produkty"
+                onClick={() => setIsCartOpen(false)}
+                className="mt-2 inline-flex items-center gap-2 px-6 py-2.5 bg-[#D9A87E] text-black font-semibold text-xs uppercase tracking-wider rounded-lg hover:bg-[#e4b58e] transition-colors"
+              >
+                Przejdź do kolekcji <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
-
-            {/* Order Confirmation Card */}
-            <div className="w-full bg-white border border-[#0D0D0B] p-5 text-left space-y-3">
-              <div className="flex justify-between items-center border-b border-[#E5E5E0] pb-2.5">
-                <span className="text-xs uppercase tracking-wider text-[#5A5B60]">ID ZAMÓWIENIA:</span>
-                <span className="font-mono text-xs font-bold text-[#0D0D0B] bg-[#F6F5F2] px-2 py-1 border border-[#0D0D0B]">
-                  {placedOrderNo}
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-[#5A5B60] uppercase tracking-wider">DOSTAWA:</span>
-                <span className="font-mono text-xs font-semibold text-[#0D0D0B]">
-                  {placedOrderDetails?.method === 'paczkomat' ? (
-                    `PACZKOMAT INPOST (${placedOrderDetails.pointName})`
-                  ) : (
-                    `KURIER POD ADRES`
-                  )}
-                </span>
-              </div>
-
-              {placedOrderDetails?.address && (
-                <div className="text-[11px] text-[#5A5B60] pt-2 border-t border-[#E5E5E0]">
-                  <strong className="text-[#0D0D0B] font-mono uppercase tracking-wider">ADRES:</strong> {placedOrderDetails.address}
+          ) : (
+            cart.map((item, idx) => (
+              <div key={`${item.product.id}-${item.variant || ''}-${idx}`} className="pt-4 first:pt-0 flex gap-4">
+                {/* Thumbnail */}
+                <div className="relative w-20 h-20 bg-[#171715] rounded-lg overflow-hidden shrink-0 border border-[#262624]">
+                  <Image
+                    src={item.product.images?.[0] || '/assets/durag_silk_black.webp'}
+                    alt={item.product.name}
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                  />
                 </div>
-              )}
 
-              <div className="flex justify-between items-center pt-2.5 border-t border-[#0D0D0B] text-xs font-bold text-[#0D0D0B]">
-                <span className="uppercase tracking-wider">ŁĄCZNIE:</span>
-                <span className="font-mono">{placedOrderDetails?.total.toFixed(2)} PLN (DOSTAWA 0 ZŁ)</span>
-              </div>
-            </div>
-
-            <p className="text-[11px] font-mono text-[#5A5B60]">
-              Potwierdzenie i numer przesyłki wyślemy na Twój e-mail.
-            </p>
-
-            <button
-              onClick={handleCloseSuccess}
-              className="w-full bg-[#0D0D0B] text-white py-4 text-xs uppercase tracking-[0.2em] font-mono font-semibold hover:bg-[#734C1D] transition-colors"
-            >
-              [ POWRÓT DO SKLEPU ]
-            </button>
-          </div>
-        ) : cart.length === 0 ? (
-          /* Empty Cart View */
-          <div className="flex-grow p-8 flex flex-col items-center justify-center text-center bg-[#FAF9F7]">
-            <div className="w-14 h-14 border border-[#0D0D0B] flex items-center justify-center text-[#0D0D0B] mb-5">
-              <Package className="w-6 h-6" />
-            </div>
-            <p className="text-[#0D0D0B] font-serif text-xl mb-2">Twój koszyk jest pusty</p>
-            <p className="text-xs text-[#5A5B60] font-light mb-6">Dodaj produkty z atelier, aby skompletować zamówienie.</p>
-            <button
-              onClick={() => setIsCartOpen(false)}
-              className="bg-[#0D0D0B] text-white px-8 py-3.5 text-xs uppercase tracking-[0.2em] font-mono font-semibold hover:bg-[#734C1D] transition-colors"
-            >
-              [ PRZEGLĄDAJ OFERTĘ ]
-            </button>
-          </div>
-        ) : (
-          /* Active Cart & Checkout View */
-          <div className="flex-grow overflow-y-auto flex flex-col justify-between">
-            
-            {/* 1. Item List */}
-            <div className="p-6 space-y-4 divide-y divide-[#E5E5E0]">
-              <div className="text-xs uppercase tracking-[0.2em] font-mono font-bold text-[#0D0D0B] pb-2 flex justify-between items-center">
-                <span>[ ZAWARTOŚĆ KOSZYKA ]</span>
-                <span className="text-[#5A5B60]">{cart.reduce((sum, i) => sum + i.quantity, 0)} SZT.</span>
-              </div>
-
-              {cart.map((item) => (
-                <div key={item.product.id} className="flex gap-4 pt-4">
-                  <div className="relative w-16 h-16 bg-[#F6F5F2] shrink-0 border border-[#0D0D0B] overflow-hidden">
-                    <Image
-                      src={item.product.images[0] || '/assets/durag_silk_black.png'}
-                      alt={item.product.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-
-                  <div className="flex-grow">
-                    <div className="flex justify-between items-start">
-                      <h4 className="font-serif text-sm text-[#0D0D0B] font-medium leading-snug">
+                {/* Details */}
+                <div className="flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start gap-2">
+                      <Link
+                        href={`/produkt/${item.product.slug}`}
+                        onClick={() => setIsCartOpen(false)}
+                        className="font-serif text-sm font-medium text-white hover:text-[#D9A87E] transition-colors line-clamp-1"
+                      >
                         {item.product.name}
-                      </h4>
+                      </Link>
                       <button
-                        onClick={() => removeFromCart(item.product.id)}
-                        className="text-[#8C8D94] hover:text-[#0D0D0B] transition-colors p-1"
+                        onClick={() => removeFromCart(item.product.id, item.variant)}
+                        className="text-gray-500 hover:text-red-400 p-1 transition-colors"
                         title="Usuń z koszyka"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
 
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#734C1D] block mt-0.5">
-                      {item.product.material}
-                    </span>
+                    {item.variant && (
+                      <p className="text-[11px] text-gray-400 mt-0.5">Wariant: {item.variant}</p>
+                    )}
+                    <p className="text-[11px] text-[#D9A87E]/90 mt-0.5">{item.product.material}</p>
+                  </div>
 
-                    <div className="flex items-center justify-between mt-2.5">
-                      <div className="flex items-center border border-[#0D0D0B] bg-white">
-                        <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                          className="px-2 py-1 text-[#0D0D0B] hover:bg-black hover:text-white transition-colors"
-                          aria-label="Zmniejsz ilość"
-                        >
-                          <Minus className="w-2.5 h-2.5" />
-                        </button>
-                        <span className="px-2.5 text-xs font-mono font-bold text-[#0D0D0B]">{item.quantity}</span>
-                        <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                          className="px-2 py-1 text-[#0D0D0B] hover:bg-black hover:text-white transition-colors"
-                          aria-label="Zwiększ ilość"
-                        >
-                          <Plus className="w-2.5 h-2.5" />
-                        </button>
-                      </div>
+                  <div className="flex items-center justify-between mt-3">
+                    {/* Quantity Selector */}
+                    <div className="flex items-center border border-[#262624] rounded-md bg-[#171715]">
+                      <button
+                        onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.variant)}
+                        className="p-1.5 text-gray-400 hover:text-white transition-colors"
+                        aria-label="Zmniejsz ilość"
+                      >
+                        <Minus className="w-3 h-3" />
+                      </button>
+                      <span className="px-2 text-xs font-mono font-medium text-white min-w-[24px] text-center">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.variant)}
+                        className="p-1.5 text-gray-400 hover:text-white transition-colors"
+                        aria-label="Zwiększ ilość"
+                      >
+                        <Plus className="w-3 h-3" />
+                      </button>
+                    </div>
 
-                      <span className="text-xs font-mono font-bold text-[#0D0D0B]">
-                        {(item.product.price * item.quantity).toFixed(2)} PLN
+                    {/* Unit Price */}
+                    <div className="text-right">
+                      <span className="font-mono text-sm font-semibold text-white">
+                        {(item.unitPrice * item.quantity).toFixed(2)} zł
                       </span>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-
-            {/* 2. Promo Code, Summary & Checkout Form */}
-            <div className="p-6 border-t border-[#0D0D0B] bg-[#F6F5F2] space-y-4">
-              
-              {/* Promo Code Input */}
-              <form onSubmit={handleApplyPromo} className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="KOD RABATOWY (NP. WARSAW10)"
-                  value={promoInput}
-                  onChange={(e) => setPromoInput(e.target.value)}
-                  className="flex-grow px-3 py-2 text-xs font-mono bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D] uppercase tracking-wider"
-                />
-                <button
-                  type="submit"
-                  disabled={isApplyingPromo}
-                  className="bg-[#0D0D0B] text-white px-4 py-2 text-xs uppercase tracking-[0.15em] font-mono font-semibold hover:bg-[#734C1D] transition-colors disabled:opacity-50"
-                >
-                  {isApplyingPromo ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : '[ ZASTOSUJ ]'}
-                </button>
-              </form>
-
-              {appliedPromoCode && (
-                <div className="text-[11px] font-mono text-[#0D0D0B] bg-white border border-[#0D0D0B] px-3 py-2 flex items-center justify-between font-semibold">
-                  <span>KOD: <strong>{appliedPromoCode}</strong></span>
-                  <span>-{promoDiscount.toFixed(2)} PLN ({((promoRate || 0.1) * 100).toFixed(0)}%)</span>
-                </div>
-              )}
-              {promoError && (
-                <div className="text-[11px] font-mono text-[#B53838] border border-[#B53838] bg-white p-2">{promoError}</div>
-              )}
-
-              {/* Subtotals */}
-              <div className="space-y-1.5 text-xs font-mono text-[#5A5B60] pt-1">
-                <div className="flex justify-between">
-                  <span className="uppercase">Wartość produktów:</span>
-                  <span className="text-[#0D0D0B] font-bold">{subtotal.toFixed(2)} PLN</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="uppercase">Dostawa:</span>
-                  <span className="text-[#0D0D0B] font-bold">0.00 PLN (GRATIS)</span>
-                </div>
-                {promoDiscount > 0 && (
-                  <div className="flex justify-between text-[#734C1D]">
-                    <span className="uppercase">Rabat:</span>
-                    <span>-{promoDiscount.toFixed(2)} PLN</span>
-                  </div>
-                )}
-                <div className="flex justify-between text-sm font-bold text-[#0D0D0B] pt-2 border-t border-[#0D0D0B]">
-                  <span className="uppercase">Do zapłaty:</span>
-                  <span>{total.toFixed(2)} PLN</span>
                 </div>
               </div>
+            ))
+          )}
+        </div>
 
-              {/* 3. Checkout Details & Delivery */}
-              <form onSubmit={handleCheckoutSubmit} className="space-y-3 pt-3 border-t border-[#0D0D0B]">
-                <div className="text-xs uppercase tracking-[0.2em] font-mono font-bold text-[#0D0D0B]">
-                  [ DANE DOSTAWY I PŁATNOŚCI ]
-                </div>
+        {/* Footer / Summary */}
+        {cart.length > 0 && (
+          <div className="p-5 bg-[#171715] border-t border-[#262624] space-y-3">
+            {/* Subtotal */}
+            <div className="flex justify-between text-xs text-gray-400">
+              <span>Wartość produktów:</span>
+              <span className="font-mono text-white">{subtotal.toFixed(2)} zł</span>
+            </div>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    placeholder="Imię i Nazwisko *"
-                    required
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D]"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Telefon (SMS InPost) *"
-                    required
-                    value={customerPhone}
-                    onChange={(e) => setCustomerPhone(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D]"
-                  />
-                </div>
+            {/* Free items discount */}
+            {freeItemsDiscount > 0 && (
+              <div className="flex justify-between text-xs text-emerald-400">
+                <span className="flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" /> Rabat "Kup 2, 3 gratis":
+                </span>
+                <span className="font-mono font-semibold">-{freeItemsDiscount.toFixed(2)} zł</span>
+              </div>
+            )}
 
-                <input
-                  type="email"
-                  placeholder="Adres E-mail do potwierdzenia *"
-                  required
-                  value={customerEmail}
-                  onChange={(e) => setCustomerEmail(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D]"
-                />
+            {/* Promo code discount */}
+            {promoDiscount > 0 && (
+              <div className="flex justify-between text-xs text-[#D9A87E]">
+                <span>Kod rabatowy ({appliedPromoCode}):</span>
+                <span className="font-mono font-semibold">-{promoDiscount.toFixed(2)} zł</span>
+              </div>
+            )}
 
-                {/* Delivery Method Selection */}
-                <div className="space-y-1.5 pt-1">
-                  <label className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#5A5B60] font-bold block">
-                    Forma wysyłki (0 PLN)
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setDeliveryMethod('paczkomat')}
-                      className={`p-3 text-left border transition-all flex flex-col justify-between ${
-                        deliveryMethod === 'paczkomat'
-                          ? 'border-[#0D0D0B] bg-[#0D0D0B] text-white'
-                          : 'border-[#0D0D0B] bg-white text-[#0D0D0B] hover:bg-[#F6F5F2]'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-mono font-bold">
-                          [ PACZKOMAT ]
-                        </span>
-                      </div>
-                      <span className={`text-[10px] font-mono mt-1 ${deliveryMethod === 'paczkomat' ? 'text-[#D9A87E]' : 'text-[#734C1D]'}`}>
-                        INPOST 24/7 • 0 ZŁ
-                      </span>
-                    </button>
+            {/* Delivery */}
+            <div className="flex justify-between text-xs text-gray-400">
+              <span>Dostawa w Polsce:</span>
+              <span className="font-mono text-emerald-400 font-medium">0.00 zł (Darmowa)</span>
+            </div>
 
-                    <button
-                      type="button"
-                      onClick={() => setDeliveryMethod('courier')}
-                      className={`p-3 text-left border transition-all flex flex-col justify-between ${
-                        deliveryMethod === 'courier'
-                          ? 'border-[#0D0D0B] bg-[#0D0D0B] text-white'
-                          : 'border-[#0D0D0B] bg-white text-[#0D0D0B] hover:bg-[#F6F5F2]'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-mono font-bold flex items-center gap-1.5">
-                          [ KURIER ]
-                        </span>
-                      </div>
-                      <span className={`text-[10px] font-mono mt-1 ${deliveryMethod === 'courier' ? 'text-[#D9A87E]' : 'text-[#734C1D]'}`}>
-                        POD DRZWI • 0 ZŁ
-                      </span>
-                    </button>
-                  </div>
-                </div>
+            {/* Total */}
+            <div className="pt-2 border-t border-[#262624] flex justify-between items-baseline">
+              <span className="font-serif text-base font-semibold text-white uppercase tracking-wider">
+                Do zapłaty:
+              </span>
+              <span className="font-mono text-xl font-bold text-[#D9A87E]">
+                {total.toFixed(2)} zł
+              </span>
+            </div>
 
-                {/* InPost Picker or Courier Address */}
-                {deliveryMethod === 'paczkomat' ? (
-                  <div className="pt-1">
-                    <InPostPicker
-                      selectedPoint={selectedInpost}
-                      onSelectPoint={setSelectedInpost}
-                      required
-                    />
-                  </div>
-                ) : (
-                  <div className="space-y-2 pt-1">
-                    <input
-                      type="text"
-                      placeholder="Ulica i numer domu / lokalu *"
-                      required
-                      value={courierStreet}
-                      onChange={(e) => setCourierStreet(e.target.value)}
-                      className="w-full px-3 py-2 text-xs bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D]"
-                    />
-                    <div className="grid grid-cols-2 gap-2">
-                      <input
-                        type="text"
-                        placeholder="Kod pocztowy *"
-                        required
-                        value={courierPostCode}
-                        onChange={(e) => setCourierPostCode(e.target.value)}
-                        className="w-full px-3 py-2 text-xs bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D]"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Miejscowość *"
-                        required
-                        value={courierCity}
-                        onChange={(e) => setCourierCity(e.target.value)}
-                        className="w-full px-3 py-2 text-xs bg-white border border-[#0D0D0B] outline-none focus:border-[#734C1D]"
-                      />
-                    </div>
-                  </div>
-                )}
+            {/* CTAs */}
+            <div className="pt-2 space-y-2">
+              <Link
+                href="/checkout"
+                onClick={() => setIsCartOpen(false)}
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-[#D9A87E] text-black font-semibold text-xs uppercase tracking-widest rounded-lg hover:bg-[#e4b58e] transition-colors shadow-lg shadow-[#D9A87E]/10"
+              >
+                Przejdź do kasy <ArrowRight className="w-4 h-4" />
+              </Link>
 
-                {formError && (
-                  <div className="text-[11px] font-mono text-[#B53838] border border-[#B53838] bg-white p-3 text-center">
-                    {formError}
-                  </div>
-                )}
-
-                {/* Submit Checkout Button */}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-[#0D0D0B] text-white py-4 text-xs font-mono uppercase tracking-[0.2em] font-semibold hover:bg-[#734C1D] transition-colors flex items-center justify-center gap-2 group disabled:opacity-60 cursor-pointer shadow-md"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>PRZEKIEROWYWANIE DO PŁATNOŚCI...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>[ PRZEJDŹ DO PŁATNOŚCI: {total.toFixed(2)} PLN ]</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </button>
-
-                {/* Supported Payment Badges */}
-                <div className="pt-1 pb-1 flex flex-wrap items-center justify-center gap-1.5 text-[9px] font-mono text-[#5A5B60]">
-                  <span className="px-1.5 py-0.5 bg-[#F4F4F4] border border-[#E5E5E5] rounded font-bold text-[#0D0D0B]">BLIK</span>
-                  <span className="px-1.5 py-0.5 bg-[#F4F4F4] border border-[#E5E5E5] rounded font-medium text-[#0D0D0B]">KARTA (VISA/MC)</span>
-                  <span className="px-1.5 py-0.5 bg-[#F4F4F4] border border-[#E5E5E5] rounded font-medium text-[#0D0D0B]">APPLE PAY</span>
-                  <span className="px-1.5 py-0.5 bg-[#F4F4F4] border border-[#E5E5E5] rounded font-medium text-[#0D0D0B]">GOOGLE PAY</span>
-                  <span className="px-1.5 py-0.5 bg-[#F4F4F4] border border-[#E5E5E5] rounded font-medium text-[#0D0D0B]">P24</span>
-                </div>
-
-                <p className="text-[10px] font-mono text-center text-[#5A5B60] tracking-wider uppercase">
-                  WYSYŁKA 24H • BEZPIECZNE PŁATNOŚCI STRIPE • SZYFROWANIE SSL
-                </p>
-              </form>
+              <Link
+                href="/koszyk"
+                onClick={() => setIsCartOpen(false)}
+                className="w-full flex items-center justify-center py-2.5 px-4 text-xs font-mono uppercase tracking-wider text-gray-400 hover:text-white transition-colors"
+              >
+                Zobacz pełny koszyk
+              </Link>
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

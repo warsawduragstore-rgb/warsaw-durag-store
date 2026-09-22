@@ -1,143 +1,152 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { Product } from '@/lib/products';
+import { useCartStore } from '@/store/useCartStore';
+import { ResolvedCart } from '@/lib/cart-server';
 
 export interface CartItem {
   product: Product;
   quantity: number;
+  variant?: string;
+  unitPrice: number;
+  totalPrice: number;
+  promoEligible: boolean;
 }
 
 interface CartContextType {
   cart: CartItem[];
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
-  addToCart: (product: Product, quantity?: number) => void;
-  removeFromCart: (productId: number) => void;
-  updateQuantity: (productId: number, quantity: number) => void;
+  addToCart: (product: Product, quantity?: number, variant?: string) => void;
+  removeFromCart: (productId: number, variant?: string) => void;
+  updateQuantity: (productId: number, quantity: number, variant?: string) => void;
   clearCart: () => void;
   cartCount: number;
   subtotal: number;
   promoDiscount: number;
+  freeItemsCount: number;
+  freeItemsDiscount: number;
   appliedPromoCode: string | null;
-  promoRate: number;
   applyPromoCode: (code: string) => Promise<boolean>;
   total: number;
+  isLoading: boolean;
+  refreshCart: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [appliedPromoCode, setAppliedPromoCode] = useState<string | null>(null);
-  const [promoRate, setPromoRate] = useState<number>(0);
+  const items = useCartStore((state) => state.items);
+  const isCartOpen = useCartStore((state) => state.isOpen);
+  const setIsCartOpen = useCartStore((state) => state.setIsOpen);
+  const addItemStore = useCartStore((state) => state.addItem);
+  const removeItemStore = useCartStore((state) => state.removeItem);
+  const updateQtyStore = useCartStore((state) => state.updateQty);
+  const clearCartStore = useCartStore((state) => state.clearCart);
+  const promoCodeStore = useCartStore((state) => state.promoCode);
+  const setPromoCodeStore = useCartStore((state) => state.setPromoCode);
 
-  // Load from localStorage on mount
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem('wds_next_cart');
-      if (saved) {
-        setCart(JSON.parse(saved));
-      }
-    } catch (e) {
-      console.error('Failed to load cart', e);
-    }
-  }, []);
+  const [resolvedCart, setResolvedCart] = useState<ResolvedCart | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Sync to localStorage
-  useEffect(() => {
-    localStorage.setItem('wds_next_cart', JSON.stringify(cart));
-  }, [cart]);
-
-  const addToCart = (product: Product, quantity: number = 1) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
-      }
-      return [...prev, { product, quantity }];
-    });
-    setIsCartOpen(true);
-  };
-
-  const removeFromCart = (productId: number) => {
-    setCart((prev) => prev.filter((item) => item.product.id !== productId));
-  };
-
-  const updateQuantity = (productId: number, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(productId);
+  // Sync and resolve cart with server API whenever items or promoCode change
+  const refreshCart = useCallback(async () => {
+    if (items.length === 0) {
+      setResolvedCart(null);
       return;
     }
-    setCart((prev) =>
-      prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
-      )
-    );
+
+    try {
+      setIsLoading(true);
+      const res = await fetch('/api/cart/resolve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items, promoCode: promoCodeStore }),
+      });
+
+      if (res.ok) {
+        const data: ResolvedCart = await res.json();
+        setResolvedCart(data);
+      }
+    } catch (err) {
+      console.error('[Cart] Błąd dociągania aktualnych cen z serwera:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [items, promoCodeStore]);
+
+  useEffect(() => {
+    refreshCart();
+  }, [refreshCart]);
+
+  const addToCart = (product: Product, quantity: number = 1, variant?: string) => {
+    addItemStore(product.id, variant, quantity);
+  };
+
+  const removeFromCart = (productId: number, variant?: string) => {
+    removeItemStore(productId, variant);
+  };
+
+  const updateQuantity = (productId: number, quantity: number, variant?: string) => {
+    updateQtyStore(productId, variant, quantity);
   };
 
   const clearCart = () => {
-    setCart([]);
-    setAppliedPromoCode(null);
-    setPromoRate(0);
+    clearCartStore();
+    setResolvedCart(null);
   };
 
   const applyPromoCode = async (code: string): Promise<boolean> => {
-    const cleanCode = code.trim().toUpperCase();
-    if (!cleanCode) return false;
+    const clean = code.trim().toUpperCase();
+    if (!clean) return false;
 
-    // Fast static check for initial codes
-    const staticCodes: Record<string, number> = {
-      WARSAW10: 0.10,
-      WDS10: 0.10,
-      ELEMENTY: 0.15,
-      DURAGWAVES: 0.20,
-      VIP20: 0.20,
-    };
-
-    if (staticCodes[cleanCode]) {
-      setAppliedPromoCode(cleanCode);
-      setPromoRate(staticCodes[cleanCode]);
-      return true;
-    }
-
-    // Try dynamic check in Supabase
     try {
-      const { getSupabaseBrowserClient } = await import('@/lib/supabase');
-      const client = getSupabaseBrowserClient();
-      if (client) {
-        const { data } = await client
-          .from('promo_codes')
-          .select('rate, active')
-          .eq('code', cleanCode)
-          .eq('active', true)
-          .maybeSingle();
+      const res = await fetch('/api/cart/resolve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items, promoCode: clean }),
+      });
 
-        if (data && data.rate) {
-          setAppliedPromoCode(cleanCode);
-          setPromoRate(Number(data.rate));
+      if (res.ok) {
+        const data: ResolvedCart = await res.json();
+        if (data.promoDiscount > 0 || data.promoCode === clean) {
+          setPromoCodeStore(clean);
+          setResolvedCart(data);
           return true;
         }
       }
     } catch {
-      // Fallback failed
+      // Ignoruj błąd sieci
     }
 
     return false;
   };
 
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = cart.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0
-  );
-  const promoDiscount = subtotal * promoRate;
-  const total = Math.max(0, subtotal - promoDiscount);
+  // Convert resolved cart items to CartItem format
+  const cart: CartItem[] = useMemo(() => {
+    if (!resolvedCart) {
+      return [];
+    }
+    return resolvedCart.items.map((item) => ({
+      product: item.product,
+      quantity: item.qty,
+      variant: item.variant,
+      unitPrice: item.unitPrice,
+      totalPrice: item.totalPrice,
+      promoEligible: item.promoEligible,
+    }));
+  }, [resolvedCart]);
+
+  const cartCount = useMemo(() => {
+    return items.reduce((sum, item) => sum + item.qty, 0);
+  }, [items]);
+
+  const subtotal = resolvedCart?.subtotal || 0;
+  const promoDiscount = resolvedCart?.promoDiscount || 0;
+  const freeItemsCount = resolvedCart?.freeItemsCount || 0;
+  const freeItemsDiscount = resolvedCart?.freeItemsDiscount || 0;
+  const total = resolvedCart?.total || 0;
 
   return (
     <CartContext.Provider
@@ -152,10 +161,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         cartCount,
         subtotal,
         promoDiscount,
-        appliedPromoCode,
-        promoRate,
+        freeItemsCount,
+        freeItemsDiscount,
+        appliedPromoCode: promoCodeStore,
         applyPromoCode,
         total,
+        isLoading,
+        refreshCart,
       }}
     >
       {children}

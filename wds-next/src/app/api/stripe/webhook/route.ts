@@ -45,18 +45,45 @@ export async function POST(req: NextRequest) {
         });
 
         // 2. Fallback: if not found by session_id, update by order_no
-        if (!res.success && orderNo) {
-          const supabase = getSupabaseServerClient();
-          if (supabase) {
-            await supabase
-              .from('orders')
-              .update({
-                payment_status: 'paid',
-                status: 'new',
-                stripe_session_id: session.id,
-                payment_method: session.payment_method_types?.[0] || 'stripe',
-              })
-              .eq('order_no', orderNo);
+        const supabase = getSupabaseServerClient();
+        if (!res.success && orderNo && supabase) {
+          await supabase
+            .from('orders')
+            .update({
+              payment_status: 'paid',
+              status: 'new',
+              stripe_session_id: session.id,
+              payment_method: session.payment_method_types?.[0] || 'stripe',
+            })
+            .eq('order_no', orderNo);
+        }
+
+        // 3. Dekrement stanu magazynowego po opłaceniu (blokada nadsprzedaży)
+        const orderData = res.order;
+        if (orderData && Array.isArray(orderData.items) && supabase) {
+          for (const it of orderData.items) {
+            const pId = Number(it.id || it.productId);
+            const qty = Number(it.quantity || it.qty) || 1;
+            if (pId > 0) {
+              try {
+                const { data: prod } = await supabase
+                  .from('products')
+                  .select('stock')
+                  .eq('id', pId)
+                  .maybeSingle();
+
+                if (prod && typeof prod.stock === 'number') {
+                  const newStock = Math.max(0, prod.stock - qty);
+                  await supabase
+                    .from('products')
+                    .update({ stock: newStock })
+                    .eq('id', pId);
+                  console.log(`[Stripe Webhook] Zaktualizowano stan magazynowy dla produktu ${pId}: ${prod.stock} -> ${newStock}`);
+                }
+              } catch (stockErr) {
+                console.warn(`[Stripe Webhook] Nie udało się zaktualizować stanu magazynowego dla produktu ${pId}:`, stockErr);
+              }
+            }
           }
         }
       } catch (dbErr) {
