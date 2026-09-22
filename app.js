@@ -1534,7 +1534,7 @@ function renderProductGrid() {
   
   grid.innerHTML = '';
   
-  filtered.forEach(p => {
+  filtered.forEach((p, idx) => {
     const card = document.createElement('article');
     card.className = 'product-card reveal active';
     card.setAttribute('data-id', p.id);
@@ -1555,11 +1555,18 @@ function renderProductGrid() {
                    : (p.category === 'accessories' ? dict.filterAccessories : p.categoryLabel))));
     const descSnippet = p.storyDescription || p.description;
 
+    const isFirstScreen = idx < 4;
+    const loadingAttr = isFirstScreen ? 'loading="eager" fetchpriority="high"' : 'loading="lazy" decoding="async"';
+    const hasSecondary = p.images && p.images.length > 1 && p.images[1] !== p.images[0];
+    const secondaryImgHtml = hasSecondary 
+      ? `<img class="product-card-img secondary" src="${p.images[1]}" alt="${displayName} - detale" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='./assets/durag_silk_black.webp';">`
+      : '';
+
     card.innerHTML = `
       <div class="product-image-container">
         ${badgeHtml}
-        <img class="product-card-img primary" src="${p.images[0]}" alt="${displayName}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='./assets/durag_silk_black.webp';">
-        <img class="product-card-img secondary" src="${p.images[1] || p.images[0]}" alt="${displayName} - detale" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='./assets/durag_silk_black.webp';">
+        <img class="product-card-img primary" src="${p.images[0]}" alt="${displayName}" ${loadingAttr} onerror="this.onerror=null;this.src='./assets/durag_silk_black.webp';">
+        ${secondaryImgHtml}
       </div>
       
       <div class="product-info">
@@ -1932,6 +1939,7 @@ function openProductModal(productId) {
   // Inject details
   DOM.modalImg.src = p.images[0];
   DOM.modalImg.alt = displayName;
+  DOM.modalImg.onerror = function() { this.onerror = null; this.src = './assets/durag_silk_black.webp'; };
   DOM.modalCategory.textContent = catLabel;
   DOM.modalTitle.textContent = displayName;
   DOM.modalPrice.textContent = `${p.price.toFixed(2)} PLN`;

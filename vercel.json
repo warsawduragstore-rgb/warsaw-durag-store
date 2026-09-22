@@ -3,5 +3,9 @@
   "framework": null,
   "buildCommand": "echo 'Static storefront ready'",
   "outputDirectory": ".",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/koszyk", "destination": "/koszyk.html" },
+    { "source": "/cart", "destination": "/koszyk.html" }
+  ]
 }

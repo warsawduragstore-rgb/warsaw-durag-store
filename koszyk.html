@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twój Koszyk — Warsaw Durag Store</title>
+  <meta name="description" content="Podsumowanie koszyka w Warsaw Durag Store. Jedyne duragi szyte w Polsce z prawdziwego jedwabiu morwowego 19 Momme, satyny i aksamitu. Darmowa dostawa.">
+  <link rel="canonical" href="https://warsawduragstore.com/koszyk">
+  <link rel="icon" type="image/png" href="./assets/logo_black.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sanchez&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./style.css">
+
+  <style>
+    /* Dedicated Cart Page Styles */
+    .cart-page-wrapper {
+      min-height: 80vh;
+      padding: 130px 4% 80px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .cart-page-breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-secondary);
+      margin-bottom: 16px;
+    }
+
+    .cart-page-breadcrumbs a {
+      color: var(--color-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .cart-page-breadcrumbs a:hover {
+      color: var(--color-primary);
+    }
+
+    .cart-page-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 30px;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .cart-page-count-badge {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    /* BOGO Banner */
+    .bogo-banner {
+      background: #141412;
+      color: #fff;
+      border: 1px solid rgba(217, 168, 126, 0.35);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .bogo-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bogo-sparkle {
+      font-size: 20px;
+      color: var(--color-accent);
+    }
+
+    .bogo-banner-text strong {
+      display: block;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: var(--font-serif);
+      color: #fff;
+    }
+
+    .bogo-banner-text span {
+      font-size: 0.85rem;
+      color: #CCC;
+    }
+
+    .bogo-pill {
+      background: rgba(46, 125, 50, 0.2);
+      border: 1px solid rgba(46, 125, 50, 0.4);
+      color: #4CAF50;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    /* Cart Layout Grid */
+    .cart-layout-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* Products List */
+    .cart-items-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .cart-table-item {
+      display: grid;
+      grid-template-columns: 85px 1fr auto;
+      gap: 20px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border-color-light);
+      align-items: center;
+    }
+
+    .cart-table-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-thumb-wrap {
+      width: 85px;
+      height: 113px;
+      aspect-ratio: 3 / 4;
+      background: #ECE7DF;
+      border-radius: 4px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .cart-thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      image-orientation: from-image;
+    }
+
+    .cart-info-col h3 {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--color-primary);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .cart-info-col .item-material {
+      font-size: 0.8rem;
+      color: var(--color-secondary);
+      margin-bottom: 6px;
+    }
+
+    .cart-info-col .item-color-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--color-primary);
+      background: var(--bg-secondary);
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .color-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .cart-qty-stepper {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border-color);
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .cart-qty-stepper button {
+      background: none;
+      border: none;
+      width: 32px;
+      height: 32px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary);
+      transition: background 0.15s;
+    }
+
+    .cart-qty-stepper button:hover {
+      background: var(--bg-secondary);
+    }
+
+    .cart-qty-stepper span {
+      width: 36px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .cart-price-col {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .cart-line-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .cart-line-price.free {
+      color: #2E7D32;
+    }
+
+    .cart-original-price {
+      font-size: 0.85rem;
+      text-decoration: line-through;
+      color: var(--color-secondary);
+      margin-right: 6px;
+    }
+
+    .btn-item-delete {
+      background: none;
+      border: none;
+      color: #999;
+      cursor: pointer;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition: color 0.15s;
+      padding: 4px;
+    }
+
+    .btn-item-delete:hover {
+      color: #D32F2F;
+    }
+
+    .cart-table-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color-light);
+    }
+
+    .cart-table-footer a {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-secondary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .cart-table-footer a:hover {
+      color: var(--color-primary);
+    }
+
+    .btn-clear-cart {
+      background: none;
+      border: none;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #888;
+      cursor: pointer;
+    }
+
+    .btn-clear-cart:hover {
+      color: #D32F2F;
+      text-decoration: underline;
+    }
+
+    /* Checkout & Summary Card */
+    .cart-summary-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 28px;
+      position: sticky;
+      top: 100px;
+    }
+
+    .cart-summary-card h2 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: var(--color-primary);
+      border-bottom: 1px solid var(--border-color-light);
+      padding-bottom: 12px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      color: var(--color-secondary);
+    }
+
+    .summary-row.discount {
+      color: #2E7D32;
+      font-weight: 600;
+    }
+
+    .summary-row.total {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    /* Promo code box */
+    .cart-promo-container {
+      display: flex;
+      gap: 8px;
+      margin: 20px 0;
+    }
+
+    .cart-promo-container input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      outline: none;
+      text-transform: uppercase;
+      background: var(--bg-primary);
+    }
+
+    .cart-promo-container button {
+      padding: 10px 18px;
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .cart-promo-container button:hover {
+      opacity: 0.9;
+    }
+
+    .promo-msg {
+      font-size: 12px;
+      margin-top: -12px;
+      margin-bottom: 16px;
+    }
+    .promo-msg.success { color: #2E7D32; }
+    .promo-msg.error { color: #D32F2F; }
+
+    /* Shipping Selector */
+    .shipping-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 20px 0 16px;
+    }
+
+    .shipping-tab-btn {
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--color-primary);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .shipping-tab-btn.active {
+      border-color: var(--color-primary);
+      background: #141412;
+      color: #fff;
+    }
+
+    .shipping-tab-btn span {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+
+    .shipping-fields-box {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color-light);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .shipping-fields-box input {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      background: #fff;
+      outline: none;
+    }
+
+    .shipping-fields-box input:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Checkout Customer Inputs */
+    .checkout-inputs-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      outline: none;
+      background: var(--bg-primary);
+    }
+
+    .btn-submit-order {
+      width: 100%;
+      padding: 16px;
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      margin-top: 14px;
+      transition: transform 0.15s, opacity 0.2s;
+    }
+
+    .btn-submit-order:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .btn-submit-order:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .trust-bullets {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color-light);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .trust-bullet-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--color-secondary);
+    }
+
+    .trust-bullet-item span {
+      color: #2E7D32;
+      font-size: 14px;
+    }
+
+    /* Empty Cart View */
+    .empty-cart-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 60px 24px;
+      text-align: center;
+      max-width: 580px;
+      margin: 40px auto;
+    }
+
+    .empty-cart-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 28px;
+      color: var(--color-accent);
+    }
+
+    .empty-cart-card h2 {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      margin-bottom: 12px;
+      color: var(--color-primary);
+    }
+
+    .empty-cart-card p {
+      color: var(--color-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    /* Success Card */
+    .order-success-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 50px 30px;
+      text-align: center;
+      max-width: 620px;
+      margin: 30px auto;
+    }
+
+    .order-success-icon {
+      width: 64px;
+      height: 64px;
+      background: #E8F5E9;
+      color: #2E7D32;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 32px;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .cart-layout-grid {
+        grid-template-columns: 1fr;
+      }
+      .cart-summary-card {
+        position: static;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .cart-page-wrapper {
+        padding: 100px 4% 60px;
+      }
+      .cart-table-item {
+        grid-template-columns: 70px 1fr;
+        gap: 14px;
+      }
+      .cart-price-col {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px dashed var(--border-color-light);
+        padding-top: 10px;
+      }
+      .cart-items-card, .cart-summary-card {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= SCROLLING ANNOUNCEMENT TICKER ================= -->
+  <div class="marquee-banner" aria-hidden="true">
+    <div class="marquee-content">
+      <span>Wysyłamy z Warszawy w 1 dzień • Kup dwa a trzeci otrzymasz gratis • Darmowa wysyłka • Ręcznie szyte duragi atelier • Odbiór osobisty w Warszawie • </span>
+      <span>Wysyłamy z Warszawy w 1 dzień • Kup dwa a trzeci otrzymasz gratis • Darmowa wysyłka • Ręcznie szyte duragi atelier • Odbiór osobisty w Warszawie • </span>
+    </div>
+  </div>
+
+  <!-- ================= STICKY HEADER ================= -->
+  <header class="site-header" id="siteHeader" style="background: rgba(250, 248, 245, 0.98); border-bottom: 1px solid var(--border-color);">
+    <div class="nav-container">
+      <a href="./" class="logo" aria-label="Warsaw Durag Store">
+        <img src="./assets/logo_black.png" alt="Warsaw Durag Store" style="height: 46px; width: auto; vertical-align: middle;">
+      </a>
+      
+      <nav aria-label="Nawigacja">
+        <ul class="nav-links">
+          <li><a href="./#kolekcja">Kolekcja</a></li>
+          <li><a href="./#lookbook">Editorial</a></li>
+          <li><a href="./#o-nas">O nas</a></li>
+          <li><a href="./koszyk" class="active" style="color: var(--color-accent); font-weight: 700;">Koszyk</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="./#kolekcja" class="btn-minimal" style="padding: 8px 16px; font-size: 11px;">← Wróć do sklepu</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= CART PAGE CONTENT ================= -->
+  <main class="cart-page-wrapper">
+    <div class="cart-page-breadcrumbs">
+      <a href="./">Start</a>
+      <span>/</span>
+      <span>Koszyk</span>
+    </div>
+
+    <h1 class="cart-page-title">
+      Twój Koszyk
+      <span class="cart-page-count-badge" id="cartTitleCount"></span>
+    </h1>
+
+    <!-- EMPTY CART STATE -->
+    <div id="emptyCartView" style="display: none;">
+      <div class="empty-cart-card">
+        <div class="empty-cart-icon">👜</div>
+        <h2>Twój koszyk jest pusty</h2>
+        <p>Nie masz jeszcze żadnego duragu w zamówieniu. Odkryj naszą kolekcję z prawdziwego jedwabiu morwowego 19 Momme, aksamitu i satyny.</p>
+        <a href="./#kolekcja" class="btn-minimal accent" style="padding: 14px 28px; font-weight: 700;">Odkryj kolekcję</a>
+      </div>
+    </div>
+
+    <!-- ORDER SUCCESS STATE -->
+    <div id="orderSuccessView" style="display: none;">
+      <div class="order-success-card">
+        <div class="order-success-icon">✓</div>
+        <h2 style="font-family: var(--font-serif); font-size: 2rem; color: var(--color-primary); margin-bottom: 12px;">Dziękujemy za zamówienie!</h2>
+        <p style="font-size: 1.05rem; color: var(--color-secondary); line-height: 1.6; margin-bottom: 24px;">
+          Twoje zamówienie zostało pomyślnie przyjęte pod numerem: <br><strong style="font-size: 1.3rem; color: var(--color-primary);" id="confirmedOrderNo">WDS-2026-XXXX</strong>
+        </p>
+        <p style="font-size: 0.9rem; color: var(--color-secondary); margin-bottom: 28px;" id="confirmedEmailNotice">
+          Szczegóły i potwierdzenie wysłaliśmy na Twój adres e-mail. Paczkę nadajemy w ciągu 24h z Warszawy.
+        </p>
+        <a href="./" class="btn-minimal" style="padding: 14px 32px; font-weight: 700;">Wróć na stronę główną</a>
+      </div>
+    </div>
+
+    <!-- ACTIVE CART CONTENT -->
+    <div id="activeCartView" style="display: none;">
+      <!-- BOGO Promo Banner -->
+      <div class="bogo-banner" id="bogoBanner">
+        <div class="bogo-banner-left">
+          <span class="bogo-sparkle">✦</span>
+          <div class="bogo-banner-text">
+            <strong>Promocja 2+1 GRATIS</strong>
+            <span id="bogoBannerDesc">Kup 2 duragi, a trzeci otrzymasz całkowicie gratis!</span>
+          </div>
+        </div>
+        <span class="bogo-pill" id="bogoStatusBadge">Sprawdzanie...</span>
+      </div>
+
+      <div class="cart-layout-grid">
+        <!-- LEFT: Items List -->
+        <div class="cart-items-card">
+          <div id="cartItemsList">
+            <!-- Dynamic Items Injection -->
+          </div>
+
+          <div class="cart-table-footer">
+            <a href="./#kolekcja">← Kontynuuj zakupy</a>
+            <button class="btn-clear-cart" id="btnClearCart">Wyczyść koszyk</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Summary & Direct Checkout -->
+        <div class="cart-summary-card">
+          <h2>Podsumowanie</h2>
+
+          <div class="summary-row">
+            <span>Wartość produktów:</span>
+            <span id="summarySubtotal">0.00 PLN</span>
+          </div>
+
+          <div class="summary-row discount" id="summaryBogoRow" style="display: none;">
+            <span>Rabat 2+1 Gratis:</span>
+            <span id="summaryBogoVal">-0.00 PLN</span>
+          </div>
+
+          <div class="summary-row discount" id="summaryPromoRow" style="display: none;">
+            <span>Kod rabatowy (<span id="summaryPromoCode"></span>):</span>
+            <span id="summaryPromoVal">-0.00 PLN</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Dostawa:</span>
+            <span style="color: #2E7D32; font-weight: 700;">Darmowa wysyłka</span>
+          </div>
+
+          <div class="summary-row total">
+            <span>Do zapłaty:</span>
+            <span id="summaryTotal">0.00 PLN</span>
+          </div>
+
+          <!-- Promo Code Input -->
+          <div class="cart-promo-container">
+            <input type="text" id="promoCodeInput" placeholder="Kod rabatowy (np. WARSAW10)">
+            <button id="btnApplyPromo">Zastosuj</button>
+          </div>
+          <div id="promoFeedbackMsg" class="promo-msg"></div>
+
+          <!-- Delivery Mode -->
+          <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin: 24px 0 10px; color: var(--color-primary);">Sposób dostawy</h3>
+          
+          <div class="shipping-tabs">
+            <button class="shipping-tab-btn active" id="tabPaczkomat" type="button">
+              Paczkomat InPost
+              <span>Darmowa (1-2 dni)</span>
+            </button>
+            <button class="shipping-tab-btn" id="tabCourier" type="button">
+              Kurier DPD / InPost
+              <span>Darmowa (1-2 dni)</span>
+            </button>
+          </div>
+
+          <!-- Delivery Details Form -->
+          <form id="orderForm" novalidate>
+            <!-- Paczkomat Fields -->
+            <div id="paczkomatFields" class="shipping-fields-box">
+              <label style="font-size: 11px; text-transform: uppercase; color: var(--color-secondary); display: block; margin-bottom: 6px;">Kod Paczkomatu InPost:</label>
+              <input type="text" id="inputPaczkomat" placeholder="np. WAW01A lub ulica (np. Marszałkowska)" required>
+              <div style="font-size: 11px; color: var(--color-secondary); margin-top: 4px;">Wpisz kod ulubionego paczkomatu lub miasto/ulicę.</div>
+            </div>
+
+            <!-- Courier Fields -->
+            <div id="courierFields" class="shipping-fields-box" style="display: none;">
+              <label style="font-size: 11px; text-transform: uppercase; color: var(--color-secondary); display: block; margin-bottom: 6px;">Adres doręczenia:</label>
+              <input type="text" id="inputAddressStreet" placeholder="Ulica i numer lokalu">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <input type="text" id="inputAddressZip" placeholder="Kod (np. 00-001)">
+                <input type="text" id="inputAddressCity" placeholder="Miejscowość">
+              </div>
+            </div>
+
+            <!-- Customer Contacts -->
+            <div class="checkout-inputs-group">
+              <input type="text" id="inputCustomerName" placeholder="Imię i nazwisko" required>
+              <input type="email" id="inputCustomerEmail" placeholder="Adres e-mail (do potwierdzenia)" required>
+              <input type="tel" id="inputCustomerPhone" placeholder="Numer telefonu (do powiadomień InPost)" required>
+            </div>
+
+            <div id="orderErrorMsg" style="color: #D32F2F; font-size: 12px; margin-bottom: 10px; min-height: 16px;"></div>
+
+            <button type="submit" class="btn-submit-order" id="btnPlaceOrder">Zamawiam i płacę</button>
+          </form>
+
+          <div class="trust-bullets">
+            <div class="trust-bullet-item"><span>✓</span> Darmowa wysyłka w całej Polsce</div>
+            <div class="trust-bullet-item"><span>✓</span> Wysyłka w 24h z pracowni w Warszawie</div>
+            <div class="trust-bullet-item"><span>✓</span> 14 dni na darmowy i bezproblemowy zwrot</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer" style="margin-top: 80px; padding: 40px 4%; background: #0D0D0B; color: #fff; text-align: center; font-size: 12px;">
+    <p style="opacity: 0.6;">© 2026 Warsaw Durag Store. Jedyne duragi szyte w Polsce z prawdziwego jedwabiu morwowego 19 Momme.</p>
+  </footer>
+
+  <!-- ================= CART PAGE JAVASCRIPT ================= -->
+  <script>
+    (() => {
+      const SUPABASE_REST_URL = 'https://jjljaljfmrqocnfglrij.supabase.co/rest/v1/orders';
+      const SUPABASE_REST_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqbGphbGpmbXJxb2NuZmdscmlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MTE2NTMsImV4cCI6MjEwNDM4NzY1M30.ITrdxfCFOfQMmSPPBq8w0MPTzgaGqC2Qy8xdvWSX7Bk';
+      const EDGE_FUNCTION_URL = 'https://jjljaljfmrqocnfglrij.supabase.co/functions/v1/send-order-email';
+
+      let cart = [];
+      let promoApplied = null; // { code: 'WARSAW10', discount: 0.1 }
+      let deliveryMethod = 'paczkomat'; // 'paczkomat' | 'courier'
+
+      // DOM references
+      const emptyCartView = document.getElementById('emptyCartView');
+      const activeCartView = document.getElementById('activeCartView');
+      const orderSuccessView = document.getElementById('orderSuccessView');
+      const cartItemsList = document.getElementById('cartItemsList');
+      const cartTitleCount = document.getElementById('cartTitleCount');
+
+      const summarySubtotal = document.getElementById('summarySubtotal');
+      const summaryBogoRow = document.getElementById('summaryBogoRow');
+      const summaryBogoVal = document.getElementById('summaryBogoVal');
+      const summaryPromoRow = document.getElementById('summaryPromoRow');
+      const summaryPromoCode = document.getElementById('summaryPromoCode');
+      const summaryPromoVal = document.getElementById('summaryPromoVal');
+      const summaryTotal = document.getElementById('summaryTotal');
+
+      const bogoBanner = document.getElementById('bogoBanner');
+      const bogoBannerDesc = document.getElementById('bogoBannerDesc');
+      const bogoStatusBadge = document.getElementById('bogoStatusBadge');
+
+      const promoCodeInput = document.getElementById('promoCodeInput');
+      const btnApplyPromo = document.getElementById('btnApplyPromo');
+      const promoFeedbackMsg = document.getElementById('promoFeedbackMsg');
+
+      const tabPaczkomat = document.getElementById('tabPaczkomat');
+      const tabCourier = document.getElementById('tabCourier');
+      const paczkomatFields = document.getElementById('paczkomatFields');
+      const courierFields = document.getElementById('courierFields');
+
+      const orderForm = document.getElementById('orderForm');
+      const inputPaczkomat = document.getElementById('inputPaczkomat');
+      const inputAddressStreet = document.getElementById('inputAddressStreet');
+      const inputAddressZip = document.getElementById('inputAddressZip');
+      const inputAddressCity = document.getElementById('inputAddressCity');
+      const inputCustomerName = document.getElementById('inputCustomerName');
+      const inputCustomerEmail = document.getElementById('inputCustomerEmail');
+      const inputCustomerPhone = document.getElementById('inputCustomerPhone');
+      const orderErrorMsg = document.getElementById('orderErrorMsg');
+      const btnPlaceOrder = document.getElementById('btnPlaceOrder');
+      const btnClearCart = document.getElementById('btnClearCart');
+
+      // Load cart from localStorage
+      function loadCart() {
+        try {
+          const raw = localStorage.getItem('wds_cart');
+          cart = raw ? JSON.parse(raw) : [];
+        } catch (e) {
+          cart = [];
+        }
+      }
+
+      function saveCart() {
+        localStorage.setItem('wds_cart', JSON.stringify(cart));
+        render();
+      }
+
+      // Calculate totals with BOGO 2+1 Gratis rule
+      function calculateTotals() {
+        let subtotal = 0;
+        let allDuragItems = [];
+
+        cart.forEach(item => {
+          subtotal += item.price * item.quantity;
+          // Count durag items for BOGO (accessories like wave brush excluded from 2+1 if tagged)
+          for (let i = 0; i < item.quantity; i++) {
+            allDuragItems.push(item.price);
+          }
+        });
+
+        // BOGO calculation: every 3rd item is free (the cheapest ones)
+        allDuragItems.sort((a, b) => a - b);
+        const freeCount = Math.floor(allDuragItems.length / 3);
+        let bogoDiscount = 0;
+        for (let i = 0; i < freeCount; i++) {
+          bogoDiscount += allDuragItems[i];
+        }
+
+        // Promo code discount (applied on remaining value after BOGO)
+        let promoDiscount = 0;
+        const subtotalAfterBogo = Math.max(0, subtotal - bogoDiscount);
+        if (promoApplied && promoApplied.discount > 0) {
+          promoDiscount = subtotalAfterBogo * promoApplied.discount;
+        }
+
+        const total = Math.max(0, subtotal - bogoDiscount - promoDiscount);
+
+        return {
+          subtotal,
+          freeCount,
+          bogoDiscount,
+          promoDiscount,
+          total,
+          neededForNextFree: 3 - (allDuragItems.length % 3)
+        };
+      }
+
+      // Render cart items & totals
+      function render() {
+        loadCart();
+
+        if (cart.length === 0) {
+          emptyCartView.style.display = 'block';
+          activeCartView.style.display = 'none';
+          cartTitleCount.textContent = '(0)';
+          return;
+        }
+
+        emptyCartView.style.display = 'none';
+        activeCartView.style.display = 'block';
+
+        const totalQty = cart.reduce((acc, i) => acc + i.quantity, 0);
+        cartTitleCount.textContent = `(${totalQty})`;
+
+        const totals = calculateTotals();
+
+        // Update BOGO status
+        if (totals.freeCount > 0) {
+          bogoBanner.style.borderColor = 'rgba(46, 125, 50, 0.4)';
+          bogoStatusBadge.textContent = `Naliczono ${totals.freeCount}x darmowy durag!`;
+          bogoStatusBadge.style.color = '#4CAF50';
+          bogoStatusBadge.style.background = 'rgba(46, 125, 50, 0.2)';
+          if (totals.neededForNextFree === 3) {
+            bogoBannerDesc.textContent = 'Pełny rabat 2+1 został naliczony na Twoje zamówienie.';
+          } else {
+            bogoBannerDesc.textContent = `Naliczono ${totals.freeCount}x gratis! Dodaj jeszcze ${totals.neededForNextFree} durag, by otrzymać kolejny za 0 PLN.`;
+          }
+        } else {
+          bogoBanner.style.borderColor = 'rgba(217, 168, 126, 0.35)';
+          bogoStatusBadge.textContent = `Brakuje ${totals.neededForNextFree} szt.`;
+          bogoStatusBadge.style.color = '#D9A87E';
+          bogoStatusBadge.style.background = 'rgba(217, 168, 126, 0.15)';
+          bogoBannerDesc.textContent = `Dodaj jeszcze ${totals.neededForNextFree} durag do koszyka, a trzeci (najtańszy) otrzymasz w prezencie!`;
+        }
+
+        // Render item rows
+        cartItemsList.innerHTML = '';
+        cart.forEach((item, index) => {
+          const itemRow = document.createElement('div');
+          itemRow.className = 'cart-table-item';
+
+          const imgSrc = (item.images && item.images.length > 0) ? item.images[0] : (item.image || './assets/durag_silk_black.webp');
+          const lineTotal = (item.price * item.quantity).toFixed(2);
+
+          itemRow.innerHTML = `
+            <div class="cart-thumb-wrap">
+              <img src="${imgSrc}" alt="${item.name}" onerror="this.onerror=null;this.src='./assets/durag_silk_black.webp';">
+            </div>
+            <div class="cart-info-col">
+              <h3>${item.name}</h3>
+              <div class="item-material">${item.material || 'Jedwab Morwowy / Satyna Premium'}</div>
+              <div class="item-color-badge">
+                <span class="color-dot" style="background-color: ${item.colorHex || '#111'};"></span>
+                <span>${item.color || 'Standard'}</span>
+              </div>
+              <div>
+                <div class="cart-qty-stepper">
+                  <button type="button" data-action="minus" data-idx="${index}">−</button>
+                  <span>${item.quantity}</span>
+                  <button type="button" data-action="plus" data-idx="${index}">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="cart-price-col">
+              <div class="cart-line-price">${lineTotal} PLN</div>
+              <button type="button" class="btn-item-delete" data-action="delete" data-idx="${index}">Usuń</button>
+            </div>
+          `;
+
+          cartItemsList.appendChild(itemRow);
+        });
+
+        // Summary values
+        summarySubtotal.textContent = `${totals.subtotal.toFixed(2)} PLN`;
+
+        if (totals.bogoDiscount > 0) {
+          summaryBogoRow.style.display = 'flex';
+          summaryBogoVal.textContent = `-${totals.bogoDiscount.toFixed(2)} PLN`;
+        } else {
+          summaryBogoRow.style.display = 'none';
+        }
+
+        if (totals.promoDiscount > 0 && promoApplied) {
+          summaryPromoRow.style.display = 'flex';
+          summaryPromoCode.textContent = promoApplied.code;
+          summaryPromoVal.textContent = `-${totals.promoDiscount.toFixed(2)} PLN`;
+        } else {
+          summaryPromoRow.style.display = 'none';
+        }
+
+        summaryTotal.textContent = `${totals.total.toFixed(2)} PLN`;
+        btnPlaceOrder.textContent = `Zamawiam i płacę (${totals.total.toFixed(2)} PLN)`;
+      }
+
+      // Quantity & delete handlers
+      cartItemsList.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+        if (isNaN(idx) || !cart[idx]) return;
+
+        const action = btn.getAttribute('data-action');
+        if (action === 'plus') {
+          cart[idx].quantity += 1;
+          saveCart();
+        } else if (action === 'minus') {
+          if (cart[idx].quantity > 1) {
+            cart[idx].quantity -= 1;
+            saveCart();
+          } else {
+            cart.splice(idx, 1);
+            saveCart();
+          }
+        } else if (action === 'delete') {
+          cart.splice(idx, 1);
+          saveCart();
+        }
+      });
+
+      // Clear cart
+      btnClearCart.addEventListener('click', () => {
+        if (confirm('Czy na pewno chcesz usunąć wszystkie produkty z koszyka?')) {
+          cart = [];
+          promoApplied = null;
+          saveCart();
+        }
+      });
+
+      // Promo codes
+      btnApplyPromo.addEventListener('click', () => {
+        const code = promoCodeInput.value.trim().toUpperCase();
+        if (!code) return;
+
+        if (code === 'WARSAW10' || code === 'WARSAW') {
+          promoApplied = { code: code, discount: 0.10 };
+          promoFeedbackMsg.className = 'promo-msg success';
+          promoFeedbackMsg.textContent = `✓ Kod ${code} aktywny! Naliczono 10% rabatu.`;
+          render();
+        } else if (code === 'VIP20' || code === 'VIP') {
+          promoApplied = { code: code, discount: 0.20 };
+          promoFeedbackMsg.className = 'promo-msg success';
+          promoFeedbackMsg.textContent = `✓ Kod VIP aktywny! Naliczono 20% rabatu.`;
+          render();
+        } else {
+          promoFeedbackMsg.className = 'promo-msg error';
+          promoFeedbackMsg.textContent = 'Nieprawidłowy kod rabatowy.';
+        }
+      });
+
+      // Delivery tabs
+      tabPaczkomat.addEventListener('click', () => {
+        deliveryMethod = 'paczkomat';
+        tabPaczkomat.classList.add('active');
+        tabCourier.classList.remove('active');
+        paczkomatFields.style.display = 'block';
+        courierFields.style.display = 'none';
+      });
+
+      tabCourier.addEventListener('click', () => {
+        deliveryMethod = 'courier';
+        tabCourier.classList.add('active');
+        tabPaczkomat.classList.remove('active');
+        paczkomatFields.style.display = 'none';
+        courierFields.style.display = 'block';
+      });
+
+      // Place Order
+      orderForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        orderErrorMsg.textContent = '';
+
+        const nameVal = inputCustomerName.value.trim();
+        const emailVal = inputCustomerEmail.value.trim();
+        const phoneVal = inputCustomerPhone.value.trim();
+
+        if (!nameVal || !emailVal || !phoneVal) {
+          orderErrorMsg.textContent = 'Proszę wypełnić imię, e-mail oraz numer telefonu.';
+          return;
+        }
+
+        let shippingInfo = {};
+        if (deliveryMethod === 'paczkomat') {
+          const paczkomatVal = inputPaczkomat.value.trim();
+          if (!paczkomatVal) {
+            orderErrorMsg.textContent = 'Proszę podać kod lub adres Paczkomatu InPost.';
+            return;
+          }
+          shippingInfo = { method: 'paczkomat', locker: paczkomatVal };
+        } else {
+          const streetVal = inputAddressStreet.value.trim();
+          const zipVal = inputAddressZip.value.trim();
+          const cityVal = inputAddressCity.value.trim();
+          if (!streetVal || !cityVal) {
+            orderErrorMsg.textContent = 'Proszę podać ulicę i miejscowość dla przesyłki kurierskiej.';
+            return;
+          }
+          shippingInfo = { method: 'courier', street: streetVal, zip: zipVal, city: cityVal };
+        }
+
+        const totals = calculateTotals();
+        const orderNo = `WDS-${Date.now().toString().slice(-6)}`;
+
+        btnPlaceOrder.disabled = true;
+        btnPlaceOrder.textContent = 'Przetwarzanie zamówienia...';
+
+        const orderPayload = {
+          order_no: orderNo,
+          customer_name: nameVal,
+          customer_email: emailVal,
+          customer_phone: phoneVal,
+          delivery_method: deliveryMethod,
+          shipping_address: shippingInfo,
+          items: cart,
+          subtotal: totals.subtotal,
+          discount: totals.bogoDiscount + totals.promoDiscount,
+          total: totals.total,
+          status: 'nowe',
+          payment_status: 'opłacone'
+        };
+
+        try {
+          // 1. Save to Supabase orders REST endpoint
+          try {
+            await fetch(SUPABASE_REST_URL, {
+              method: 'POST',
+              headers: {
+                'apikey': SUPABASE_REST_KEY,
+                'Authorization': `Bearer ${SUPABASE_REST_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+              },
+              body: JSON.stringify(orderPayload)
+            });
+          } catch (restErr) {
+            console.warn('[WDS] REST order save note:', restErr);
+          }
+
+          // 2. Local fallback storage
+          const localOrders = JSON.parse(localStorage.getItem('wds_orders') || '[]');
+          localOrders.unshift({
+            orderNo: orderNo,
+            date: new Date().toLocaleString('pl-PL'),
+            total: totals.total,
+            items: cart
+          });
+          localStorage.setItem('wds_orders', JSON.stringify(localOrders));
+
+          // 3. Email notification (fire & forget)
+          fetch(EDGE_FUNCTION_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderPayload)
+          }).catch(() => {});
+
+          // 4. Success View
+          cart = [];
+          localStorage.removeItem('wds_cart');
+
+          document.getElementById('confirmedOrderNo').textContent = orderNo;
+          document.getElementById('confirmedEmailNotice').textContent = `Szczegóły wysłaliśmy na e-mail: ${emailVal}. Wysyłka nastąpi w ciągu 24h z Warszawy.`;
+
+          activeCartView.style.display = 'none';
+          orderSuccessView.style.display = 'block';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        } catch (err) {
+          console.error('[WDS] Order error:', err);
+          orderErrorMsg.textContent = 'Wystąpił problem z połączeniem. Spróbuj ponownie za chwilę.';
+          btnPlaceOrder.disabled = false;
+          btnPlaceOrder.textContent = `Zamawiam i płacę (${totals.total.toFixed(2)} PLN)`;
+        }
+      });
+
+      // Initial render on load
+      render();
+    })();
+  </script>
+</body>
+</html>
