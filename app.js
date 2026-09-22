@@ -25,21 +25,68 @@ let state = {
   activeImageIndexInModal: 0
 };
 
-// --- Load products from Supabase (strict database source) ---
-async function loadProductsFromSupabase() {
-  try {
-    if (window.supabaseClient) {
-      const { data, error } = await window.supabaseClient
-        .from('products')
-        .select('*')
-        .order('id', { ascending: true });
+// --- Load products from Supabase (strict database source via native REST API) ---
+const SUPABASE_REST_URL = 'https://jjljaljfmrqocnfglrij.supabase.co/rest/v1/products?select=*&visible=eq.true&order=id.asc';
+const SUPABASE_REST_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqbGphbGpmbXJxb2NuZmdscmlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MTE2NTMsImV4cCI6MjEwNDM4NzY1M30.ITrdxfCFOfQMmSPPBq8w0MPTzgaGqC2Qy8xdvWSX7Bk';
 
-      if (!error && data && data.length > 0) {
-        // Filtrujemy tylko widoczne produkty dla klientów sklepu
+let isProductsLoading = true;
+let productsLoadPromise = null;
+
+function loadProductsFromSupabase() {
+  if (productsLoadPromise) return productsLoadPromise;
+  productsLoadPromise = (async () => {
+    try {
+      let data = null;
+
+      // 1. High-speed native REST fetch directly to PostgREST (Zero CDN latency, works regardless of adblock/CDN status)
+      try {
+        const res = await fetch(SUPABASE_REST_URL, {
+          method: 'GET',
+          headers: {
+            'apikey': SUPABASE_REST_KEY,
+            'Authorization': `Bearer ${SUPABASE_REST_KEY}`,
+            'Accept': 'application/json'
+          }
+        });
+        if (res.ok) {
+          data = await res.json();
+        }
+      } catch (fetchErr) {
+        console.warn('[WDS] Native REST fetch failed, attempting client SDK fallback:', fetchErr);
+      }
+
+      // 2. Client SDK fallback if REST was blocked
+      if ((!data || data.length === 0) && window.supabaseClient) {
+        const { data: sdkData, error } = await window.supabaseClient
+          .from('products')
+          .select('*')
+          .eq('visible', true)
+          .order('id', { ascending: true });
+
+        if (!error && sdkData) {
+          data = sdkData;
+        }
+      }
+
+      if (data && data.length > 0) {
         const visibleProducts = data.filter(p => p.visible !== false);
         
         products = visibleProducts.map(p => {
-          let finalImages = (p.images && p.images.length > 0) ? p.images : ['./assets/durag_silk_black.webp'];
+          let finalImages = p.images;
+          if (typeof finalImages === 'string') {
+            try { finalImages = JSON.parse(finalImages); } catch (e) { finalImages = [finalImages]; }
+          }
+          if (!Array.isArray(finalImages) || finalImages.length === 0) {
+            finalImages = ['./assets/durag_silk_black.webp'];
+          }
+
+          let parsedColors = p.colors;
+          if (typeof parsedColors === 'string') {
+            try { parsedColors = JSON.parse(parsedColors); } catch (e) { parsedColors = []; }
+          }
+          if (!Array.isArray(parsedColors) || parsedColors.length === 0) {
+            parsedColors = [{ name: 'Classic', hex: '#0A0A0A' }];
+          }
 
           return {
             id: p.id,
@@ -52,7 +99,7 @@ async function loadProductsFromSupabase() {
             description: p.description || '',
             storyDescription: p.story_description || p.description || '',
             images: finalImages,
-            colors: p.colors && p.colors.length > 0 ? p.colors : [{ name: 'Classic', hex: '#0A0A0A' }],
+            colors: parsedColors,
             reviews: p.reviews || [],
             stock: typeof p.stock === 'number' ? p.stock : 10,
             visible: p.visible !== false
@@ -61,18 +108,26 @@ async function loadProductsFromSupabase() {
 
         window.wdsActiveProducts = products;
         console.log(`[WDS] ✓ Załadowano ${products.length} produktów z bazy danych Supabase.`);
+        isProductsLoading = false;
         renderProductGrid();
         return;
       }
+    } catch (err) {
+      console.warn('[WDS] Supabase fetch error:', err);
+    } finally {
+      isProductsLoading = false;
     }
-  } catch (err) {
-    console.warn('[WDS] Supabase fetch error:', err);
-  }
 
-  // Strict mode: if database is unavailable or empty, do not show fake mockups
-  products = [];
-  renderProductGrid();
+    // Strict mode: if database is unavailable or empty, do not show fake mockups
+    products = [];
+    renderProductGrid();
+  })();
+
+  return productsLoadPromise;
 }
+
+// Start loading immediately in background
+loadProductsFromSupabase();
 
 // --- Dynamic Site Content CMS Loader ---
 async function loadSiteContent() {
@@ -419,7 +474,8 @@ function bindEventListeners() {
   }
   
   // Close Mobile Drawer on Link Click and Filter Products
-  DOM.navFilterLinks.forEach(link => {
+  const navFilterLinks = document.querySelectorAll('.nav-links a, .mobile-menu-links a');
+  navFilterLinks.forEach(link => {
     link.addEventListener('click', (e) => {
       const filter = link.getAttribute('data-filter');
       if (filter) {
@@ -463,7 +519,8 @@ function bindEventListeners() {
   }
 
   // Collection Filter Button Clicks
-  DOM.filterBtns.forEach(btn => {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const category = btn.getAttribute('data-category');
       setActiveFilter(category);
@@ -1421,7 +1478,8 @@ function setActiveFilter(category) {
   state.activeCategory = category;
   
   // Update nav UI buttons
-  DOM.filterBtns.forEach(btn => {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
     if (btn.getAttribute('data-category') === category) {
       btn.classList.add('active');
       btn.setAttribute('aria-selected', 'true');
@@ -1433,14 +1491,18 @@ function setActiveFilter(category) {
 
   updateCategoryDescription(category);
 
-  // Fade-out catalog, filter, then fade-in
-  DOM.productGrid.style.transition = 'opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
-  DOM.productGrid.style.opacity = '0';
-  
-  setTimeout(() => {
+  const grid = document.getElementById('productGrid') || (DOM && DOM.productGrid);
+  if (grid) {
+    grid.style.transition = 'opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+    grid.style.opacity = '0';
+    
+    setTimeout(() => {
+      renderProductGrid();
+      grid.style.opacity = '1';
+    }, 250);
+  } else {
     renderProductGrid();
-    DOM.productGrid.style.opacity = '1';
-  }, 250);
+  }
 }
 
 // ========================================================================
@@ -1448,18 +1510,29 @@ function setActiveFilter(category) {
 // ========================================================================
 
 function renderProductGrid() {
+  const grid = document.getElementById('productGrid') || (DOM && DOM.productGrid);
+  if (!grid) return;
+
   const filtered = state.activeCategory === 'all' 
     ? products 
     : products.filter(p => p.category === state.activeCategory);
     
-  DOM.productGrid.innerHTML = '';
   const lang = getActiveLanguage();
   const dict = I18N[lang] || I18N.PL;
   
   if (filtered.length === 0) {
-    DOM.productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:var(--color-secondary); padding: 40px 0;">${dict.emptyCatalog}</p>`;
+    if (isProductsLoading) {
+      grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:var(--color-secondary); padding: 60px 0;">
+        <span class="catalog-spinner" style="display:inline-block; width: 28px; height: 28px; border: 2px solid var(--color-accent); border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 14px;"></span>
+        <p style="font-family: var(--font-primary); font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;">${lang === 'PL' ? 'Ładowanie kolekcji...' : 'Loading collection...'}</p>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:var(--color-secondary); padding: 40px 0;">${dict.emptyCatalog}</p>`;
     return;
   }
+  
+  grid.innerHTML = '';
   
   filtered.forEach(p => {
     const card = document.createElement('article');
@@ -1522,7 +1595,7 @@ function renderProductGrid() {
       });
     }
     
-    DOM.productGrid.appendChild(card);
+    grid.appendChild(card);
   });
 }
 
