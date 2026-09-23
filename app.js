@@ -1943,7 +1943,14 @@ function openProductModal(productId) {
   DOM.modalMaterial.textContent = p.material;
   DOM.modalDesc.textContent = p.description;
   DOM.modalQtyVal.textContent = '1';
-  DOM.modalReviewsCount.textContent = (p.reviews && p.reviews.length) || 0;
+  const revCount = (p.reviews && p.reviews.length) || 0;
+  if (DOM.modalReviewsCount) {
+    if (revCount > 0) {
+      DOM.modalReviewsCount.textContent = `${revCount} ${revCount === 1 ? (lang === 'PL' ? 'opinia' : 'review') : (lang === 'PL' ? 'opinie' : 'reviews')}`;
+    } else {
+      DOM.modalReviewsCount.textContent = lang === 'PL' ? 'Warsaw Atelier • Zweryfikowana jakość' : 'Warsaw Atelier • Verified Quality';
+    }
+  }
   
   const modalAddBtn = document.getElementById('modalAddBtn');
   if (modalAddBtn) modalAddBtn.textContent = dict.addToCart;
