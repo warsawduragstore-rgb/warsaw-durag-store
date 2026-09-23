@@ -2090,113 +2090,6 @@ a {
   line-height: 1.5;
 }
 
-/* --- Footer --- */
-.site-footer {
-  background-color: var(--bg-secondary);
-  color: var(--color-primary);
-  border-top: 1px solid var(--border-color);
-  padding-top: 90px;
-  padding-bottom: 40px;
-}
-
-.footer-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr 0.8fr 1.2fr;
-  gap: 60px;
-  margin-bottom: 80px;
-}
-
-@media (max-width: 992px) {
-  .footer-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
-  }
-}
-
-@media (max-width: 576px) {
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-}
-
-.footer-col {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.footer-logo {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.footer-about-text {
-  font-size: 0.9rem;
-  color: var(--color-secondary);
-  line-height: 1.7;
-  font-weight: 300;
-}
-
-.footer-col-title {
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-weight: 600;
-  color: var(--color-primary);
-}
-
-.footer-links {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.footer-links a {
-  font-size: 0.9rem;
-  color: var(--color-secondary);
-  font-weight: 300;
-}
-
-.footer-links a:hover {
-  color: var(--color-primary);
-  padding-left: 4px;
-}
-
-.footer-contact-info {
-  font-size: 0.9rem;
-  color: var(--color-secondary);
-  line-height: 1.8;
-  font-weight: 300;
-}
-
-.footer-bottom {
-  border-top: 1px solid var(--border-color);
-  padding-top: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.85rem;
-  color: var(--color-secondary);
-  font-weight: 300;
-}
-
-@media (max-width: 768px) {
-  .footer-bottom {
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-  }
-}
-
-.footer-legal-links {
-  display: flex;
-  gap: 24px;
-}
-
 /* --- Scroll Reveal & Micro Animations --- */
 .reveal {
   opacity: 1;
@@ -3288,10 +3181,17 @@ body { background: var(--bg-primary); }
   background-color: #090908 !important;
   color: #FFFFFF !important;
   border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-  padding-top: 80px !important;
-  padding-bottom: 40px !important;
+  padding: 80px 0 40px !important;
   position: relative !important;
   overflow: hidden !important;
+}
+
+.site-footer .container {
+  width: 100% !important;
+  max-width: 1320px !important;
+  margin: 0 auto !important;
+  padding: 0 24px !important;
+  box-sizing: border-box !important;
 }
 
 .site-footer::before {
@@ -3308,9 +3208,17 @@ body { background: var(--bg-primary); }
 
 .footer-grid {
   display: grid !important;
-  grid-template-columns: 1.3fr 0.9fr 0.9fr 1.1fr !important;
+  grid-template-columns: 1.35fr 0.85fr 0.9fr 1.1fr !important;
   gap: 48px !important;
   margin-bottom: 60px !important;
+  width: 100% !important;
+}
+
+.footer-col {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px !important;
+  min-width: 0 !important;
 }
 
 .footer-logo img {
@@ -3321,31 +3229,32 @@ body { background: var(--bg-primary); }
 }
 
 .footer-about-text {
-  font-size: 0.85rem !important;
+  font-size: 0.88rem !important;
   color: #A1A1A8 !important;
   line-height: 1.7 !important;
   font-weight: 300 !important;
-  margin-top: 14px !important;
+  margin: 0 !important;
 }
 
 .footer-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-top: 4px !important;
 }
 
 .footer-pill-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 9999px;
-  font-size: 10px;
-  font-family: var(--font-mono, monospace);
-  color: #D9A87E;
-  letter-spacing: 0.05em;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 4px 10px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 9999px !important;
+  font-size: 10px !important;
+  font-family: var(--font-mono, monospace) !important;
+  color: #D9A87E !important;
+  letter-spacing: 0.05em !important;
+  white-space: nowrap !important;
 }
 
 .footer-col-title {
@@ -3355,20 +3264,20 @@ body { background: var(--bg-primary); }
   letter-spacing: 0.18em !important;
   font-weight: 700 !important;
   color: #D9A87E !important;
-  margin-bottom: 18px !important;
+  margin: 0 0 6px 0 !important;
 }
 
 .footer-links {
   list-style: none !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 11px !important;
+  gap: 12px !important;
   padding: 0 !important;
   margin: 0 !important;
 }
 
 .footer-links a {
-  font-size: 0.85rem !important;
+  font-size: 0.88rem !important;
   color: #8E8E93 !important;
   text-decoration: none !important;
   transition: all 0.2s ease !important;
@@ -3381,20 +3290,31 @@ body { background: var(--bg-primary); }
 }
 
 .footer-showroom-info {
-  font-size: 0.85rem !important;
-  line-height: 1.6 !important;
+  font-size: 0.88rem !important;
+  line-height: 1.7 !important;
+  color: #A1A1A8 !important;
+}
+
+.footer-showroom-info p {
+  margin: 0 0 6px 0 !important;
 }
 
 .footer-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-  padding-top: 30px !important;
+  padding-top: 32px !important;
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
-  font-size: 0.8rem !important;
+  font-size: 0.82rem !important;
   color: #6C6C70 !important;
   flex-wrap: wrap !important;
   gap: 16px !important;
+}
+
+#footerCopyright {
+  margin: 0 !important;
+  font-size: 12px !important;
+  color: #7A7A80 !important;
 }
 
 .footer-legal,
@@ -3409,7 +3329,7 @@ body { background: var(--bg-primary); }
 .footer-legal-links a {
   color: #8E8E93 !important;
   text-decoration: none !important;
-  font-size: 11.5px !important;
+  font-size: 12px !important;
   transition: color 0.2s ease !important;
 }
 
@@ -3419,8 +3339,125 @@ body { background: var(--bg-primary); }
 }
 
 .footer-sep {
-  color: rgba(255, 255, 255, 0.2);
-  font-size: 10px;
+  color: rgba(255, 255, 255, 0.2) !important;
+  font-size: 10px !important;
+}
+
+/* --- Tablet Breakpoint (max-width: 992px) --- */
+@media (max-width: 992px) {
+  .site-footer {
+    padding: 60px 0 35px !important;
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 40px 28px !important;
+    margin-bottom: 48px !important;
+  }
+}
+
+/* --- Mobile Breakpoint (max-width: 768px) --- */
+@media (max-width: 768px) {
+  .site-footer {
+    padding: 50px 0 32px !important;
+  }
+
+  .site-footer .container {
+    padding: 0 20px !important;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 34px !important;
+    margin-bottom: 36px !important;
+  }
+
+  .footer-col {
+    gap: 14px !important;
+  }
+
+  .footer-logo img {
+    height: 36px !important;
+  }
+
+  .footer-about-text {
+    font-size: 0.85rem !important;
+    line-height: 1.65 !important;
+    max-width: 100% !important;
+  }
+
+  .footer-badges {
+    gap: 6px !important;
+    margin-top: 6px !important;
+  }
+
+  .footer-pill-badge {
+    font-size: 9.5px !important;
+    padding: 4px 9px !important;
+  }
+
+  .footer-col-title {
+    font-size: 11px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .footer-links {
+    gap: 10px !important;
+  }
+
+  .footer-links a {
+    font-size: 0.9rem !important;
+    padding: 4px 0 !important;
+  }
+
+  .footer-bottom {
+    padding-top: 24px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+
+  #footerCopyright {
+    font-size: 11.5px !important;
+    line-height: 1.6 !important;
+    width: 100% !important;
+  }
+
+  .footer-legal,
+  .footer-legal-links {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 8px 10px !important;
+    width: 100% !important;
+  }
+
+  .footer-legal a,
+  .footer-legal-links a {
+    font-size: 11.5px !important;
+    padding: 2px 0 !important;
+  }
+}
+
+/* --- Small Mobile Breakpoint (max-width: 480px) --- */
+@media (max-width: 480px) {
+  .site-footer {
+    padding: 44px 0 28px !important;
+  }
+
+  .site-footer .container {
+    padding: 0 16px !important;
+  }
+
+  .footer-grid {
+    gap: 30px !important;
+    margin-bottom: 30px !important;
+  }
+
+  .footer-pill-badge {
+    font-size: 9px !important;
+    padding: 3px 8px !important;
+  }
 }
 
 /* A hard, quiet feature panel rather than an ornamental lookbook card. */
