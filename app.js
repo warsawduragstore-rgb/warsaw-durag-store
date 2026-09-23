@@ -1640,10 +1640,7 @@ function initAboutCarousel() {
 // ========================================================================
 
 function openCartDrawer() {
-  DOM.cartOverlay.classList.add('active');
-  DOM.cartOverlay.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-  renderCart();
+  window.location.href = './koszyk';
 }
 
 function closeCartDrawer() {

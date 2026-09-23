@@ -193,13 +193,14 @@ export default function Header() {
               <Search className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.5]" />
             </Link>
 
-            {/* Cart Button */}
-            <button
-              onClick={() => setIsCartOpen(true)}
+            {/* Cart Link directly to /koszyk */}
+            <Link
+              href="/koszyk"
               className={`relative p-2 transition-colors focus:outline-none ${
                 isScrolled ? 'text-white hover:text-[#D9A87E]' : 'text-[#0D0D0B] hover:text-[#734C1D]'
               }`}
-              aria-label="Otwórz koszyk"
+              aria-label="Przejdź do koszyka"
+              title="Przejdź do koszyka"
             >
               <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.5]" />
               {cartCount > 0 && (
@@ -207,7 +208,7 @@ export default function Header() {
                   {cartCount}
                 </span>
               )}
-            </button>
+            </Link>
 
             {/* Mobile Hamburger Toggle Button */}
             <button
@@ -419,16 +420,14 @@ export default function Header() {
 
             {/* Drawer Bottom Bar: Direct Action */}
             <div className="p-4 border-t border-white/10 bg-[#141412] flex items-center justify-between">
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setIsCartOpen(true);
-                }}
+              <Link
+                href="/koszyk"
+                onClick={() => setMobileMenuOpen(false)}
                 className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-white text-[#0D0D0B] hover:bg-[#D9A87E] font-mono font-bold text-xs tracking-[0.2em] uppercase transition-colors"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>[ TWÓJ KOSZYK: {cartCount} ]</span>
-              </button>
+              </Link>
             </div>
           </div>
         </div>

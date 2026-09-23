@@ -86,6 +86,31 @@ export async function POST(req: NextRequest) {
             }
           }
         }
+        // 4. Send transactional confirmation email via Supabase Edge Function
+        try {
+          const emailEndpoint = process.env.NEXT_PUBLIC_SUPABASE_URL
+            ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/send-order-email`
+            : 'https://jjljaljfmrqocnfglrij.supabase.co/functions/v1/send-order-email';
+
+          fetch(emailEndpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+            },
+            body: JSON.stringify(orderData || {
+              order_no: orderNo,
+              customer_email: session.customer_email || session.metadata?.customer_email,
+              customer_name: session.metadata?.customer_name,
+              total: session.amount_total ? session.amount_total / 100 : 0,
+              delivery_method: session.metadata?.delivery_method,
+              locker_code: session.metadata?.locker_code,
+              locker_address: session.metadata?.locker_address,
+            }),
+          }).catch((emailErr) => console.warn('[Stripe Webhook] Email dispatch warning:', emailErr));
+        } catch (e) {
+          console.warn('[Stripe Webhook] Nie udało się wysłać e-maila:', e);
+        }
       } catch (dbErr) {
         console.error('[Stripe Webhook] Błąd aktualizacji bazy danych:', dbErr);
       }

@@ -755,9 +755,18 @@
           <form id="orderForm" novalidate>
             <!-- Paczkomat Fields -->
             <div id="paczkomatFields" class="shipping-fields-box">
-              <label style="font-size: 11px; text-transform: uppercase; color: var(--color-secondary); display: block; margin-bottom: 6px;">Kod Paczkomatu InPost:</label>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label style="font-size: 11px; text-transform: uppercase; color: var(--color-secondary);">Paczkomat InPost 24/7:</label>
+                <button type="button" id="btnOpenInpostMap" style="background: rgba(255, 209, 0, 0.15); border: 1px solid #FFD100; color: #FFD100; font-size: 11px; font-weight: 700; padding: 4px 10px; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; gap: 4px; border-radius: 4px;">
+                  📍 Wybierz na mapie
+                </button>
+              </div>
               <input type="text" id="inputPaczkomat" placeholder="np. WAW01A lub ulica (np. Marszałkowska)" required>
-              <div style="font-size: 11px; color: var(--color-secondary); margin-top: 4px;">Wpisz kod ulubionego paczkomatu lub miasto/ulicę.</div>
+              <div id="selectedPaczkomatBadge" style="display: none; margin-top: 8px; padding: 10px 14px; background: rgba(46, 125, 50, 0.12); border: 1px solid rgba(46, 125, 50, 0.3); border-radius: 4px; font-size: 12px; color: #E8F5E9;">
+                <div style="font-weight: 700; color: #FFD100;" id="selectedPaczkomatName"></div>
+                <div style="font-size: 11px; color: #C8E6C9;" id="selectedPaczkomatAddress"></div>
+              </div>
+              <div style="font-size: 11px; color: var(--color-secondary); margin-top: 6px;">Wpisz kod Paczkomatu lub kliknij przycisk powyżej, aby wybrać maszynę na mapie.</div>
             </div>
 
             <!-- Courier Fields -->
@@ -791,6 +800,24 @@
       </div>
     </div>
   </main>
+
+  <!-- ================= INPOST GEOWIDGET MODAL ================= -->
+  <div id="inpostModal" style="display: none; position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 15px;">
+    <div style="background: #141412; border: 1px solid #2B2B28; border-radius: 12px; width: 100%; max-width: 900px; height: 85vh; max-height: 700px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);">
+      <div style="padding: 16px 20px; background: #1A1A18; border-bottom: 1px solid #2B2B28; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="width: 10px; height: 10px; border-radius: 50%; background: #FFD100; box-shadow: 0 0 8px rgba(255,209,0,0.6);"></span>
+          <strong style="color: #fff; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em;">Wybierz Paczkomat InPost na mapie</strong>
+        </div>
+        <button type="button" id="btnCloseInpostModal" style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; line-height: 1; padding: 4px 8px;">&times;</button>
+      </div>
+      <div id="inpostWidgetContainer" style="flex-grow: 1; width: 100%; height: 100%; position: relative; background: #0D0D0B;">
+        <div id="inpostLoadingNotice" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 13px; font-family: monospace;">
+          Ładowanie mapy Paczkomatów InPost...
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ================= FOOTER ================= -->
   <footer class="site-footer" style="margin-top: 80px; padding: 40px 4%; background: #0D0D0B; color: #fff; text-align: center; font-size: 12px;">
@@ -1071,6 +1098,94 @@
         paczkomatFields.style.display = 'none';
         courierFields.style.display = 'block';
       });
+
+      // InPost Geowidget Modal Logic
+      const btnOpenInpostMap = document.getElementById('btnOpenInpostMap');
+      const inpostModal = document.getElementById('inpostModal');
+      const btnCloseInpostModal = document.getElementById('btnCloseInpostModal');
+      const inpostWidgetContainer = document.getElementById('inpostWidgetContainer');
+      const inpostLoadingNotice = document.getElementById('inpostLoadingNotice');
+      const selectedPaczkomatBadge = document.getElementById('selectedPaczkomatBadge');
+      const selectedPaczkomatName = document.getElementById('selectedPaczkomatName');
+      const selectedPaczkomatAddress = document.getElementById('selectedPaczkomatAddress');
+
+      function openInpostGeowidget() {
+        inpostModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        if (!document.getElementById('inpost-geowidget-css')) {
+          const link = document.createElement('link');
+          link.id = 'inpost-geowidget-css';
+          link.rel = 'stylesheet';
+          link.href = 'https://geowidget.inpost.pl/inpost-geowidget.css';
+          document.head.appendChild(link);
+        }
+
+        if (!document.getElementById('inpost-geowidget-js')) {
+          const script = document.createElement('script');
+          script.id = 'inpost-geowidget-js';
+          script.src = 'https://geowidget.inpost.pl/inpost-geowidget.js';
+          script.async = true;
+          script.onload = () => {
+            if (inpostLoadingNotice) inpostLoadingNotice.style.display = 'none';
+            mountGeowidgetElement();
+          };
+          script.onerror = () => {
+            if (inpostLoadingNotice) inpostLoadingNotice.textContent = 'Nie udało się załadować mapy. Wpisz kod w polu poniżej.';
+          };
+          document.body.appendChild(script);
+        } else {
+          if (inpostLoadingNotice) inpostLoadingNotice.style.display = 'none';
+          mountGeowidgetElement();
+        }
+      }
+
+      function mountGeowidgetElement() {
+        if (!document.querySelector('inpost-geowidget')) {
+          const widget = document.createElement('inpost-geowidget');
+          widget.setAttribute('language', 'pl');
+          widget.setAttribute('config', 'parcelcollect');
+          widget.setAttribute('onpoint', 'onStaticPointSelect');
+          widget.style.width = '100%';
+          widget.style.height = '100%';
+          widget.style.display = 'block';
+          inpostWidgetContainer.appendChild(widget);
+        }
+      }
+
+      function closeInpostGeowidget() {
+        inpostModal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+
+      window.onStaticPointSelect = function(rawPoint) {
+        const p = rawPoint && rawPoint.detail ? rawPoint.detail : rawPoint;
+        if (!p) return;
+        const name = (p.name || p.id || '').toUpperCase();
+        const line1 = p.address_details?.street 
+          ? `${p.address_details.street} ${p.address_details.building_number || ''}`.trim()
+          : p.address?.line1 || p.address?.street || '';
+        const city = p.address_details?.city || p.address?.city || (p.address?.line2 || '');
+        const addressStr = `${line1}, ${city}`.trim();
+
+        inputPaczkomat.value = `${name} (${addressStr})`;
+        selectedPaczkomatName.textContent = `Paczkomat: ${name}`;
+        selectedPaczkomatAddress.textContent = addressStr;
+        selectedPaczkomatBadge.style.display = 'block';
+
+        closeInpostGeowidget();
+      };
+
+      document.addEventListener('onpointselect', (e) => window.onStaticPointSelect(e));
+      document.addEventListener('point:selected', (e) => window.onStaticPointSelect(e));
+
+      if (btnOpenInpostMap) btnOpenInpostMap.addEventListener('click', openInpostGeowidget);
+      if (btnCloseInpostModal) btnCloseInpostModal.addEventListener('click', closeInpostGeowidget);
+      if (inpostModal) {
+        inpostModal.addEventListener('click', (e) => {
+          if (e.target === inpostModal) closeInpostGeowidget();
+        });
+      }
 
       // Place Order
       orderForm.addEventListener('submit', async (e) => {

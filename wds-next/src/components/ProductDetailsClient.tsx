@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Product } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -216,8 +217,14 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
             </div>
 
             {addedMessage && (
-              <div className="bg-[#0D0D0B] text-[#D9A87E] text-xs font-mono p-3 border border-[#D9A87E] tracking-wider uppercase">
-                [ OK ] Produkt został dodany do Twojego koszyka.
+              <div className="bg-[#0D0D0B] text-[#D9A87E] text-xs font-mono p-3 border border-[#D9A87E] tracking-wider uppercase flex items-center justify-between gap-2 flex-wrap">
+                <span>[ OK ] Produkt został dodany do Twojego koszyka.</span>
+                <Link
+                  href="/koszyk"
+                  className="inline-flex items-center gap-1 font-bold text-white hover:text-[#D9A87E] underline"
+                >
+                  Przejdź do koszyka →
+                </Link>
               </div>
             )}
           </div>

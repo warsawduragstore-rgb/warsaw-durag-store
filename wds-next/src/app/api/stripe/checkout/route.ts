@@ -6,18 +6,13 @@ import { CartItemRef } from '@/store/useCartStore';
 
 export async function POST(req: NextRequest) {
   try {
-    if (
-      !process.env.STRIPE_SECRET_KEY ||
-      process.env.STRIPE_SECRET_KEY.includes('placeholder') ||
-      process.env.STRIPE_SECRET_KEY.includes('twoj_tajny')
-    ) {
-      return NextResponse.json(
-        {
-          error: 'Brak aktywnego klucza Stripe. Wklej poprawny STRIPE_SECRET_KEY (np. sk_test_...) w pliku wds-next/.env.local.',
-        },
-        { status: 500 }
-      );
-    }
+    const rawStripeKey = process.env.STRIPE_SECRET_KEY;
+    const hasStripeKey = Boolean(
+      rawStripeKey &&
+      !rawStripeKey.includes('placeholder') &&
+      !rawStripeKey.includes('twoj_tajny') &&
+      rawStripeKey.trim().length > 10
+    );
 
     const body = await req.json();
     const {
@@ -195,6 +190,60 @@ export async function POST(req: NextRequest) {
         },
         quantity: count,
       });
+    }
+
+    // If Stripe key is missing in development mode, allow instant mock payment simulation
+    if (!hasStripeKey) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('[Stripe Dev Mode] Brak STRIPE_SECRET_KEY w .env.local. Symulacja pomyślnej płatności.');
+        const mockSessionId = `dev_mock_${Date.now()}`;
+        const devOrderPayload = {
+          order_no: orderNo,
+          customer_name: customerName.trim(),
+          customer_email: customerEmail.trim(),
+          customer_phone: customerPhone.trim(),
+          delivery_method: deliveryMethod as 'paczkomat' | 'courier' | 'pickup',
+          locker_code: deliveryMethod === 'paczkomat' ? effectiveLockerCode : null,
+          point_id: deliveryMethod === 'paczkomat' ? effectiveLockerCode : null,
+          locker_address: lockerAddress || (deliveryMethod === 'pickup' ? 'Włodarzewska 4, Warszawa' : null),
+          items: resolvedCart.items.map((i) => ({
+            id: i.productId,
+            name: i.product.name,
+            price: i.unitPrice,
+            quantity: i.qty,
+            variant: i.variant,
+            category: i.product.category,
+            material: i.product.material,
+            image: i.product.images?.[0] || null,
+            promo_eligible: i.promoEligible,
+          })),
+          items_summary: resolvedCart.items
+            .map((i) => `${i.qty}x ${i.product.name}${i.variant ? ` (${i.variant})` : ''}`)
+            .join(' | '),
+          subtotal: resolvedCart.subtotal,
+          discount_code: resolvedCart.promoCode,
+          discount_val: resolvedCart.freeItemsDiscount + resolvedCart.promoDiscount,
+          total: resolvedCart.total,
+          status: 'new' as const,
+          payment_status: 'paid' as const,
+          stripe_session_id: mockSessionId,
+        };
+
+        await createOrderInSupabase(devOrderPayload);
+
+        return NextResponse.json({
+          url: `${origin}/zamowienie/sukces?session_id=${mockSessionId}&order_no=${orderNo}&dev=true`,
+          sessionId: mockSessionId,
+          orderNo,
+        });
+      }
+
+      return NextResponse.json(
+        {
+          error: 'Brak aktywnego klucza Stripe. Wklej poprawny STRIPE_SECRET_KEY (np. sk_test_...) w pliku wds-next/.env.local.',
+        },
+        { status: 500 }
+      );
     }
 
     // Promo code coupon discount (if applicable beyond the BOGO promo)

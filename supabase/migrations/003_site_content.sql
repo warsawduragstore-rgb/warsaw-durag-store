@@ -43,7 +43,7 @@ INSERT INTO site_content (section_key, content) VALUES
     "isActive": true
   }'::jsonb
 ),
-(
+(ncaught SyntaxError: Unexpected token ')' (at app.js:3838:2)
   'hero',
   '{
     "accent": "Warsaw Atelier / 52.2297° N",
