@@ -14,6 +14,7 @@ import {
   Check,
   Sparkles,
   ChevronDown,
+  ShieldCheck,
 } from 'lucide-react';
 
 interface ProductDetailsClientProps {
@@ -22,7 +23,7 @@ interface ProductDetailsClientProps {
 
 export default function ProductDetailsClient({ product }: ProductDetailsClientProps) {
   const { addToCart } = useCart();
-  const { language, t } = useLanguage();
+  const { language, formatPrice, t } = useLanguage();
   const [selectedImage, setSelectedImage] = useState(product.images[0] || '');
   const [quantity, setQuantity] = useState(1);
   const [addedMessage, setAddedMessage] = useState(false);
@@ -37,7 +38,6 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // When main buy button is NOT intersecting (scrolled past), show sticky bar
         setShowStickyBar(!entry.isIntersecting);
       },
       { rootMargin: '0px 0px -50px 0px', threshold: 0 }
@@ -64,7 +64,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-start">
         {/* Left: Gallery */}
         <div className="space-y-3">
-          <div className="relative aspect-[3/4] bg-[#F6F5F2] border border-[#E5E2DC] overflow-hidden">
+          <div className="relative aspect-[3/4] bg-[#0E0E10] border border-[#26262A] overflow-hidden">
             <Image
               src={mainImage}
               alt={displayName}
@@ -73,12 +73,12 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
-            <div className="absolute top-3 left-3 bg-[#0D0D0B] text-[#D9A87E] text-[10px] uppercase font-mono tracking-widest px-2.5 py-1 border border-white/10">
+            <div className="absolute top-3 left-3 bg-[#0B0B0C]/90 text-[#C8794B] text-[10px] uppercase font-mono tracking-widest px-2.5 py-1 border border-[#C8794B]/30">
               {product.categoryLabel}
             </div>
 
             {product.category === 'silk' && (
-              <div className="absolute top-3 right-3 bg-[#D9A87E] text-[#0D0D0B] text-[10px] uppercase font-mono tracking-widest font-bold px-2.5 py-1">
+              <div className="absolute top-3 right-3 bg-[#C8794B] text-[#0B0B0C] text-[10px] uppercase font-mono tracking-widest font-bold px-2.5 py-1">
                 100% Jedwab 19 Momme
               </div>
             )}
@@ -90,10 +90,10 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
                 <button
                   key={idx}
                   onClick={() => setSelectedImage(img)}
-                  className={`relative w-16 h-20 sm:w-20 sm:h-24 shrink-0 bg-[#F6F5F2] border transition-colors cursor-pointer ${
+                  className={`relative w-16 h-20 sm:w-20 sm:h-24 shrink-0 bg-[#0E0E10] border transition-colors cursor-pointer ${
                     (selectedImage === img || (!selectedImage && idx === 0))
-                      ? 'border-[#0D0D0B] ring-1 ring-[#0D0D0B]'
-                      : 'border-[#E5E2DC] opacity-75 hover:opacity-100 hover:border-[#0D0D0B]'
+                      ? 'border-[#C8794B] ring-1 ring-[#C8794B]'
+                      : 'border-[#26262A] opacity-75 hover:opacity-100 hover:border-[#C8794B]'
                   }`}
                   aria-label={`Pokaż zdjęcie ${idx + 1}`}
                 >
@@ -107,95 +107,101 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
         {/* Right: Product Info & Buy Action */}
         <div className="space-y-6">
           <div>
-            <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-[#E5E2DC] text-[10px] font-mono">
-              <span className="uppercase tracking-widest font-bold text-[#734C1D]">
+            <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-[#26262A] text-[10px] font-mono">
+              <span className="uppercase tracking-widest font-bold text-[#C8794B]">
                 [ {product.material} ]
               </span>
-              <span className="text-gray-500 uppercase tracking-wider">
+              <span className="text-[#787570] uppercase tracking-wider">
                 ATELIER WARSZAWA • NADAWANIE 24H
               </span>
             </div>
 
-            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl text-[#0D0D0B] font-medium leading-tight">
+            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl text-[#FAFAF9] font-normal leading-tight">
               {displayName}
             </h1>
 
-            <div className="flex items-center gap-2 mt-2 font-mono text-xs text-[#6B6D74]">
-              <span className="text-[#734C1D] font-bold">[ OCENA 5.0 ]</span>
+            <div className="flex items-center gap-2 mt-2 font-mono text-xs text-[#A3A09B]">
+              <span className="text-[#C8794B] font-bold flex items-center gap-1">
+                <Star className="w-3.5 h-3.5 fill-[#C8794B]" /> 5.0 / 5.0
+              </span>
               <span>•</span>
-              <span>{Math.max(product.reviews?.length || 1, 1)} zweryfikowane opinie waverów</span>
+              <span>{Math.max(product.reviews?.length || 1, 1)} zweryfikowane opinie</span>
             </div>
           </div>
 
           {/* 2 + 1 GRATIS Promo Box */}
-          <div className="bg-[#0D0D0B] text-white p-4 border border-[#D9A87E] flex items-center justify-between">
+          <div className="bg-[#141416] text-white p-4 border border-[#C8794B]/40 flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-mono text-[#D9A87E] uppercase tracking-widest font-bold block mb-0.5">
+              <span className="text-[10px] font-mono text-[#C8794B] uppercase tracking-widest font-bold block mb-0.5">
                 [ OFERTA ZESTAWOWA ]
               </span>
-              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">2 + 1 GRATIS</h4>
-              <p className="text-[11px] text-gray-300 font-light mt-0.5">Dodaj 3 dowolne duragi do koszyka — trzeci otrzymasz gratis.</p>
+              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FAFAF9]">
+                2 + 1 GRATIS (TRZECI MODEL ZA 1 ZŁ)
+              </h4>
+              <p className="text-[11px] text-[#A3A09B] font-light mt-0.5">
+                Dodaj 3 dowolne duragi do koszyka — rabat naliczy się automatycznie.
+              </p>
             </div>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0D0D0B] bg-[#D9A87E] px-2.5 py-1 shrink-0">
-              RABAT
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0B0B0C] bg-[#C8794B] px-2.5 py-1 shrink-0">
+              PROMO
             </span>
           </div>
 
           {/* Price & Free Delivery */}
-          <div className="pb-4 border-b border-[#E5E2DC]">
+          <div className="pb-4 border-b border-[#26262A]">
             <div className="flex items-baseline gap-4">
-              <span className="font-mono text-3xl font-extrabold text-[#0D0D0B] tracking-tight">
-                {product.price.toFixed(2)} PLN
+              <span className="font-mono text-3xl font-bold text-[#FAFAF9] tracking-tight">
+                {formatPrice(product.price, product.priceEur)}
               </span>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#734C1D] border border-[#734C1D]/40 px-2 py-0.5">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 border border-emerald-500/30 px-2 py-0.5 bg-emerald-500/10">
                 Paczkomat InPost: 0 zł
               </span>
             </div>
-            <span className="text-xs text-gray-400 font-mono block mt-1">
+            <span className="text-xs text-[#787570] font-mono block mt-1">
               Cena brutto • Bezpłatna dostawa na terenie całej Polski
             </span>
           </div>
 
           {/* Key Product Highlights Bullets */}
-          <div className="grid grid-cols-2 gap-2 text-xs font-mono text-[#3B3C40] bg-[#F6F5F2] p-4 border border-[#E5E2DC]">
+          <div className="grid grid-cols-2 gap-2 text-xs font-mono text-[#ECEAE7] bg-[#141416] p-4 border border-[#26262A]">
             <div className="flex items-center gap-2">
-              <span className="text-[#734C1D] font-bold">[✓]</span>
+              <span className="text-[#C8794B] font-bold">◆</span>
               <span>Pasy: 100 cm (double wrap)</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[#734C1D] font-bold">[✓]</span>
-              <span>Szew bezodciskowy</span>
+              <span className="text-[#C8794B] font-bold">◆</span>
+              <span>Szew bezodciskowy na zewnątrz</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[#734C1D] font-bold">[✓]</span>
+              <span className="text-[#C8794B] font-bold">◆</span>
               <span>Szerokość pasów: 8 cm</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[#734C1D] font-bold">[✓]</span>
-              <span>Atelier Warszawa</span>
+              <span className="text-[#C8794B] font-bold">◆</span>
+              <span>Atelier Warszawa • 24h</span>
             </div>
           </div>
 
           {/* Description */}
-          <div className="text-xs sm:text-sm text-[#3B3C40] font-light leading-relaxed whitespace-pre-line border-b border-[#E5E2DC] pb-4">
+          <div className="text-xs sm:text-sm text-[#A3A09B] font-light leading-relaxed whitespace-pre-line border-b border-[#26262A] pb-4">
             {product.description}
           </div>
 
           {/* Main Quantity & Add to Cart Container */}
           <div ref={mainBuyBoxRef} className="pt-2 space-y-3">
             <div className="flex items-center gap-3">
-              <div className="flex items-center border border-[#0D0D0B] bg-white shrink-0">
+              <div className="flex items-center border border-[#26262A] bg-[#141416] shrink-0">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-4 py-3 text-sm text-[#0D0D0B] hover:bg-gray-100 font-mono font-bold cursor-pointer"
+                  className="px-4 py-3 text-sm text-[#FAFAF9] hover:bg-[#26262A] font-mono font-bold cursor-pointer transition-colors"
                   aria-label="Zmniejsz ilość"
                 >
                   -
                 </button>
-                <span className="px-3 text-sm font-mono font-bold min-w-[2rem] text-center">{quantity}</span>
+                <span className="px-3 text-sm font-mono font-bold text-white min-w-[2rem] text-center">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="px-4 py-3 text-sm text-[#0D0D0B] hover:bg-gray-100 font-mono font-bold cursor-pointer"
+                  className="px-4 py-3 text-sm text-[#FAFAF9] hover:bg-[#26262A] font-mono font-bold cursor-pointer transition-colors"
                   aria-label="Zwiększ ilość"
                 >
                   +
@@ -206,22 +212,22 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
                 onClick={handleAddToCart}
                 className={`flex-grow py-3.5 sm:py-4 px-6 text-xs sm:text-sm font-mono font-bold uppercase tracking-[0.18em] transition-colors border cursor-pointer ${
                   addedMessage
-                    ? 'bg-[#0D0D0B] border-[#0D0D0B] text-[#D9A87E]'
-                    : 'bg-[#0D0D0B] border-[#0D0D0B] text-white hover:bg-[#D9A87E] hover:border-[#D9A87E] hover:text-[#0D0D0B]'
+                    ? 'bg-[#C8794B] border-[#C8794B] text-[#0B0B0C]'
+                    : 'bg-[#C8794B] border-[#C8794B] text-[#0B0B0C] hover:bg-[#FAFAF9] hover:border-[#FAFAF9]'
                 }`}
               >
                 {addedMessage
                   ? '[ DODANO DO KOSZYKA ]'
-                  : `DODAJ DO KOSZYKA • ${(product.price * quantity).toFixed(2)} PLN`}
+                  : `DODAJ DO KOSZYKA • ${formatPrice(product.price * quantity, product.priceEur ? product.priceEur * quantity : undefined)}`}
               </button>
             </div>
 
             {addedMessage && (
-              <div className="bg-[#0D0D0B] text-[#D9A87E] text-xs font-mono p-3 border border-[#D9A87E] tracking-wider uppercase flex items-center justify-between gap-2 flex-wrap">
+              <div className="bg-[#141416] text-[#C8794B] text-xs font-mono p-3 border border-[#C8794B] tracking-wider uppercase flex items-center justify-between gap-2 flex-wrap">
                 <span>[ OK ] Produkt został dodany do Twojego koszyka.</span>
                 <Link
                   href="/koszyk"
-                  className="inline-flex items-center gap-1 font-bold text-white hover:text-[#D9A87E] underline"
+                  className="inline-flex items-center gap-1 font-bold text-white hover:text-[#C8794B] underline"
                 >
                   Przejdź do koszyka →
                 </Link>
@@ -230,84 +236,84 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
           </div>
 
           {/* Quick Accordion Tabs: Shipping, Payments, Reviews */}
-          <div className="border-t border-[#E5E2DC] pt-4 space-y-2">
+          <div className="border-t border-[#26262A] pt-4 space-y-2">
             {/* Delivery Accordion */}
-            <div className="border border-[#E5E2DC] bg-white">
+            <div className="border border-[#26262A] bg-[#141416]">
               <button
                 onClick={() => setActiveTab(activeTab === 'shipping' ? null : 'shipping')}
-                className="w-full px-4 py-3 text-left font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-between hover:bg-[#F6F5F2] transition-colors cursor-pointer"
+                className="w-full px-4 py-3 text-left font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-between hover:bg-[#1A1A1B] transition-colors cursor-pointer text-[#FAFAF9]"
               >
-                <span className="text-[#0D0D0B]">[ 01 ] DARMOWA DOSTAWA & WYSYŁKA 24H</span>
+                <span>[ 01 ] DARMOWA DOSTAWA & WYSYŁKA 24H</span>
                 <ChevronDown
                   className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                    activeTab === 'shipping' ? 'rotate-180 text-[#0D0D0B]' : ''
+                    activeTab === 'shipping' ? 'rotate-180 text-[#C8794B]' : ''
                   }`}
                 />
               </button>
               {activeTab === 'shipping' && (
-                <div className="px-4 pb-4 pt-1 text-xs text-[#3B3C40] space-y-2 border-t border-[#E5E2DC] font-light">
+                <div className="px-4 pb-4 pt-1 text-xs text-[#A3A09B] space-y-2 border-t border-[#26262A] font-light">
                   <p>• <strong>Paczkomat InPost:</strong> 0 zł (darmowa dostawa dla każdego zamówienia)</p>
-                  <p>• <strong>Kurier InPost / DPD:</strong> 12,99 zł</p>
-                  <p>• <strong>Odbiór osobisty w Warszawie:</strong> ul. Włodarzewska 4 (po kontakcie)</p>
+                  <p>• <strong>Kurier InPost / DPD:</strong> 0 zł (lub 12,99 zł poniżej progu)</p>
+                  <p>• <strong>Odbiór osobisty w Warszawie:</strong> ul. Włodarzewska 4 / Centrum (po kontakcie)</p>
                   <p>• <strong>Czas dostawy:</strong> Zazwyczaj 1 dzień roboczy od nadania</p>
                 </div>
               )}
             </div>
 
             {/* Payments Accordion */}
-            <div className="border border-[#E5E2DC] bg-white">
+            <div className="border border-[#26262A] bg-[#141416]">
               <button
                 onClick={() => setActiveTab(activeTab === 'payments' ? null : 'payments')}
-                className="w-full px-4 py-3 text-left font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-between hover:bg-[#F6F5F2] transition-colors cursor-pointer"
+                className="w-full px-4 py-3 text-left font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-between hover:bg-[#1A1A1B] transition-colors cursor-pointer text-[#FAFAF9]"
               >
-                <span className="text-[#0D0D0B]">[ 02 ] PŁATNOŚCI & 14 DNI NA ZWROT</span>
+                <span>[ 02 ] PŁATNOŚCI & 14 DNI NA ZWROT</span>
                 <ChevronDown
                   className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                    activeTab === 'payments' ? 'rotate-180 text-[#0D0D0B]' : ''
+                    activeTab === 'payments' ? 'rotate-180 text-[#C8794B]' : ''
                   }`}
                 />
               </button>
               {activeTab === 'payments' && (
-                <div className="px-4 pb-4 pt-1 text-xs text-[#3B3C40] space-y-2 border-t border-[#E5E2DC] font-light">
-                  <p>• <strong>Metody płatności:</strong> BLIK, Apple Pay, Google Pay, szybki przelew online, karty płatnicze</p>
-                  <p>• <strong>Bezpieczeństwo:</strong> Szyfrowanie SSL 256-bit</p>
+                <div className="px-4 pb-4 pt-1 text-xs text-[#A3A09B] space-y-2 border-t border-[#26262A] font-light">
+                  <p>• <strong>Metody płatności:</strong> BLIK, Apple Pay, Google Pay, karty, Przelewy24</p>
+                  <p>• <strong>Bezpieczeństwo:</strong> Szyfrowanie SSL 256-bit przez bramkę Stripe</p>
                   <p>• <strong>Zwroty:</strong> 14 dni na darmowy zwrot lub wymianę bez zbędnych pytań</p>
                 </div>
               )}
             </div>
 
             {/* Reviews Accordion */}
-            <div className="border border-[#E5E2DC] bg-white">
+            <div className="border border-[#26262A] bg-[#141416]">
               <button
                 onClick={() => setActiveTab(activeTab === 'reviews' ? null : 'reviews')}
-                className="w-full px-4 py-3 text-left font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-between hover:bg-[#F6F5F2] transition-colors cursor-pointer"
+                className="w-full px-4 py-3 text-left font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-between hover:bg-[#1A1A1B] transition-colors cursor-pointer text-[#FAFAF9]"
               >
-                <span className="text-[#0D0D0B]">[ 03 ] OPINIE KLIENTÓW ({product.reviews?.length || 1})</span>
+                <span>[ 03 ] OPINIE KLIENTÓW ({product.reviews?.length || 1})</span>
                 <ChevronDown
                   className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                    activeTab === 'reviews' ? 'rotate-180 text-[#0D0D0B]' : ''
+                    activeTab === 'reviews' ? 'rotate-180 text-[#C8794B]' : ''
                   }`}
                 />
               </button>
               {activeTab === 'reviews' && (
-                <div className="px-4 pb-4 pt-2 text-xs text-[#3B3C40] space-y-3 border-t border-[#E5E2DC] font-light">
+                <div className="px-4 pb-4 pt-2 text-xs text-[#A3A09B] space-y-3 border-t border-[#26262A] font-light">
                   {(product.reviews && product.reviews.length > 0) ? (
                     product.reviews.map((rev, idx) => (
-                      <div key={idx} className="border-b border-[#E5E2DC] pb-2.5 last:border-b-0">
+                      <div key={idx} className="border-b border-[#26262A] pb-2.5 last:border-b-0">
                         <div className="flex items-center justify-between mb-1 font-mono text-[11px]">
-                          <span className="font-bold text-[#0D0D0B]">{rev.author}</span>
-                          <span className="text-[#734C1D] font-bold">[ OCENA 5.0 ]</span>
+                          <span className="font-bold text-white">{rev.author}</span>
+                          <span className="text-[#C8794B] font-bold">[ OCENA 5.0 ]</span>
                         </div>
-                        <p className="text-gray-600 italic">&ldquo;{rev.comment}&rdquo;</p>
+                        <p className="text-[#ECEAE7] italic">&ldquo;{rev.comment}&rdquo;</p>
                       </div>
                     ))
                   ) : (
-                    <div className="border-b border-[#E5E2DC] pb-2.5">
+                    <div className="border-b border-[#26262A] pb-2.5">
                       <div className="flex items-center justify-between mb-1 font-mono text-[11px]">
-                        <span className="font-bold text-[#0D0D0B]">Tomasz K., Warszawa</span>
-                        <span className="text-[#734C1D] font-bold">[ OCENA 5.0 ]</span>
+                        <span className="font-bold text-white">Tomasz K., Warszawa</span>
+                        <span className="text-[#C8794B] font-bold">[ OCENA 5.0 ]</span>
                       </div>
-                      <p className="text-gray-600 italic">&ldquo;Najwyższa jakość jedwabiu w Polsce. Pasy są długie, szew nie zostawia śladów na czole po nocy. Polecam!&rdquo;</p>
+                      <p className="text-[#ECEAE7] italic">&ldquo;Najwyższa jakość jedwabiu w Polsce. Pasy są długie, szew nie zostawia śladów na czole po nocy. Polecam!&rdquo;</p>
                     </div>
                   )}
                 </div>
@@ -319,10 +325,10 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
 
       {/* Mobile Sticky Add-to-Cart Bottom Bar */}
       {showStickyBar && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#0D0D0B] text-white p-3 border-t border-white/20 md:hidden">
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#0B0B0C] text-white p-3 border-t border-[#26262A] md:hidden shadow-2xl">
           <div className="flex items-center justify-between gap-3 max-w-md mx-auto">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="relative w-10 h-10 overflow-hidden shrink-0 border border-white/20 bg-[#111111]">
+              <div className="relative w-10 h-10 overflow-hidden shrink-0 border border-[#26262A] bg-[#141416]">
                 <Image
                   src={mainImage}
                   alt={displayName}
@@ -332,20 +338,20 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
                 />
               </div>
               <div className="min-w-0">
-                <h4 className="text-xs font-serif font-medium text-white truncate">{displayName}</h4>
+                <h4 className="text-xs font-serif font-normal text-white truncate">{displayName}</h4>
                 <div className="flex items-center gap-1.5 font-mono text-xs">
-                  <span className="font-bold text-[#D9A87E]">{product.price.toFixed(2)} PLN</span>
-                  <span className="text-[10px] text-gray-400">• 0 ZŁ</span>
+                  <span className="font-bold text-[#C8794B]">{formatPrice(product.price, product.priceEur)}</span>
+                  <span className="text-[10px] text-[#787570]">• 0 ZŁ</span>
                 </div>
               </div>
             </div>
 
             <button
               onClick={handleAddToCart}
-              className={`py-2.5 px-4 font-mono font-bold text-xs uppercase tracking-wider shrink-0 transition-colors border ${
+              className={`py-2.5 px-4 font-mono font-bold text-xs uppercase tracking-wider shrink-0 transition-colors border cursor-pointer ${
                 addedMessage
-                  ? 'bg-[#0D0D0B] border-[#0D0D0B] text-[#D9A87E]'
-                  : 'bg-[#D9A87E] border-[#D9A87E] text-[#0D0D0B] hover:bg-white hover:border-white'
+                  ? 'bg-[#0B0B0C] border-[#0B0B0C] text-[#C8794B]'
+                  : 'bg-[#C8794B] border-[#C8794B] text-[#0B0B0C] hover:bg-[#FAFAF9]'
               }`}
             >
               {addedMessage ? '[ DODANO ]' : 'KUP TERAZ'}

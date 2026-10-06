@@ -8,22 +8,23 @@ import ProductCard from '@/components/ProductCard';
 import AboutStoryCarousel from '@/components/AboutStoryCarousel';
 import HeroVideo from '@/components/HeroVideo';
 import { fetchProducts, fetchBestsellers } from '@/lib/products-db';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { fetchCustomerReviews } from '@/lib/supabase';
+import { ArrowRight, ChevronRight, Sparkles, ShieldCheck, Truck, RefreshCw, Star } from 'lucide-react';
 import { SITE_URL } from '@/lib/siteConfig';
 
 export const revalidate = 60; // ISR: 60s cache with on-demand tag revalidation
 
 export const metadata: Metadata = {
-  title: 'Warsaw Durag Store — Ręcznie Szyte Duragi Jedwabne i Satynowe',
+  title: 'Warsaw Durag Store — Jedyne Duragi Szyte w Polsce | 100% Jedwab Morwowy 19 Momme',
   description:
-    'Pierwszy polski sklep z duragami z prawdziwego jedwabiu morwowego 19 Momme, luksusowej satyny i weluru. Ręczne pakowanie w Warszawie, darmowa wysyłka i profesjonalne poradniki 360 waves.',
+    'Pierwszy polski butik z duragami z prawdziwego jedwabiu morwowego 19 Momme, luksusowej satyny i aksamitu. Zewnętrzny szew bezodciskowy, pasy 100 cm. Ręczne szycie w Warszawie, darmowy Paczkomat 0 zł i wysyłka w 24h.',
   alternates: {
     canonical: SITE_URL,
   },
   openGraph: {
     title: 'Warsaw Durag Store — Ręcznie Szyte Duragi z Warszawy',
     description:
-      'Odkryj kolekcję ręcznie szytych duragów z czystego jedwabiu morwowego 19 Momme, satyny i aksamitu. Polski butik streetwear.',
+      'Odkryj kolekcję duragów z czystego jedwabiu morwowego 19 Momme, satyny i aksamitu. Polski butik streetwear z Warszawy.',
     url: SITE_URL,
     siteName: 'Warsaw Durag Store',
     images: [
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Warsaw Durag Store — Duragi Jedwabne i Satynowe',
-    description: 'Ręcznie szyte duragi w Warszawie. 100% naturalny jedwab morwowy i luksusowa satyna.',
+    description: 'Ręcznie szyte duragi w Warszawie. 100% naturalny jedwab morwowy 19 Momme i luksusowa satyna.',
     images: [`${SITE_URL}/assets/lookbook_editorial.png`],
   },
 };
@@ -50,60 +51,36 @@ const CATEGORY_CARDS = [
     slug: 'silk',
     title: 'Jedwab Morwowy',
     badge: '19 Momme',
-    desc: 'Czysty jedwab naturalny. Ochrona przed puszeniem i łamaniem.',
+    desc: 'Czysty jedwab naturalny Milanówek. Maksymalna redukcja tarcia i ochrona nawilżenia.',
     code: 'SPEC-01',
   },
   {
     slug: 'satin',
     title: 'Satyna Premium',
     badge: 'Bestseller',
-    desc: 'Maksymalna gładkość do codziennego noszenia i fal 360.',
+    desc: 'Gładka mikrofibra o wysokiej gęstości do codziennego noszenia i pielęgnacji fal 360.',
     code: 'SPEC-02',
   },
   {
     slug: 'velvet',
     title: 'Welur Luksusowy',
-    badge: 'Kompresja',
-    desc: 'Gruba, aksamitna struktura do układania i utrwalania fal.',
+    badge: 'Kompresja 360',
+    desc: 'Mięsista, aksamitna struktura stworzona do układania i głębokiego utrwalania fal.',
     code: 'SPEC-03',
   },
   {
     slug: 'seasonal',
     title: 'Serie Sezonowe',
     badge: 'Limitowane',
-    desc: 'Unikatowe tkaniny: oddychający len, cupro i krepa.',
+    desc: 'Autorskie dropy: oddychający len, cupro o chłodnym chwycie oraz miękka krepa.',
     code: 'SPEC-04',
   },
   {
     slug: 'accessories',
     title: 'Akcesoria & Fale',
     badge: '360 Waves',
-    desc: 'Naturalne szczotki z włosia dzika oraz czepki kompresyjne.',
+    desc: 'Profesjonalne twarde i miękkie szczotki z włosia dzika oraz czepki kompresyjne.',
     code: 'SPEC-05',
-  },
-];
-
-const REVIEWS_DATA = [
-  {
-    name: 'Kamil W.',
-    city: 'Warszawa',
-    product: 'Durag Milanówek 19 Momme',
-    rating: '5.0',
-    text: 'Jedyny durag w Polsce, po którym nie mam odcisków na czole po nocy. Prawdziwy jedwab robi niesamowitą różnicę — włosy są miękkie i nawilżone.',
-  },
-  {
-    name: 'Mateusz S.',
-    city: 'Gdańsk',
-    product: 'Durag Satynowy Czarny',
-    rating: '5.0',
-    text: 'Paczka w Paczkomacie była dosłownie na drugi dzień. Jakość wykonania i długość pasów (100 cm) sprawiają, że zawiązanie go zajmuje 15 sekund. Klasa.',
-  },
-  {
-    name: 'Patryk M.',
-    city: 'Kraków',
-    product: 'Durag Welurowy Granat',
-    rating: '5.0',
-    text: 'Kompresja fal 360 na najwyższym poziomie. Materiał jest gęsty, nie zsuwa się w nocy, a szew nie wbija się w skórę.',
   },
 ];
 
@@ -111,29 +88,35 @@ const FAQS_DATA = [
   {
     num: '01',
     q: 'Kiedy paczka zostanie wysłana?',
-    a: 'Wszystkie zamówienia pakujemy ręcznie i nadajemy w ciągu 24 godzin z Warszawy. Przesyłki do Paczkomatu InPost trafiają zazwyczaj w 1 dzień roboczy. Dostawa jest bezpłatna.',
+    a: 'Wszystkie zamówienia pakujemy ręcznie w warszawskim atelier i nadajemy w ciągu 24 godzin. Przesyłki do Paczkomatu InPost trafiają zazwyczaj w 1 dzień roboczy. Dostawa w Polsce jest bezpłatna (0 zł).',
   },
   {
     num: '02',
-    q: 'Czym różni się jedwab morwowy 19 Momme od satyny poliestrowej?',
-    a: 'Nasz model Milanówek wykonany jest w 100% z naturalnego jedwabiu morwowego o wysokiej gramaturze 19 Momme. Naturalne włókno jedwabne składa się z białek zbliżonych do struktury ludzkiego włosa — nie pochłania sebum ani odżywek, redukuje puszenie i łamliwość.',
+    q: 'Jak działa promocja 2+1 (trzeci durag za 1 zł)?',
+    a: 'Wybierz dowolne 2 duragi do koszyka. Nasz system automatycznie dobierze 3. losowy model z puli prezentowej w symbolicznej cenie 1 PLN (0.25 EUR). Promocja łączy się z darmową dostawą InPost.',
   },
   {
     num: '03',
-    q: 'Czy durag zostawia odciski na czole po całej nocy?',
-    a: 'Nie. Wszystkie duragi Warsaw Durag Store mają specjalny szew zewnętrzny oraz szerokie na 8 cm pasy o długości 100 cm, które równomiernie rozkładają nacisk.',
+    q: 'Czym różni się jedwab morwowy 19 Momme od zwykłej satyny poliestrowej?',
+    a: 'Nasz model Milanówek wykonany jest w 100% z naturalnego jedwabiu morwowego o gramaturze 19 Momme. Naturalne włókno białkowe nie pochłania sebum ani odżywek z włosów, zapobiega mikrouszkodzeniom i jest hipoalergiczne.',
   },
   {
     num: '04',
-    q: 'Jak działa rabat w zestawie 2 + 1 gratis?',
-    a: 'Wybierz dowolne 3 duragi do koszyka. System automatycznie obniży wartość zamówienia o cenę trzeciego duraga przy kasie. Promocja łączy się z darmową wysyłką InPost.',
+    q: 'Czy durag zostawia odciski na czole po całej nocy?',
+    a: 'Nie. Wszystkie duragi Warsaw Durag Store mają autorski szew wyprowadzony na zewnątrz oraz szerokie pasy o długości 100 cm, które równomiernie rozkładają nacisk.',
+  },
+  {
+    num: '05',
+    q: 'Gdzie możliwy jest odbiór osobisty w Warszawie?',
+    a: 'Zamówienia można odebrać osobiście po wcześniejszym umówieniu w naszym atelier na Ochocie (ul. Włodarzewska 4) lub w Śródmieściu.',
   },
 ];
 
 export default async function HomePage() {
-  const [products, bestsellers] = await Promise.all([
+  const [products, bestsellers, reviews] = await Promise.all([
     fetchProducts(),
     fetchBestsellers(4),
+    fetchCustomerReviews(),
   ]);
 
   const jsonLdData = {
@@ -148,12 +131,11 @@ export default async function HomePage() {
         description: 'Ekskluzywny polski butik z duragami z naturalnego jedwabiu morwowego 19 Momme, satyny i weluru.',
         address: {
           '@type': 'PostalAddress',
-          streetAddress: 'ul. Włodarzewska 4',
+          streetAddress: 'Grójecka 186 lok. 212',
           addressLocality: 'Warszawa',
-          postalCode: '02-384',
+          postalCode: '02-390',
           addressCountry: 'PL',
         },
-        telephone: '+48 500 000 000',
         priceRange: '79.00 - 149.00 PLN',
       },
       {
@@ -172,128 +154,170 @@ export default async function HomePage() {
   };
 
   return (
-    <div>
-      {/* Rich Schema.org Structured Data */}
+    <div className="bg-[#0B0B0C] text-[#FAFAF9] min-h-screen selection:bg-[#C8794B] selection:text-[#0B0B0C]">
+      {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
       />
 
-      {/* Hero Section: Editorial Video Background with Asymmetric Atelier Layout */}
-      <section className="relative bg-[#0D0D0B] text-white min-h-[75vh] sm:min-h-[85vh] flex items-center justify-center overflow-hidden">
-        {/* Official Brand Video Player */}
+      {/* Hero Section: Dark Luxury Editorial Atmosphere */}
+      <section className="relative bg-[#0B0B0C] text-white min-h-[75vh] sm:min-h-[85vh] flex items-center justify-center overflow-hidden border-b border-[#26262A]">
+        {/* Brand Video Player */}
         <HeroVideo poster="/media/wds/wyszol1126.jpg" />
 
-        {/* Subtle architectural vertical guide lines */}
+        {/* Architectural vertical guide lines */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:6rem_100%] pointer-events-none" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center py-16 sm:py-24">
-          
-          {/* Woven Fabric Tag (No AI brackets) */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#141412]/95 border-l-2 border-[#D9A87E] text-[#D9A87E] text-[10px] sm:text-xs font-mono tracking-[0.25em] uppercase mb-6 shadow-xl">
-            <span className="w-1.5 h-1.5 bg-[#D9A87E] rounded-full inline-block animate-pulse" />
+          {/* Atelier Tag */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#141416]/90 border border-[#C8794B]/40 text-[#C8794B] text-[10px] sm:text-xs font-mono tracking-[0.25em] uppercase mb-6 shadow-2xl backdrop-blur-md">
+            <span className="w-1.5 h-1.5 bg-[#C8794B] rounded-full inline-block animate-pulse" />
             <span>Atelier Warszawa • 100% Jedwab Morwowy 19 Momme</span>
           </div>
 
-          {/* Headline with deliberate Serif + Italic Accent Contrast */}
-          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-normal tracking-tight text-white leading-[1.15] mb-6">
+          {/* Headline with Serif & Italic Accent */}
+          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-normal tracking-tight text-[#FAFAF9] leading-[1.15] mb-6">
             Ręcznie szyte duragi.<br />
-            <span className="italic text-[#D9A87E] font-normal">Dla fal 360</span> i ochrony włosów.
+            <span className="italic text-[#C8794B] font-normal">Dla fal 360</span> i ochrony włosów.
           </h1>
 
-          <p className="text-xs sm:text-sm md:text-base text-gray-300 font-light max-w-2xl mx-auto leading-relaxed mb-8">
-            Zewnętrzny szew bezodciskowy i pasy 100 cm. Czysty naturalny jedwab morwowy oraz luksusowa satyna. Ręczne pakowanie i wysyłka w 24h prosto z Warszawy.
+          <p className="text-xs sm:text-sm md:text-base text-[#ECEAE7]/80 font-light max-w-2xl mx-auto leading-relaxed mb-8">
+            Zewnętrzny szew bezodciskowy i pasy 100 cm. Czysty naturalny jedwab morwowy 19 Momme oraz luksusowa satyna. Ręczne pakowanie i wysyłka w 24h prosto z Warszawy.
           </p>
 
-          {/* Asymmetric Streetwear CTAs */}
+          {/* Luxury CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-md mx-auto sm:max-w-none mb-10">
             <Link
               href="#bestsellery"
-              className="w-full sm:w-auto bg-[#D9A87E] text-[#0D0D0B] px-8 py-4 sm:px-10 sm:py-4 text-xs font-mono font-bold uppercase tracking-[0.2em] transition-all hover:bg-white hover:translate-x-0.5 text-center shadow-lg shadow-[#D9A87E]/10 [clip-path:polygon(0_0,calc(100%-8px)_0,100%_8px,100%_100%,8px_100%,0_calc(100%-8px))]"
+              className="w-full sm:w-auto bg-[#C8794B] text-[#0B0B0C] px-8 py-4 sm:px-10 sm:py-4 text-xs font-mono font-bold uppercase tracking-[0.2em] transition-all hover:bg-[#FAFAF9] hover:translate-x-0.5 text-center shadow-lg shadow-[#C8794B]/15 cursor-pointer"
             >
               Kup teraz
             </Link>
             <Link
               href="#kolekcja"
-              className="w-full sm:w-auto bg-transparent hover:bg-white/10 border border-white/30 text-white px-8 py-4 sm:px-9 sm:py-4 text-xs font-mono font-medium uppercase tracking-[0.2em] transition-all hover:border-[#D9A87E] hover:text-[#D9A87E] hover:font-serif hover:italic text-center"
+              className="w-full sm:w-auto bg-transparent hover:bg-white/5 border border-[#333338] text-[#FAFAF9] px-8 py-4 sm:px-9 sm:py-4 text-xs font-mono font-medium uppercase tracking-[0.2em] transition-all hover:border-[#C8794B] hover:text-[#C8794B] hover:font-serif hover:italic text-center cursor-pointer"
             >
               Przeglądaj ofertę
             </Link>
           </div>
 
-          {/* Continuous Typographic Ticker Strip (No bracket AI slop) */}
-          <div className="pt-6 border-t border-white/10 flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-8 gap-y-2 text-[10px] sm:text-xs font-mono uppercase tracking-widest text-gray-400">
-            <span className="flex items-center gap-1.5"><span className="text-[#D9A87E]">◆</span> Paczkomat 0 zł</span>
-            <span className="flex items-center gap-1.5"><span className="text-[#D9A87E]">◆</span> Nadawanie 24h z Warszawy</span>
-            <span className="flex items-center gap-1.5"><span className="text-[#D9A87E]">◆</span> Szew bezodciskowy</span>
-            <span className="flex items-center gap-1.5"><span className="text-[#D9A87E]">◆</span> BLIK / Apple Pay</span>
+          {/* Continuous Typographic Ticker Strip */}
+          <div className="pt-6 border-t border-[#26262A] flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-8 gap-y-2 text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#787570]">
+            <span className="flex items-center gap-1.5">
+              <span className="text-[#C8794B]">◆</span> Paczkomat 0 zł
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="text-[#C8794B]">◆</span> Nadanie 24h z Warszawy
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="text-[#C8794B]">◆</span> Szew bezodciskowy
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="text-[#C8794B]">◆</span> BLIK / Apple Pay / Karty
+            </span>
           </div>
         </div>
 
-        {/* Floating Atelier Specimen Card on Desktop (Breaks symmetrical single-column AI template) */}
-        <div className="hidden xl:block absolute right-8 bottom-12 max-w-[210px] bg-[#0D0D0B]/90 border border-white/15 p-4 text-left shadow-2xl z-20">
+        {/* Floating Atelier Specimen Card on Desktop */}
+        <div className="hidden xl:block absolute right-8 bottom-12 max-w-[220px] bg-[#141416]/95 border border-[#26262A] p-4 text-left shadow-2xl z-20 backdrop-blur-md">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[9px] font-mono text-[#D9A87E] tracking-widest uppercase">SPEC-01</span>
-            <span className="text-[8px] font-mono text-gray-400 uppercase">ATELIER</span>
+            <span className="text-[9px] font-mono text-[#C8794B] tracking-widest uppercase font-bold">SPEC-01</span>
+            <span className="text-[8px] font-mono text-[#787570] uppercase">ATELIER</span>
           </div>
-          <h4 className="font-serif text-sm text-white font-medium mb-1">
+          <h4 className="font-serif text-sm text-[#FAFAF9] font-medium mb-1">
             Jedwab Milanówek
           </h4>
-          <p className="text-[10px] text-gray-400 font-light leading-snug">
+          <p className="text-[10px] text-[#A3A09B] font-light leading-snug">
             Pasy 100 cm • Szew zewnętrzny • 19 Momme
           </p>
         </div>
       </section>
 
-      {/* Visual Quick Categories Section */}
-      <section className="py-8 sm:py-12 bg-[#F6F5F2] border-b border-[#E5E2DC]" id="kategorie">
+      {/* Editorial Promotion 2+1 Banner */}
+      <section className="bg-[#141416] border-b border-[#26262A] py-6 sm:py-8 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6">
+          <div className="flex items-center gap-3.5 text-left">
+            <div className="w-10 h-10 bg-[#C8794B]/10 border border-[#C8794B]/30 flex items-center justify-center shrink-0">
+              <Sparkles className="w-5 h-5 text-[#C8794B]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] uppercase font-mono tracking-[0.2em] text-[#C8794B] font-bold">
+                  Promocja Limitowana
+                </span>
+                <span className="text-[9px] font-mono bg-[#C8794B] text-[#0B0B0C] px-1.5 py-0.2 font-bold uppercase">
+                  Zestaw 2 + 1
+                </span>
+              </div>
+              <h3 className="font-serif text-base sm:text-lg text-[#FAFAF9] font-medium">
+                Kup 2 dowolne duragi, odbierz <span className="italic text-[#C8794B]">3. model w prezencie za 1 zł</span>
+              </h3>
+              <p className="text-xs text-[#A3A09B] font-light hidden sm:block">
+                Automatyczny rabat naliczany w koszyku. Łączy się z darmową wysyłką Paczkomatem InPost w całej Polsce.
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href="#kolekcja"
+            className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#C8794B] text-[#0B0B0C] hover:bg-[#FAFAF9] px-6 py-3 text-xs font-mono font-bold uppercase tracking-[0.16em] transition-colors shrink-0 shadow-lg shadow-[#C8794B]/10"
+          >
+            <span>Wybierz duragi do zestawu</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      </section>
+
+      {/* Visual Fabric Specification Chips */}
+      <section className="py-10 sm:py-14 bg-[#0E0E10] border-b border-[#26262A]" id="kategorie">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between mb-5 pb-3 border-b border-[#E5E2DC]">
+          <div className="flex items-center justify-between mb-6 pb-3 border-b border-[#26262A]">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="w-1.5 h-1.5 bg-[#734C1D] inline-block rotate-45" />
-                <span className="text-[10px] uppercase font-mono tracking-[0.2em] text-[#734C1D] font-semibold">
+                <span className="w-1.5 h-1.5 bg-[#C8794B] inline-block rotate-45" />
+                <span className="text-[10px] uppercase font-mono tracking-[0.2em] text-[#C8794B] font-semibold">
                   Specyfikacja Tkanin Atelier
                 </span>
               </div>
-              <h2 className="font-serif text-lg sm:text-2xl text-[#0D0D0B] font-medium">
-                Wybierz <span className="italic text-[#734C1D]">Materiał</span>
+              <h2 className="font-serif text-lg sm:text-2xl text-[#FAFAF9] font-medium">
+                Wybierz <span className="italic text-[#C8794B]">Materiał</span>
               </h2>
             </div>
             <Link
               href="/kolekcja/all"
-              className="text-xs font-mono uppercase tracking-wider text-[#0D0D0B] hover:text-[#734C1D] flex items-center gap-1 group"
+              className="text-xs font-mono uppercase tracking-wider text-[#ECEAE7] hover:text-[#C8794B] flex items-center gap-1 group"
             >
               <span className="group-hover:italic transition-all">Wszystkie modele</span>
               <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
 
-          {/* Quick Category Chips Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {/* Quick Category Cards Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
             {CATEGORY_CARDS.map((cat) => (
               <Link
                 key={cat.slug}
                 href={`/kolekcja/${cat.slug}`}
-                className="group bg-white p-4 border border-[#E5E2DC] hover:border-[#0D0D0B] transition-colors flex flex-col justify-between"
+                className="group bg-[#141416] p-4 sm:p-5 border border-[#26262A] hover:border-[#C8794B] transition-all flex flex-col justify-between hover:-translate-y-0.5"
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[9px] uppercase font-mono tracking-wider text-[#734C1D] font-bold">
+                    <span className="text-[9px] uppercase font-mono tracking-wider text-[#C8794B] font-bold">
                       {cat.code}
                     </span>
-                    <span className="text-[9px] uppercase font-mono tracking-wider text-[#0D0D0B] bg-[#F6F5F2] px-2 py-0.5 border border-[#E5E2DC]">
+                    <span className="text-[9px] uppercase font-mono tracking-wider text-[#ECEAE7] bg-[#1A1A1B] px-2 py-0.5 border border-[#26262A]">
                       {cat.badge}
                     </span>
                   </div>
-                  <h3 className="font-serif text-sm sm:text-base font-normal text-[#0D0D0B] group-hover:text-[#734C1D] group-hover:italic transition-all">
+                  <h3 className="font-serif text-sm sm:text-base font-normal text-[#FAFAF9] group-hover:text-[#C8794B] group-hover:italic transition-all">
                     {cat.title}
                   </h3>
-                  <p className="text-[11px] text-[#6B6D74] font-light mt-1 leading-snug">
+                  <p className="text-[11px] text-[#A3A09B] font-light mt-1.5 leading-snug">
                     {cat.desc}
                   </p>
                 </div>
-                <div className="mt-4 pt-2.5 border-t border-[#E5E2DC] flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-[#0D0D0B] group-hover:text-[#734C1D]">
+                <div className="mt-4 pt-2.5 border-t border-[#26262A] flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-[#787570] group-hover:text-[#C8794B]">
                   <span>Odkryj</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -303,33 +327,33 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Trust Banner with Asymmetric Pillars */}
+      {/* 4 Trust Pillars */}
       <TrustBanner />
 
-      {/* Dedicated Bestsellery Section */}
-      <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6" id="bestsellery">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-10 gap-3 pb-4 border-b border-[#E5E2DC]">
+      {/* Dedicated Bestsellers Section */}
+      <section className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6" id="bestsellery">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-3 pb-4 border-b border-[#26262A]">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-1.5 h-1.5 bg-[#734C1D] inline-block rotate-45" />
-              <span className="text-[#734C1D] text-[10px] sm:text-xs uppercase font-mono tracking-[0.25em] font-semibold">
+              <span className="w-1.5 h-1.5 bg-[#C8794B] inline-block rotate-45" />
+              <span className="text-[#C8794B] text-[10px] sm:text-xs uppercase font-mono tracking-[0.25em] font-semibold">
                 Wybór Waverów • Bestsellery
               </span>
             </div>
-            <h2 className="font-serif text-2xl sm:text-4xl text-[#0D0D0B] font-medium">
-              Bestsellery <span className="italic text-[#734C1D]">Warsaw Durag Store</span>
+            <h2 className="font-serif text-2xl sm:text-4xl text-[#FAFAF9] font-medium">
+              Bestsellery <span className="italic text-[#C8794B]">Warsaw Durag Store</span>
             </h2>
           </div>
           <Link
             href="#kolekcja"
-            className="text-xs font-mono uppercase tracking-wider text-[#0D0D0B] hover:text-[#734C1D] transition-colors inline-flex items-center gap-1.5 self-start sm:self-auto group"
+            className="text-xs font-mono uppercase tracking-wider text-[#ECEAE7] hover:text-[#C8794B] transition-colors inline-flex items-center gap-1.5 self-start sm:self-auto group"
           >
             <span className="group-hover:italic transition-all">Pełna oferta ({products.length} modeli)</span>
             <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
 
-        {/* Bestseller Cards (100% DB source) */}
+        {/* Bestseller Cards */}
         {bestsellers.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
             {bestsellers.map((product, idx) => (
@@ -337,54 +361,57 @@ export default async function HomePage() {
             ))}
           </div>
         ) : (
-          <div className="py-12 text-center border border-dashed border-[#E5E2DC] text-xs font-mono uppercase tracking-widest text-[#734C1D]">
+          <div className="py-12 text-center border border-dashed border-[#26262A] text-xs font-mono uppercase tracking-widest text-[#C8794B]">
             Katalog bestsellerów w trakcie aktualizacji w atelier.
           </div>
         )}
       </section>
 
-      {/* Dynamic Products Catalog */}
+      {/* Dynamic Products Catalog with Live Filters */}
       <HomeProductCatalog initialProducts={products} />
 
-      {/* Verified Reviews Section */}
-      <section className="bg-[#F6F5F2] py-14 sm:py-20 border-t border-[#E5E2DC] cv-auto">
+      {/* Verified Reviews Section (Dark Luxury) */}
+      <section className="bg-[#0E0E10] py-14 sm:py-20 border-t border-[#26262A] cv-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10 sm:mb-14">
             <div className="inline-flex items-center gap-2 mb-2">
-              <span className="w-1.5 h-1.5 bg-[#734C1D] inline-block rotate-45" />
-              <span className="text-[#734C1D] text-[10px] sm:text-xs uppercase font-mono tracking-[0.25em] font-semibold">
+              <span className="w-1.5 h-1.5 bg-[#C8794B] inline-block rotate-45" />
+              <span className="text-[#C8794B] text-[10px] sm:text-xs uppercase font-mono tracking-[0.25em] font-semibold">
                 Doświadczenia Społeczności
               </span>
             </div>
-            <h2 className="font-serif text-2xl sm:text-4xl text-[#0D0D0B] font-medium">
-              Głosy Klientów <span className="italic text-[#734C1D]">Warsaw Durag Store</span>
+            <h2 className="font-serif text-2xl sm:text-4xl text-[#FAFAF9] font-medium">
+              Głosy Klientów <span className="italic text-[#C8794B]">Warsaw Durag Store</span>
             </h2>
-            <div className="flex items-center justify-center gap-2 mt-3 font-mono text-xs text-[#0D0D0B]">
-              <span className="text-[#734C1D] font-bold">★ 5.0 / 5.0</span>
-              <span className="text-gray-400">•</span>
-              <span className="text-[#6B6D74]">Ponad 1500 wysłanych zamówień w Polsce</span>
+            <div className="flex items-center justify-center gap-2 mt-3 font-mono text-xs text-[#FAFAF9]">
+              <span className="text-[#C8794B] font-bold flex items-center gap-1">
+                <Star className="w-3.5 h-3.5 fill-[#C8794B]" /> 5.0 / 5.0
+              </span>
+              <span className="text-[#787570]">•</span>
+              <span className="text-[#A3A09B]">Ponad 1500 zrealizowanych zamówień w Polsce i Europie</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {REVIEWS_DATA.map((rev, idx) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {reviews.slice(0, 4).map((rev) => (
               <div
-                key={idx}
-                className="bg-white p-6 sm:p-7 border border-[#E5E2DC] flex flex-col justify-between hover:border-[#0D0D0B] transition-colors"
+                key={rev.id}
+                className="bg-[#141416] p-5 sm:p-6 border border-[#26262A] flex flex-col justify-between hover:border-[#C8794B] transition-colors"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#E5E2DC] text-[10px] font-mono">
-                    <span className="text-[#734C1D] font-bold">OCENA {rev.rating} //</span>
-                    <span className="text-gray-400 uppercase tracking-wider">{rev.city}</span>
+                  <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#26262A] text-[10px] font-mono">
+                    <span className="text-[#C8794B] font-bold">OCENA {rev.rating}.0 // ★★★★★</span>
+                    <span className="text-[#787570] uppercase tracking-wider">{rev.source}</span>
                   </div>
-                  <p className="text-xs sm:text-sm text-[#3B3C40] font-light leading-relaxed mb-6 font-serif italic text-base">
-                    "{rev.text}"
+                  <p className="text-xs sm:text-sm text-[#ECEAE7] font-light leading-relaxed mb-6 font-serif italic text-base">
+                    "{rev.content}"
                   </p>
                 </div>
-                <div className="pt-3 border-t border-[#E5E2DC] flex items-center justify-between text-xs">
-                  <span className="font-mono font-bold text-[#0D0D0B]">{rev.name}</span>
-                  <span className="text-[10px] font-mono text-[#734C1D] truncate max-w-[150px]">
-                    {rev.product}
+                <div className="pt-3 border-t border-[#26262A] flex items-center justify-between text-xs">
+                  <span className="font-mono font-bold text-[#FAFAF9]">{rev.author}</span>
+                  <span className="text-[10px] font-mono text-[#C8794B] flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-[#C8794B]" />
+                    Zweryfikowany zakup
                   </span>
                 </div>
               </div>
@@ -394,10 +421,10 @@ export default async function HomePage() {
       </section>
 
       {/* Jedwab w Mieście Editorial Showcase */}
-      <section className="bg-[#0D0D0B] text-white py-16 sm:py-24 border-t border-white/10 cv-auto">
+      <section className="bg-[#0B0B0C] text-white py-16 sm:py-24 border-t border-[#26262A] cv-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
           {/* Editorial Image Showcase */}
-          <div className="relative aspect-[4/5] bg-[#111111] border border-white/15 overflow-hidden">
+          <div className="relative aspect-[4/5] bg-[#141416] border border-[#26262A] overflow-hidden">
             <Image
               src="/media/wds/wyszol1126.jpg"
               alt="Jedwab w mieście — Durag Milanówek 19 Momme"
@@ -406,11 +433,11 @@ export default async function HomePage() {
               sizes="(max-width: 1024px) 100vw, 50vw"
               loading="lazy"
             />
-            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 bg-[#0D0D0B]/85 border-t border-white/10">
-              <span className="text-[10px] font-mono text-[#D9A87E] uppercase tracking-widest font-bold block mb-1">
+            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 bg-[#0B0B0C]/90 border-t border-[#26262A] backdrop-blur-md">
+              <span className="text-[10px] font-mono text-[#C8794B] uppercase tracking-widest font-bold block mb-1">
                 Atelier Warszawa // Milanówek
               </span>
-              <p className="text-xs text-gray-300 font-light">
+              <p className="text-xs text-[#ECEAE7]/90 font-light">
                 Autorski krój bezodciskowy i naturalny jedwab morwowy 19 Momme.
               </p>
             </div>
@@ -418,33 +445,33 @@ export default async function HomePage() {
 
           <div className="space-y-5 lg:pl-4">
             <div className="inline-flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-[#D9A87E] rounded-full inline-block animate-pulse" />
-              <span className="text-[#D9A87E] text-[10px] sm:text-xs uppercase font-mono tracking-[0.3em] font-semibold block">
+              <span className="w-1.5 h-1.5 bg-[#C8794B] rounded-full inline-block animate-pulse" />
+              <span className="text-[#C8794B] text-[10px] sm:text-xs uppercase font-mono tracking-[0.3em] font-semibold block">
                 Pure Silk 19 Momme
               </span>
             </div>
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-white font-normal leading-tight">
-              Jedwab w Mieście — <span className="italic text-[#D9A87E]">Milanówek</span>.
+            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-[#FAFAF9] font-normal leading-tight">
+              Jedwab w Mieście — <span className="italic text-[#C8794B]">Milanówek</span>.
             </h2>
 
-            <p className="text-xs sm:text-sm text-gray-300 font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#A3A09B] font-light leading-relaxed">
               W miejskim rytmie nasz Durag Milanówek to coś więcej niż nakrycie głowy — chroni, podkreśla styl i wyróżnia nas na tle innych. Wykonany z naturalnego jedwabiu o gramaturze 19 momme — oznaczającej wysoką gęstość, trwałość i jakość materiału — łączy lekkość z wyjątkową wytrzymałością, a jego gładka struktura ogranicza tarcie, zapobiega łamaniu włosów i jest w 100% hipoalergiczna.
             </p>
 
-            <p className="text-xs sm:text-sm text-gray-300 font-light leading-relaxed">
-              To jedyny w Polsce durag wykonany z prawdziwego jedwabiu z Milanówka. Pasy o długości 100 cm pozwalają na stabilne, komfortowe wiązanie bez ucisku na skronie.
+            <p className="text-xs sm:text-sm text-[#A3A09B] font-light leading-relaxed">
+              To jedyny w Polsce durag wykonany z prawdziwego jedwabiu z Milanówka. Pasy o długości 100 cm pozwalają na stabilne, komfortowe wiązanie bez ucisku na skronie i bez bólu głowy.
             </p>
 
             <div className="pt-4 flex flex-wrap gap-4">
               <Link
                 href="/kolekcja/silk"
-                className="inline-block bg-[#D9A87E] text-[#0D0D0B] hover:bg-white px-8 py-3.5 sm:px-9 sm:py-4 text-xs font-mono font-bold uppercase tracking-[0.2em] transition-all hover:translate-x-0.5 [clip-path:polygon(0_0,calc(100%-8px)_0,100%_8px,100%_100%,8px_100%,0_calc(100%-8px))]"
+                className="inline-block bg-[#C8794B] text-[#0B0B0C] hover:bg-[#FAFAF9] px-8 py-3.5 sm:px-9 sm:py-4 text-xs font-mono font-bold uppercase tracking-[0.2em] transition-all hover:translate-x-0.5"
               >
                 Sprawdź serię jedwabną
               </Link>
               <Link
                 href="/o-nas"
-                className="inline-block bg-transparent hover:bg-white/10 border border-white/30 text-white px-7 py-3.5 sm:py-4 text-xs font-mono uppercase tracking-[0.2em] transition-all hover:border-[#D9A87E] hover:text-[#D9A87E] hover:font-serif hover:italic"
+                className="inline-block bg-transparent hover:bg-white/5 border border-[#333338] text-[#FAFAF9] px-7 py-3.5 sm:py-4 text-xs font-mono uppercase tracking-[0.2em] transition-all hover:border-[#C8794B] hover:text-[#C8794B] hover:font-serif hover:italic"
               >
                 Historia Atelier →
               </Link>
@@ -454,25 +481,25 @@ export default async function HomePage() {
 
         {/* Lookbook Gallery Strip */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-16">
-          <div className="flex items-center justify-between pb-3 mb-6 border-b border-white/10">
-            <span className="text-[10px] font-mono text-[#D9A87E] uppercase tracking-[0.25em] font-bold">
+          <div className="flex items-center justify-between pb-3 mb-6 border-b border-[#26262A]">
+            <span className="text-[10px] font-mono text-[#C8794B] uppercase tracking-[0.25em] font-bold">
               Archiwum Sesji • Warszawa
             </span>
-            <Link href="/blog" className="text-xs font-mono text-gray-400 hover:text-white transition-colors group">
-              <span className="group-hover:italic transition-all">Czytaj Blog &amp; Artykuły →</span>
+            <Link href="/blog" className="text-xs font-mono text-[#787570] hover:text-[#FAFAF9] transition-colors group">
+              <span className="group-hover:italic transition-all">Czytaj Blog &amp; Kompendium →</span>
             </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            <div className="relative aspect-[3/4] border border-white/10 overflow-hidden group">
+            <div className="relative aspect-[3/4] border border-[#26262A] overflow-hidden group">
               <Image src="/media/wds/wyszol0202.jpg" alt="Warsaw Durag Store Session 01" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <div className="relative aspect-[3/4] border border-white/10 overflow-hidden group">
+            <div className="relative aspect-[3/4] border border-[#26262A] overflow-hidden group">
               <Image src="/media/wds/DSC0653.jpg" alt="Warsaw Durag Store Session 02" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <div className="relative aspect-[3/4] border border-white/10 overflow-hidden group">
+            <div className="relative aspect-[3/4] border border-[#26262A] overflow-hidden group">
               <Image src="/media/wds/czarno-biale-3.jpg" alt="Warsaw Durag Store Session 03" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <div className="relative aspect-[3/4] border border-white/10 overflow-hidden group">
+            <div className="relative aspect-[3/4] border border-[#26262A] overflow-hidden group">
               <Image src="/media/wds/DSC07653.jpg" alt="Warsaw Durag Store Session 04" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
           </div>
@@ -480,69 +507,69 @@ export default async function HomePage() {
       </section>
 
       {/* Brand Materials Technical Specs Section */}
-      <section className="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 cv-auto">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-14 gap-4 pb-4 border-b border-[#E5E2DC]">
+      <section className="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 cv-auto border-t border-[#26262A]">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-14 gap-4 pb-4 border-b border-[#26262A]">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-1.5 h-1.5 bg-[#734C1D] inline-block rotate-45" />
-              <span className="text-[#734C1D] text-[10px] sm:text-xs uppercase font-mono tracking-[0.25em] font-semibold">
+              <span className="w-1.5 h-1.5 bg-[#C8794B] inline-block rotate-45" />
+              <span className="text-[#C8794B] text-[10px] sm:text-xs uppercase font-mono tracking-[0.25em] font-semibold">
                 Charakterystyka Tkanin
               </span>
             </div>
-            <h2 className="font-serif text-2xl sm:text-4xl text-[#0D0D0B] font-medium">
-              Standardy Tkanin <span className="italic text-[#734C1D]">WDS Atelier</span>
+            <h2 className="font-serif text-2xl sm:text-4xl text-[#FAFAF9] font-medium">
+              Standardy Tkanin <span className="italic text-[#C8794B]">WDS Atelier</span>
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-[#6B6D74] font-light max-w-md">
+          <p className="text-xs sm:text-sm text-[#A3A09B] font-light max-w-md">
             Wybieramy wyłącznie certyfikowane materiały o określonej gramaturze i gęstości splotu.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          <div className="bg-white p-6 sm:p-8 border border-[#E5E2DC] hover:border-[#0D0D0B] transition-colors">
-            <span className="font-mono text-xs text-[#734C1D] font-bold block mb-2 tracking-wider">
+          <div className="bg-[#141416] p-6 sm:p-8 border border-[#26262A] hover:border-[#C8794B] transition-colors">
+            <span className="font-mono text-xs text-[#C8794B] font-bold block mb-2 tracking-wider">
               01 // JEDWAB 19 MOMME
             </span>
-            <h3 className="font-serif text-xl sm:text-2xl text-[#0D0D0B] mb-2 font-normal">
+            <h3 className="font-serif text-xl sm:text-2xl text-[#FAFAF9] mb-2 font-normal">
               100% Jedwab Morwowy
             </h3>
-            <p className="text-xs sm:text-sm text-[#3B3C40] font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#A3A09B] font-light leading-relaxed">
               Naturalnie gładka powierzchnia ograniczająca tarcie do minimum. Chroni włosy przed puszeniem i przesuszeniem, nie wchłaniając naturalnych olejków ze skóry głowy.
             </p>
           </div>
 
-          <div className="bg-white p-6 sm:p-8 border border-[#E5E2DC] hover:border-[#0D0D0B] transition-colors">
-            <span className="font-mono text-xs text-[#734C1D] font-bold block mb-2 tracking-wider">
+          <div className="bg-[#141416] p-6 sm:p-8 border border-[#26262A] hover:border-[#C8794B] transition-colors">
+            <span className="font-mono text-xs text-[#C8794B] font-bold block mb-2 tracking-wider">
               02 // SATYNA PREMIUM
             </span>
-            <h3 className="font-serif text-xl sm:text-2xl text-[#0D0D0B] mb-2 font-normal">
+            <h3 className="font-serif text-xl sm:text-2xl text-[#FAFAF9] mb-2 font-normal">
               Satyna Codzienna
             </h3>
-            <p className="text-xs sm:text-sm text-[#3B3C40] font-light leading-relaxed">
-              Wysokogatunkowa satyna o gęstym splocie. Zapewnia optymalny poślizg, trwałość koloru po praniu i wygodę noszenia przez całą dobę.
+            <p className="text-xs sm:text-sm text-[#A3A09B] font-light leading-relaxed">
+              Wysokogatunkowa mikrofibra o gęstym splocie. Zapewnia optymalny poślizg, trwałość koloru po praniu i wygodę noszenia przez całą dobę.
             </p>
           </div>
 
-          <div className="bg-white p-6 sm:p-8 border border-[#E5E2DC] hover:border-[#0D0D0B] transition-colors">
-            <span className="font-mono text-xs text-[#734C1D] font-bold block mb-2 tracking-wider">
+          <div className="bg-[#141416] p-6 sm:p-8 border border-[#26262A] hover:border-[#C8794B] transition-colors">
+            <span className="font-mono text-xs text-[#C8794B] font-bold block mb-2 tracking-wider">
               03 // WELUR
             </span>
-            <h3 className="font-serif text-xl sm:text-2xl text-[#0D0D0B] mb-2 font-normal">
+            <h3 className="font-serif text-xl sm:text-2xl text-[#FAFAF9] mb-2 font-normal">
               Aksamitna Kompresja
             </h3>
-            <p className="text-xs sm:text-sm text-[#3B3C40] font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#A3A09B] font-light leading-relaxed">
               Gęsty welur o głębokiej barwie. Daje maksymalną kompresję, która pozwala utrwalić fale 360 i utrzymać pożądany kształt fryzury.
             </p>
           </div>
 
-          <div className="bg-white p-6 sm:p-8 border border-[#E5E2DC] hover:border-[#0D0D0B] transition-colors">
-            <span className="font-mono text-xs text-[#734C1D] font-bold block mb-2 tracking-wider">
+          <div className="bg-[#141416] p-6 sm:p-8 border border-[#26262A] hover:border-[#C8794B] transition-colors">
+            <span className="font-mono text-xs text-[#C8794B] font-bold block mb-2 tracking-wider">
               04 // SEZONOWE
             </span>
-            <h3 className="font-serif text-xl sm:text-2xl text-[#0D0D0B] mb-2 font-normal">
+            <h3 className="font-serif text-xl sm:text-2xl text-[#FAFAF9] mb-2 font-normal">
               Cupro, Len &amp; Krepa
             </h3>
-            <p className="text-xs sm:text-sm text-[#3B3C40] font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#A3A09B] font-light leading-relaxed">
               Limitowane serie szyte z tkanin przystosowanych do pór roku: oddychający polski len na upały, cupro o jedwabistym chwycie oraz miękka krepa satynowa.
             </p>
           </div>
@@ -550,30 +577,30 @@ export default async function HomePage() {
       </section>
 
       {/* "O NAS" Section */}
-      <section className="bg-[#0D0D0B] text-white py-14 sm:py-20 border-t border-white/10 cv-auto">
+      <section className="bg-[#0E0E10] text-white py-14 sm:py-20 border-t border-[#26262A] cv-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
             <AboutStoryCarousel />
 
             <div className="space-y-5">
               <div className="inline-flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-[#D9A87E] rounded-full inline-block animate-pulse" />
-                <span className="text-[#D9A87E] text-[10px] sm:text-xs uppercase font-mono tracking-[0.3em] font-semibold block">
+                <span className="w-1.5 h-1.5 bg-[#C8794B] rounded-full inline-block animate-pulse" />
+                <span className="text-[#C8794B] text-[10px] sm:text-xs uppercase font-mono tracking-[0.3em] font-semibold block">
                   Atelier • Od 2020
                 </span>
               </div>
-              <h2 className="font-serif text-2xl sm:text-4xl text-white font-medium">
-                O nas — <span className="italic text-[#D9A87E]">Warsaw Durag Store</span>
+              <h2 className="font-serif text-2xl sm:text-4xl text-[#FAFAF9] font-medium">
+                O nas — <span className="italic text-[#C8794B]">Warsaw Durag Store</span>
               </h2>
 
-              <div className="space-y-3.5 text-xs sm:text-sm text-gray-300 font-light leading-relaxed">
+              <div className="space-y-3.5 text-xs sm:text-sm text-[#A3A09B] font-light leading-relaxed">
                 <p>
-                  Warsaw Durag Store powstał w 2020 roku jako niezależny projekt dwóch braci w Warszawie. Zamiast sprowadzać masową produkcję, postawiliśmy na rzemieślnicze szycie, autorski krój ze szwem na zewnątrz i bezkompromisowe tkaniny.
+                  Warsaw Durag Store powstał w 2020 roku jako niezależny projekt w Warszawie. Zamiast sprowadzać masową produkcję, postawiliśmy na rzemieślnicze szycie, autorski krój ze szwem na zewnątrz i bezkompromisowe tkaniny.
                 </p>
                 <p>
-                  Każda sztuka przechodzi przez nasze ręce przed zapakowaniem. Zamówienia wysyłamy w 24 godziny prosto z naszego warszawskiego atelier.
+                  Każda sztuka przechodzi przez nasze ręce przed zapakowaniem. Zamówienia wysyłamy w 24 godziny prosto z naszego warszawskiego atelier w ekologicznych kartonach.
                 </p>
-                <p className="text-[#D9A87E] font-mono text-xs pt-1">
+                <p className="text-[#C8794B] font-mono text-xs pt-1">
                   Odbiór osobisty: Warszawa, ul. Włodarzewska 4 (po umówieniu) • Instagram: @warsawduragstore
                 </p>
               </div>
@@ -581,7 +608,7 @@ export default async function HomePage() {
               <div className="pt-3">
                 <Link
                   href="/strona/o-nas"
-                  className="inline-block border border-[#D9A87E] text-[#D9A87E] hover:bg-[#D9A87E] hover:text-[#0D0D0B] px-7 py-3 sm:px-8 sm:py-3.5 text-xs font-mono font-bold uppercase tracking-[0.2em] transition-all hover:translate-x-0.5 [clip-path:polygon(0_0,calc(100%-6px)_0,100%_6px,100%_100%,6px_100%,0_calc(100%-6px))]"
+                  className="inline-block border border-[#C8794B] text-[#C8794B] hover:bg-[#C8794B] hover:text-[#0B0B0C] px-7 py-3 sm:px-8 sm:py-3.5 text-xs font-mono font-bold uppercase tracking-[0.2em] transition-all hover:translate-x-0.5"
                 >
                   Dowiedz się więcej
                 </Link>
@@ -592,16 +619,16 @@ export default async function HomePage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-14 sm:py-20 max-w-4xl mx-auto px-4 sm:px-6 cv-auto">
-        <div className="text-center mb-10 pb-4 border-b border-[#E5E2DC]">
+      <section className="py-14 sm:py-20 max-w-4xl mx-auto px-4 sm:px-6 cv-auto border-t border-[#26262A]">
+        <div className="text-center mb-10 pb-4 border-b border-[#26262A]">
           <div className="inline-flex items-center gap-2 mb-1">
-            <span className="w-1.5 h-1.5 bg-[#734C1D] inline-block rotate-45" />
-            <span className="text-[#734C1D] text-[10px] sm:text-xs uppercase font-mono tracking-[0.25em] font-semibold">
+            <span className="w-1.5 h-1.5 bg-[#C8794B] inline-block rotate-45" />
+            <span className="text-[#C8794B] text-[10px] sm:text-xs uppercase font-mono tracking-[0.25em] font-semibold">
               Wiedza &amp; Pomoc
             </span>
           </div>
-          <h2 className="font-serif text-2xl sm:text-4xl text-[#0D0D0B] font-medium">
-            Często Zadawane <span className="italic text-[#734C1D]">Pytania</span>
+          <h2 className="font-serif text-2xl sm:text-4xl text-[#FAFAF9] font-medium">
+            Często Zadawane <span className="italic text-[#C8794B]">Pytania</span>
           </h2>
         </div>
 
@@ -609,17 +636,17 @@ export default async function HomePage() {
           {FAQS_DATA.map((faq, idx) => (
             <div
               key={idx}
-              className="bg-white border border-[#E5E2DC] p-5 sm:p-6 hover:border-[#0D0D0B] transition-colors"
+              className="bg-[#141416] border border-[#26262A] p-5 sm:p-6 hover:border-[#C8794B] transition-colors"
             >
               <div className="flex items-start gap-3 mb-2">
-                <span className="text-[#734C1D] font-mono text-xs font-bold pt-0.5">
+                <span className="text-[#C8794B] font-mono text-xs font-bold pt-0.5">
                   {faq.num} //
                 </span>
-                <h3 className="font-serif text-sm sm:text-base font-semibold text-[#0D0D0B]">
+                <h3 className="font-serif text-sm sm:text-base font-semibold text-[#FAFAF9]">
                   {faq.q}
                 </h3>
               </div>
-              <p className="text-xs sm:text-sm text-[#3B3C40] font-light leading-relaxed pl-7 sm:pl-8">
+              <p className="text-xs sm:text-sm text-[#A3A09B] font-light leading-relaxed pl-7 sm:pl-8">
                 {faq.a}
               </p>
             </div>
@@ -629,5 +656,3 @@ export default async function HomePage() {
     </div>
   );
 }
-
-

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { InPostPoint } from '@/components/InPostPicker';
 import {
   ArrowLeft,
@@ -24,8 +25,8 @@ import {
 const InPostPicker = dynamic(() => import('@/components/InPostPicker'), {
   ssr: false,
   loading: () => (
-    <div className="p-6 bg-[#171715] border border-[#262624] rounded-xl text-xs text-gray-400 flex items-center justify-center gap-3">
-      <Loader2 className="w-4 h-4 animate-spin text-[#D9A87E]" />
+    <div className="p-6 bg-[#141416] border border-[#26262A] text-xs text-[#A3A09B] flex items-center justify-center gap-3 font-mono">
+      <Loader2 className="w-4 h-4 animate-spin text-[#C8794B]" />
       Inicjalizacja wyszukiwarki Paczkomatów InPost...
     </div>
   ),
@@ -33,6 +34,7 @@ const InPostPicker = dynamic(() => import('@/components/InPostPicker'), {
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const { formatPrice } = useLanguage();
   const {
     cart,
     cartCount,
@@ -92,7 +94,7 @@ export default function CheckoutPage() {
       ? `${selectedInpost.street} ${selectedInpost.buildingNumber}, ${selectedInpost.postCode} ${selectedInpost.city}`
       : deliveryMethod === 'courier'
       ? `${courierStreet}, ${courierPostCode} ${courierCity}`
-      : 'Odbiór osobisty: ul. Włodarzewska 4, Warszawa';
+      : 'Odbiór osobisty: Warszawa (ul. Włodarzewska 4 / Centrum)';
 
     const payload = {
       customerName: customerName.trim(),
@@ -138,15 +140,15 @@ export default function CheckoutPage() {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-[#0D0D0B] text-[#F7F5F2] pt-32 pb-20 px-4 text-center">
-        <div className="max-w-md mx-auto bg-[#171715] border border-[#262624] rounded-2xl p-8 space-y-4">
+      <div className="min-h-screen bg-[#0B0B0C] text-[#FAFAF9] pt-32 pb-20 px-4 text-center">
+        <div className="max-w-md mx-auto bg-[#141416] border border-[#26262A] p-8 space-y-4">
           <p className="font-serif text-2xl text-white">Twój koszyk jest pusty</p>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-[#A3A09B]">
             Aby przejść do kasy, dodaj przynajmniej jeden produkt do koszyka.
           </p>
           <Link
             href="/produkty"
-            className="inline-block mt-4 px-6 py-3 bg-[#D9A87E] text-black font-semibold text-xs uppercase tracking-widest rounded-xl hover:bg-[#e4b58e] transition-colors"
+            className="inline-block mt-4 px-6 py-3 bg-[#C8794B] text-[#0B0B0C] font-mono font-bold text-xs uppercase tracking-widest hover:bg-[#FAFAF9] transition-colors"
           >
             Przejdź do oferty
           </Link>
@@ -156,28 +158,28 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0D0B] text-[#F7F5F2] pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0B0B0C] text-[#FAFAF9] pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Top Back Link & Heading */}
         <div className="mb-8 flex items-center justify-between">
           <div>
             <Link
               href="/koszyk"
-              className="inline-flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors mb-2"
+              className="inline-flex items-center gap-1.5 text-xs font-mono text-[#787570] hover:text-white transition-colors mb-2"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Wróć do koszyka
             </Link>
-            <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight uppercase">
+            <h1 className="font-serif text-3xl sm:text-4xl font-normal tracking-tight uppercase">
               Kasa & Bezpieczna Płatność
             </h1>
           </div>
-          <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20">
+          <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 border border-emerald-500/20">
             <Lock className="w-3.5 h-3.5" /> Szyfrowanie SSL 256-bit
           </div>
         </div>
 
         {errorMessage && (
-          <div className="mb-6 p-4 bg-red-950/40 border border-red-800/60 rounded-xl text-red-200 text-xs flex items-center gap-3">
+          <div className="mb-6 p-4 bg-red-950/40 border border-red-800/60 text-red-200 text-xs flex items-center gap-3 font-mono">
             <AlertCircle className="w-5 h-5 shrink-0 text-red-400" />
             <span>{errorMessage}</span>
           </div>
@@ -187,14 +189,14 @@ export default function CheckoutPage() {
           {/* Main Checkout Form */}
           <div className="lg:col-span-7 space-y-6">
             {/* Section 1: Customer Info */}
-            <div className="bg-[#171715] border border-[#262624] rounded-2xl p-6 space-y-4">
-              <h2 className="font-serif text-lg font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-[#D9A87E] text-black font-mono text-xs flex items-center justify-center font-bold">1</span>
+            <div className="bg-[#141416] border border-[#26262A] p-6 space-y-4">
+              <h2 className="font-serif text-lg font-medium text-white uppercase tracking-wider flex items-center gap-2">
+                <span className="w-6 h-6 bg-[#C8794B] text-[#0B0B0C] font-mono text-xs flex items-center justify-center font-bold">1</span>
                 Dane Zamawiającego
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div className="sm:col-span-2">
-                  <label htmlFor="name" className="text-xs font-mono text-gray-400 block mb-1">
+                  <label htmlFor="name" className="text-xs font-mono text-[#787570] block mb-1">
                     Imię i nazwisko *
                   </label>
                   <input
@@ -204,12 +206,12 @@ export default function CheckoutPage() {
                     placeholder="np. Jan Kowalski"
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
-                    className="w-full bg-[#0D0D0B] border border-[#262624] rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#D9A87E]"
+                    className="w-full bg-[#0B0B0C] border border-[#26262A] px-4 py-3 text-xs text-white placeholder-[#787570] focus:outline-none focus:border-[#C8794B]"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="text-xs font-mono text-gray-400 block mb-1">
+                  <label htmlFor="email" className="text-xs font-mono text-[#787570] block mb-1">
                     Adres e-mail (potwierdzenie zamówienia) *
                   </label>
                   <input
@@ -219,12 +221,12 @@ export default function CheckoutPage() {
                     placeholder="jan@example.com"
                     value={customerEmail}
                     onChange={(e) => setCustomerEmail(e.target.value)}
-                    className="w-full bg-[#0D0D0B] border border-[#262624] rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#D9A87E]"
+                    className="w-full bg-[#0B0B0C] border border-[#26262A] px-4 py-3 text-xs text-white placeholder-[#787570] focus:outline-none focus:border-[#C8794B]"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="text-xs font-mono text-gray-400 block mb-1">
+                  <label htmlFor="phone" className="text-xs font-mono text-[#787570] block mb-1">
                     Telefon (do powiadomień InPost) *
                   </label>
                   <input
@@ -234,16 +236,16 @@ export default function CheckoutPage() {
                     placeholder="+48 500 000 000"
                     value={customerPhone}
                     onChange={(e) => setCustomerPhone(e.target.value)}
-                    className="w-full bg-[#0D0D0B] border border-[#262624] rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#D9A87E]"
+                    className="w-full bg-[#0B0B0C] border border-[#26262A] px-4 py-3 text-xs text-white placeholder-[#787570] focus:outline-none focus:border-[#C8794B]"
                   />
                 </div>
               </div>
             </div>
 
             {/* Section 2: Delivery Method */}
-            <div className="bg-[#171715] border border-[#262624] rounded-2xl p-6 space-y-5">
-              <h2 className="font-serif text-lg font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-[#D9A87E] text-black font-mono text-xs flex items-center justify-center font-bold">2</span>
+            <div className="bg-[#141416] border border-[#26262A] p-6 space-y-5">
+              <h2 className="font-serif text-lg font-medium text-white uppercase tracking-wider flex items-center gap-2">
+                <span className="w-6 h-6 bg-[#C8794B] text-[#0B0B0C] font-mono text-xs flex items-center justify-center font-bold">2</span>
                 Sposób Dostawy
               </h2>
 
@@ -252,56 +254,56 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setDeliveryMethod('paczkomat')}
-                  className={`p-4 rounded-xl border text-left transition-all ${
+                  className={`p-4 border text-left transition-all cursor-pointer ${
                     deliveryMethod === 'paczkomat'
-                      ? 'border-[#D9A87E] bg-[#D9A87E]/10 text-white'
-                      : 'border-[#262624] bg-[#0D0D0B] text-gray-400 hover:border-gray-600'
+                      ? 'border-[#C8794B] bg-[#C8794B]/10 text-white'
+                      : 'border-[#26262A] bg-[#0B0B0C] text-[#787570] hover:border-gray-600'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-semibold text-xs text-white">Paczkomat InPost</span>
                     <span className="text-[10px] font-mono text-emerald-400 font-bold">0.00 zł</span>
                   </div>
-                  <p className="text-[11px] text-gray-400">Dostawa 24h z Warszawy</p>
+                  <p className="text-[11px] text-[#A3A09B]">Dostawa 24h z Warszawy</p>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setDeliveryMethod('courier')}
-                  className={`p-4 rounded-xl border text-left transition-all ${
+                  className={`p-4 border text-left transition-all cursor-pointer ${
                     deliveryMethod === 'courier'
-                      ? 'border-[#D9A87E] bg-[#D9A87E]/10 text-white'
-                      : 'border-[#262624] bg-[#0D0D0B] text-gray-400 hover:border-gray-600'
+                      ? 'border-[#C8794B] bg-[#C8794B]/10 text-white'
+                      : 'border-[#26262A] bg-[#0B0B0C] text-[#787570] hover:border-gray-600'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-semibold text-xs text-white">Kurier DPD / InPost</span>
                     <span className="text-[10px] font-mono text-emerald-400 font-bold">0.00 zł</span>
                   </div>
-                  <p className="text-[11px] text-gray-400">Dostawa pod Twoje drzwi</p>
+                  <p className="text-[11px] text-[#A3A09B]">Dostawa pod Twoje drzwi</p>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setDeliveryMethod('pickup')}
-                  className={`p-4 rounded-xl border text-left transition-all ${
+                  className={`p-4 border text-left transition-all cursor-pointer ${
                     deliveryMethod === 'pickup'
-                      ? 'border-[#D9A87E] bg-[#D9A87E]/10 text-white'
-                      : 'border-[#262624] bg-[#0D0D0B] text-gray-400 hover:border-gray-600'
+                      ? 'border-[#C8794B] bg-[#C8794B]/10 text-white'
+                      : 'border-[#26262A] bg-[#0B0B0C] text-[#787570] hover:border-gray-600'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-semibold text-xs text-white">Odbiór Osobisty</span>
                     <span className="text-[10px] font-mono text-emerald-400 font-bold">0.00 zł</span>
                   </div>
-                  <p className="text-[11px] text-gray-400">Warszawa (Ochota / Śródmieście)</p>
+                  <p className="text-[11px] text-[#A3A09B]">Warszawa (Włodarzewska 4 / Centrum)</p>
                 </button>
               </div>
 
               {/* InPost Picker (Loaded ONLY when Paczkomat selected) */}
               {deliveryMethod === 'paczkomat' && (
                 <div className="pt-2 space-y-3">
-                  <label className="text-xs font-mono text-gray-300 block">
+                  <label className="text-xs font-mono text-[#ECEAE7] block">
                     Wybierz Paczkomat odbioru na mapie lub wyszukaj po ulicy:
                   </label>
                   <InPostPicker
@@ -310,11 +312,11 @@ export default function CheckoutPage() {
                     required={true}
                   />
                   {selectedInpost && (
-                    <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs text-emerald-300 flex items-start gap-2">
+                    <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-300 flex items-start gap-2 font-mono">
                       <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-400" />
                       <div>
                         <strong>Wybrany Paczkomat: {selectedInpost.name}</strong>
-                        <p className="text-[11px] text-emerald-400/80">
+                        <p className="text-[11px] text-emerald-400/90">
                           {selectedInpost.street} {selectedInpost.buildingNumber}, {selectedInpost.postCode} {selectedInpost.city}
                         </p>
                       </div>
@@ -327,21 +329,21 @@ export default function CheckoutPage() {
               {deliveryMethod === 'courier' && (
                 <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
-                    <label htmlFor="street" className="text-xs font-mono text-gray-400 block mb-1">
+                    <label htmlFor="street" className="text-xs font-mono text-[#787570] block mb-1">
                       Ulica i numer domu/lokalu *
                     </label>
                     <input
                       id="street"
                       type="text"
                       required
-                      placeholder="np. Złota 44 m. 12"
+                      placeholder="np. Mokotowska 12 m. 4"
                       value={courierStreet}
                       onChange={(e) => setCourierStreet(e.target.value)}
-                      className="w-full bg-[#0D0D0B] border border-[#262624] rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#D9A87E]"
+                      className="w-full bg-[#0B0B0C] border border-[#26262A] px-4 py-3 text-xs text-white placeholder-[#787570] focus:outline-none focus:border-[#C8794B]"
                     />
                   </div>
                   <div>
-                    <label htmlFor="postcode" className="text-xs font-mono text-gray-400 block mb-1">
+                    <label htmlFor="postcode" className="text-xs font-mono text-[#787570] block mb-1">
                       Kod pocztowy *
                     </label>
                     <input
@@ -351,11 +353,11 @@ export default function CheckoutPage() {
                       placeholder="00-001"
                       value={courierPostCode}
                       onChange={(e) => setCourierPostCode(e.target.value)}
-                      className="w-full bg-[#0D0D0B] border border-[#262624] rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#D9A87E]"
+                      className="w-full bg-[#0B0B0C] border border-[#26262A] px-4 py-3 text-xs text-white placeholder-[#787570] focus:outline-none focus:border-[#C8794B]"
                     />
                   </div>
                   <div>
-                    <label htmlFor="city" className="text-xs font-mono text-gray-400 block mb-1">
+                    <label htmlFor="city" className="text-xs font-mono text-[#787570] block mb-1">
                       Miejscowość *
                     </label>
                     <input
@@ -365,7 +367,7 @@ export default function CheckoutPage() {
                       placeholder="Warszawa"
                       value={courierCity}
                       onChange={(e) => setCourierCity(e.target.value)}
-                      className="w-full bg-[#0D0D0B] border border-[#262624] rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#D9A87E]"
+                      className="w-full bg-[#0B0B0C] border border-[#26262A] px-4 py-3 text-xs text-white placeholder-[#787570] focus:outline-none focus:border-[#C8794B]"
                     />
                   </div>
                 </div>
@@ -373,15 +375,15 @@ export default function CheckoutPage() {
 
               {/* Pickup Note */}
               {deliveryMethod === 'pickup' && (
-                <div className="p-4 bg-[#0D0D0B] border border-[#D9A87E]/30 rounded-xl space-y-2 text-xs">
-                  <p className="text-white font-medium flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-[#D9A87E]" /> Punkty odbioru osobistego w Warszawie:
+                <div className="p-4 bg-[#0B0B0C] border border-[#C8794B]/30 space-y-2 text-xs">
+                  <p className="text-white font-medium flex items-center gap-1.5 font-mono">
+                    <MapPin className="w-4 h-4 text-[#C8794B]" /> Punkty odbioru osobistego w Warszawie:
                   </p>
-                  <ul className="text-gray-300 space-y-1 pl-5 list-disc text-[11px]">
+                  <ul className="text-[#ECEAE7] space-y-1 pl-5 list-disc text-[11px]">
                     <li><strong>Włodarzewska 4, Ochota</strong> — po wcześniejszym umówieniu telefonicznym lub SMS.</li>
-                    <li><strong>Salon Barberski Eclipse</strong> (pod Rondem Waszyngtona) — czynny pon-sob.</li>
+                    <li><strong>Centrum Warszawy</strong> — po wcześniejszym umówieniu terminu.</li>
                   </ul>
-                  <p className="text-gray-400 text-[10px] pt-1">
+                  <p className="text-[#787570] text-[10px] pt-1 font-mono">
                     Po opłaceniu zamówienia skontaktujemy się z Tobą SMS-em, aby ustalić dogodną godzinę odbioru.
                   </p>
                 </div>
@@ -389,26 +391,26 @@ export default function CheckoutPage() {
             </div>
 
             {/* Section 3: Payment Method Info */}
-            <div className="bg-[#171715] border border-[#262624] rounded-2xl p-6 space-y-3">
-              <h2 className="font-serif text-lg font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-[#D9A87E] text-black font-mono text-xs flex items-center justify-center font-bold">3</span>
+            <div className="bg-[#141416] border border-[#26262A] p-6 space-y-3">
+              <h2 className="font-serif text-lg font-medium text-white uppercase tracking-wider flex items-center gap-2">
+                <span className="w-6 h-6 bg-[#C8794B] text-[#0B0B0C] font-mono text-xs flex items-center justify-center font-bold">3</span>
                 Płatność
               </h2>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-[#A3A09B]">
                 Po kliknięciu przycisku poniżej zostaniesz bezpiecznie przekierowany do bramki płatności Stripe.
               </p>
               <div className="flex flex-wrap gap-2 pt-2">
-                <span className="px-3 py-1.5 bg-[#0D0D0B] border border-[#262624] rounded-lg text-xs font-mono text-gray-300">
+                <span className="px-3 py-1.5 bg-[#0B0B0C] border border-[#26262A] text-xs font-mono text-[#ECEAE7]">
                   ⚡ BLIK
                 </span>
-                <span className="px-3 py-1.5 bg-[#0D0D0B] border border-[#262624] rounded-lg text-xs font-mono text-gray-300">
+                <span className="px-3 py-1.5 bg-[#0B0B0C] border border-[#26262A] text-xs font-mono text-[#ECEAE7]">
                   💳 Karta Visa / Mastercard
                 </span>
-                <span className="px-3 py-1.5 bg-[#0D0D0B] border border-[#262624] rounded-lg text-xs font-mono text-gray-300">
+                <span className="px-3 py-1.5 bg-[#0B0B0C] border border-[#26262A] text-xs font-mono text-[#ECEAE7]">
                   🍎 Apple Pay / Google Pay
                 </span>
-                <span className="px-3 py-1.5 bg-[#0D0D0B] border border-[#262624] rounded-lg text-xs font-mono text-gray-300">
-                  🏦 Przelewy24
+                <span className="px-3 py-1.5 bg-[#0B0B0C] border border-[#26262A] text-xs font-mono text-[#ECEAE7]">
+                  🏦 Przelewy24 / SEPA
                 </span>
               </div>
             </div>
@@ -416,8 +418,8 @@ export default function CheckoutPage() {
 
           {/* Sidebar Summary & Submit */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-[#171715] border border-[#262624] rounded-2xl p-6 space-y-5 sticky top-28">
-              <h3 className="font-serif text-lg font-bold text-white uppercase tracking-wider pb-3 border-b border-[#262624]">
+            <div className="bg-[#141416] border border-[#26262A] p-6 space-y-5 sticky top-28">
+              <h3 className="font-serif text-lg font-medium text-white uppercase tracking-wider pb-3 border-b border-[#26262A]">
                 Twoje Zamówienie ({cartCount})
               </h3>
 
@@ -425,9 +427,9 @@ export default function CheckoutPage() {
               <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
                 {cart.map((item, idx) => (
                   <div key={`${item.product.id}-${idx}`} className="flex items-center gap-3 text-xs">
-                    <div className="relative w-12 h-12 bg-[#262624] rounded-lg overflow-hidden shrink-0 border border-[#333330]">
+                    <div className="relative w-12 h-12 bg-[#0E0E10] overflow-hidden shrink-0 border border-[#26262A]">
                       <Image
-                        src={item.product.images?.[0] || '/assets/durag_silk_black.webp'}
+                        src={item.product.images?.[0] || '/assets/durag_silk_black.png'}
                         alt={item.product.name}
                         fill
                         sizes="48px"
@@ -436,22 +438,22 @@ export default function CheckoutPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-white truncate">{item.product.name}</p>
-                      <p className="text-[11px] text-gray-400">
+                      <p className="text-[11px] text-[#787570] font-mono">
                         Ilość: {item.quantity} {item.variant ? `(${item.variant})` : ''}
                       </p>
                     </div>
-                    <div className="font-mono text-white text-right">
-                      {(item.unitPrice * item.quantity).toFixed(2)} zł
+                    <div className="font-mono text-white text-right font-bold">
+                      {formatPrice(item.unitPrice * item.quantity, item.product.priceEur ? item.product.priceEur * item.quantity : undefined)}
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Price Details */}
-              <div className="pt-4 border-t border-[#262624] space-y-2.5 text-xs">
-                <div className="flex justify-between text-gray-400">
+              <div className="pt-4 border-t border-[#26262A] space-y-2.5 text-xs">
+                <div className="flex justify-between text-[#A3A09B]">
                   <span>Wartość koszyka:</span>
-                  <span className="font-mono text-white">{subtotal.toFixed(2)} zł</span>
+                  <span className="font-mono text-white">{formatPrice(subtotal)}</span>
                 </div>
 
                 {freeItemsDiscount > 0 && (
@@ -459,28 +461,28 @@ export default function CheckoutPage() {
                     <span className="flex items-center gap-1">
                       <Sparkles className="w-3.5 h-3.5" /> Kup 2, trzeci gratis:
                     </span>
-                    <span className="font-mono">-{freeItemsDiscount.toFixed(2)} zł</span>
+                    <span className="font-mono">-{formatPrice(freeItemsDiscount)}</span>
                   </div>
                 )}
 
                 {promoDiscount > 0 && (
-                  <div className="flex justify-between text-[#D9A87E] font-medium">
+                  <div className="flex justify-between text-[#C8794B] font-medium">
                     <span>Kod rabatowy ({appliedPromoCode}):</span>
-                    <span className="font-mono">-{promoDiscount.toFixed(2)} zł</span>
+                    <span className="font-mono">-{formatPrice(promoDiscount)}</span>
                   </div>
                 )}
 
-                <div className="flex justify-between text-gray-400">
+                <div className="flex justify-between text-[#A3A09B]">
                   <span>Dostawa w Polsce:</span>
                   <span className="font-mono text-emerald-400 font-medium">0.00 zł (Darmowa)</span>
                 </div>
 
-                <div className="pt-3 border-t border-[#262624] flex justify-between items-baseline">
+                <div className="pt-3 border-t border-[#26262A] flex justify-between items-baseline">
                   <span className="font-serif text-base font-bold text-white uppercase tracking-wider">
                     Do zapłaty:
                   </span>
-                  <span className="font-mono text-2xl font-bold text-[#D9A87E]">
-                    {total.toFixed(2)} zł
+                  <span className="font-mono text-2xl font-bold text-[#C8794B]">
+                    {formatPrice(total)}
                   </span>
                 </div>
               </div>
@@ -489,7 +491,7 @@ export default function CheckoutPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 py-4 px-6 bg-[#D9A87E] text-black font-semibold text-xs uppercase tracking-widest rounded-xl hover:bg-[#e4b58e] transition-all disabled:opacity-60 shadow-lg shadow-[#D9A87E]/10"
+                className="w-full flex items-center justify-center gap-2 py-4 px-6 bg-[#C8794B] text-[#0B0B0C] font-mono font-bold text-xs uppercase tracking-widest hover:bg-[#FAFAF9] transition-all disabled:opacity-60 shadow-lg shadow-[#C8794B]/10 cursor-pointer"
               >
                 {isSubmitting ? (
                   <>
@@ -497,14 +499,14 @@ export default function CheckoutPage() {
                   </>
                 ) : (
                   <>
-                    <CreditCard className="w-4 h-4" /> Opłać zamówienie ({total.toFixed(2)} zł)
+                    <CreditCard className="w-4 h-4" /> Opłać zamówienie ({formatPrice(total)})
                   </>
                 )}
               </button>
 
-              <div className="pt-2 border-t border-[#262624] space-y-1.5 text-[11px] text-gray-500 text-center">
+              <div className="pt-2 border-t border-[#26262A] space-y-1.5 text-[11px] text-[#787570] text-center font-mono">
                 <p>Klikając przycisk akceptujesz <Link href="/regulamin" className="underline hover:text-white">Regulamin</Link> oraz <Link href="/polityka-prywatnosci" className="underline hover:text-white">Politykę prywatności</Link>.</p>
-                <p className="text-gray-400">Twoje dane są bezpieczne i nie są udostępniane podmiotom trzecim.</p>
+                <p className="text-[#A3A09B]">Twoje dane są bezpieczne i nie są udostępniane podmiotom trzecim.</p>
               </div>
             </div>
           </div>

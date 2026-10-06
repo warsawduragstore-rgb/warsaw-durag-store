@@ -423,6 +423,9 @@ const TRANSLATIONS: Record<Language, Translations> = {
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
+  currency: 'PLN' | 'EUR';
+  setCurrency: (curr: 'PLN' | 'EUR') => void;
+  formatPrice: (pricePln: number, priceEur?: number) => string;
   t: Translations;
 }
 
@@ -430,23 +433,51 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('PL');
+  const [currency, setCurrencyState] = useState<'PLN' | 'EUR'>('PLN');
 
   useEffect(() => {
     const saved = localStorage.getItem('wds_lang') as Language;
     if (saved && TRANSLATIONS[saved]) {
       setLanguageState(saved);
+      if (saved !== 'PL') {
+        setCurrencyState('EUR');
+      }
+    }
+    const savedCurr = localStorage.getItem('wds_currency') as 'PLN' | 'EUR';
+    if (savedCurr === 'PLN' || savedCurr === 'EUR') {
+      setCurrencyState(savedCurr);
     }
   }, []);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('wds_lang', lang);
+    if (lang === 'PL') {
+      setCurrencyState('PLN');
+      localStorage.setItem('wds_currency', 'PLN');
+    } else {
+      setCurrencyState('EUR');
+      localStorage.setItem('wds_currency', 'EUR');
+    }
+  };
+
+  const setCurrency = (curr: 'PLN' | 'EUR') => {
+    setCurrencyState(curr);
+    localStorage.setItem('wds_currency', curr);
+  };
+
+  const formatPrice = (pricePln: number, priceEur?: number): string => {
+    if (currency === 'EUR') {
+      const val = priceEur !== undefined && priceEur > 0 ? priceEur : Math.round((pricePln / 4.3) * 100) / 100;
+      return `${val.toFixed(2)} EUR`;
+    }
+    return `${pricePln.toFixed(2)} PLN`;
   };
 
   const t = TRANSLATIONS[language] || TRANSLATIONS.PL;
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, currency, setCurrency, formatPrice, t }}>
       {children}
     </LanguageContext.Provider>
   );

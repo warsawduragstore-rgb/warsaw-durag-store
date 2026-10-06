@@ -6,20 +6,20 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const aboutCarouselImages = [
   {
-    src: "/media/wds/att.mogDC6RrCftjHA9YjiKSvpu79xCgSnYrsr0NvgP4KSc.JPG",
-    title: "Ręczne pakowanie w Warszawie",
-    desc: "Każde zamówienie przechodzi przez nasze ręce i jest starannie przygotowane do wysyłki."
+    src: '/media/wds/att.mogDC6RrCftjHA9YjiKSvpu79xCgSnYrsr0NvgP4KSc.JPG',
+    title: 'Ręczne pakowanie w Warszawie',
+    desc: 'Każdy durag przechodzi przez nasze ręce w warszawskim atelier przed zapakowaniem do ekologicznego kartonu.',
   },
   {
-    src: "/assets/lookbook_editorial.png",
-    title: "Kuba i Brat — Właściciele Warsaw Durag Store",
-    desc: "Mały butik z pasją stworzony w 2020 roku w odpowiedzi na potrzebę prawdziwej jakości."
+    src: '/media/wds/DSC0653.jpg',
+    title: 'Autorski krój z płaskim szwem',
+    desc: 'Szew przeniesiony na zewnętrzną stronę, by zapewnić absolutny komfort snu bez jakichkolwiek śladów na czole.',
   },
   {
-    src: "/assets/durag_silk_black.png",
-    title: "Opinie naszej społeczności na IG",
-    desc: "Setki udostępnień i pozytywnych reakcji od waverów, artystów i sportowców z całej Polski."
-  }
+    src: '/media/wds/wyszol1126.jpg',
+    title: '100% Jedwab Morwowy 19 Momme',
+    desc: 'Prawdziwy naturalny jedwab białkowy Milanówek — maksymalna gładkość i pielęgnacja struktury włosa.',
+  },
 ];
 
 export default function AboutStoryCarousel() {
@@ -36,7 +36,7 @@ export default function AboutStoryCarousel() {
   const currentItem = aboutCarouselImages[carouselIndex];
 
   return (
-    <div className="relative rounded-2xl overflow-hidden bg-[#111111] aspect-[4/3] border border-white/10 group shadow-xl">
+    <div className="relative overflow-hidden bg-[#111113] aspect-[4/3] border border-[#26262A] group shadow-2xl">
       <Image
         src={currentItem.src}
         alt={currentItem.title}
@@ -45,13 +45,13 @@ export default function AboutStoryCarousel() {
         className="object-cover transition-opacity duration-300"
         sizes="(max-width: 1024px) 100vw, 50vw"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0B] via-[#0D0D0B]/20 to-transparent" />
-      
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0C] via-[#0B0B0C]/40 to-transparent" />
+
       <div className="absolute bottom-5 left-5 right-5 z-10">
-        <h4 className="font-serif text-lg sm:text-xl text-white font-medium mb-1">
+        <h4 className="font-serif text-lg sm:text-xl text-[#FAFAF9] font-medium mb-1">
           {currentItem.title}
         </h4>
-        <p className="text-xs text-gray-300 font-light leading-relaxed">
+        <p className="text-xs text-[#ECEAE7]/80 font-light leading-relaxed">
           {currentItem.desc}
         </p>
 
@@ -61,8 +61,8 @@ export default function AboutStoryCarousel() {
             <button
               key={i}
               onClick={() => setCarouselIndex(i)}
-              className={`h-1.5 rounded-full transition-all ${
-                carouselIndex === i ? 'w-6 bg-[#D9A87E]' : 'w-2 bg-white/40'
+              className={`h-1.5 transition-all cursor-pointer ${
+                carouselIndex === i ? 'w-6 bg-[#C8794B]' : 'w-2 bg-white/30'
               }`}
               aria-label={`Przejdź do slajdu ${i + 1}`}
             />
@@ -70,17 +70,17 @@ export default function AboutStoryCarousel() {
         </div>
       </div>
 
-      {/* Carousel Controls with 44px touch targets */}
+      {/* Carousel Controls */}
       <button
         onClick={handlePrevCarousel}
-        className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-[#D9A87E] text-white hover:text-[#0D0D0B] flex items-center justify-center transition-colors cursor-pointer active:scale-95"
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/70 hover:bg-[#C8794B] text-white hover:text-[#0B0B0C] flex items-center justify-center transition-colors cursor-pointer border border-white/10"
         aria-label="Poprzednie zdjęcie"
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
       <button
         onClick={handleNextCarousel}
-        className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-[#D9A87E] text-white hover:text-[#0D0D0B] flex items-center justify-center transition-colors cursor-pointer active:scale-95"
+        className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/70 hover:bg-[#C8794B] text-white hover:text-[#0B0B0C] flex items-center justify-center transition-colors cursor-pointer border border-white/10"
         aria-label="Następne zdjęcie"
       >
         <ChevronRight className="w-5 h-5" />

@@ -22,7 +22,6 @@ export async function generateStaticParams() {
   }));
 }
 
-
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
   const product = await fetchProductBySlug(slug);
@@ -181,7 +180,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   };
 
   return (
-    <div>
+    <div className="bg-[#0B0B0C] text-[#FAFAF9] min-h-screen">
       {/* Schema Injection */}
       <script
         type="application/ld+json"
@@ -193,30 +192,30 @@ export default async function ProductPage({ params }: ProductPageProps) {
       />
 
       {/* Breadcrumbs */}
-      <nav aria-label="Breadcrumb" className="bg-[#F7F5F2] border-b border-[#CFCFCF]/50 py-4">
-        <div className="max-w-7xl mx-auto px-6 text-xs text-[#3B3C40] flex items-center gap-2">
-          <Link href="/" className="hover:text-[#0D0D0B] transition-colors">
-            Strona Główna
+      <nav aria-label="Breadcrumb" className="bg-[#141416] border-b border-[#26262A] py-3.5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-xs text-[#787570] flex items-center gap-2 font-mono">
+          <Link href="/" className="hover:text-white transition-colors">
+            Start
           </Link>
           <span>/</span>
-          <Link href={`/kolekcja/${product.category}`} className="hover:text-[#0D0D0B] uppercase transition-colors">
+          <Link href={`/kolekcja/${product.category}`} className="hover:text-white uppercase transition-colors">
             {product.categoryLabel}
           </Link>
           <span>/</span>
-          <span className="font-semibold text-[#0D0D0B]">{product.name}</span>
+          <span className="font-semibold text-[#C8794B] truncate">{product.name}</span>
         </div>
       </nav>
 
       {/* Main Details */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
         <ProductDetailsClient product={product} />
       </div>
 
       {/* Related Products */}
-      <section className="bg-[#F7F5F2] py-12 sm:py-16 border-t border-[#CFCFCF]/50">
+      <section className="bg-[#0E0E10] py-12 sm:py-16 border-t border-[#26262A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="font-serif text-xl sm:text-2xl text-[#0D0D0B] font-medium text-center mb-8 sm:mb-10">
-            Inni Klienci Wybrali Również
+          <h2 className="font-serif text-xl sm:text-2xl text-white font-medium text-center mb-8 sm:mb-10">
+            Inni Klienci Wybrali <span className="italic text-[#C8794B]">Również</span>
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {relatedProducts.map((rel) => (
