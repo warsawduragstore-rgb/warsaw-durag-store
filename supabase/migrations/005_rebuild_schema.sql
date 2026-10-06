@@ -243,74 +243,47 @@ ALTER TABLE orders
 
 -- 7. SITE SETTINGS & COMPANY DATA
 CREATE TABLE IF NOT EXISTS site_settings (
-  key         TEXT PRIMARY KEY,
-  value       JSONB NOT NULL,
-  description TEXT,
+  id          BIGSERIAL PRIMARY KEY,
+  key         TEXT NOT NULL UNIQUE,
+  value       TEXT NOT NULL,
+  label       TEXT NOT NULL DEFAULT '',
+  category    TEXT NOT NULL DEFAULT 'general',
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-INSERT INTO site_settings (key, value, description)
+ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS label TEXT DEFAULT '';
+ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS category TEXT DEFAULT 'general';
+
+INSERT INTO site_settings (key, value, label, category)
 VALUES
   (
     'company_info',
-    '{
-      "name": "Warsaw Durag Store Michał Wyszyński",
-      "nip": "7011275454",
-      "address": "Grójecka 186 lok. 212, 02-390 Warszawa",
-      "email_support": "support@warsawduragstore.pl",
-      "email_finance": "finance@warsawduragstore.pl",
-      "phone": "",
-      "instagram": "@warsawduragstore",
-      "pickup_address": "ul. Włodarzewska 4 i Centrum, po umówieniu",
-      "registered_in": "CEIDG, Rzeczpospolita Polska"
-    }'::jsonb,
-    'Oficjalne dane rejestrowe i kontaktowe firmy'
+    '{"name": "Warsaw Durag Store Michał Wyszyński", "nip": "7011275454", "address": "Grójecka 186 lok. 212, 02-390 Warszawa", "email_support": "support@warsawduragstore.pl", "email_finance": "finance@warsawduragstore.pl", "phone": "", "instagram": "@warsawduragstore", "pickup_address": "ul. Włodarzewska 4 i Centrum, po umówieniu", "registered_in": "CEIDG, Rzeczpospolita Polska"}',
+    'Oficjalne dane rejestrowe i kontaktowe firmy',
+    'general'
   ),
   (
     'promotion_2plus1',
-    '{
-      "is_active": true,
-      "set_size": 2,
-      "gift_price_pln": 1.00,
-      "gift_price_eur": 0.25,
-      "description_pl": "Kup 2 dowolne duragi, a trzeci losowy otrzymasz za 1 zł",
-      "description_en": "Buy any 2 durags and get a third surprise durag for €0.25"
-    }'::jsonb,
-    'Zasady promocji 2+1 (trzeci losowy durag za 1 zł / 0.25 €)'
+    '{"is_active": true, "set_size": 2, "gift_price_pln": 1.00, "gift_price_eur": 0.25, "description_pl": "Kup 2 dowolne duragi, a trzeci losowy otrzymasz za 1 zł", "description_en": "Buy any 2 durags and get a third surprise durag for €0.25"}',
+    'Zasady promocji 2+1 (trzeci losowy durag za 1 zł / 0.25 €)',
+    'promotions'
   ),
   (
     'announcement_bar',
-    '{
-      "is_active": true,
-      "text_pl": "Darmowa dostawa InPost w Polsce • Kup 2, trzeci losowy za 1 zł • Wysyłka w 24h z Warszawy",
-      "text_en": "Free shipping in Poland • Buy 2, get 3rd surprise durag for €0.25 • 24h dispatch from Warsaw"
-    }'::jsonb,
-    'Pasek komunikatów na samej górze strony'
+    'Darmowa dostawa InPost w Polsce • Kup 2, trzeci losowy za 1 zł • Wysyłka w 24h z Warszawy',
+    'Pasek komunikatów na samej górze strony',
+    'header'
   ),
   (
     'trust_badges',
-    '{
-      "item1_title_pl": "Wysyłka w 1–2 Dni",
-      "item1_title_en": "Dispatch in 1–2 Days",
-      "item1_desc_pl": "Ręczne pakowanie w Warszawie",
-      "item1_desc_en": "Handcrafted in Warsaw atelier",
-      "item2_title_pl": "Darmowa Dostawa PL",
-      "item2_title_en": "Free Delivery in Poland",
-      "item2_desc_pl": "Paczkomaty InPost i kurier bez progu",
-      "item2_desc_en": "InPost Lockers and Courier",
-      "item3_title_pl": "14 Dni na Zwrot",
-      "item3_title_en": "14-Day Safe Returns",
-      "item3_desc_pl": "Bezpieczne zakupy w całej UE",
-      "item3_desc_en": "Consumer protection across EU",
-      "item4_title_pl": "Jedwab 19 Momme",
-      "item4_title_en": "19 Momme Pure Silk",
-      "item4_desc_pl": "Gwarancja naturalnych tkanin",
-      "item4_desc_en": "Verified premium mulberry silk"
-    }'::jsonb,
-    'Główne obietnice marki i zaufania'
+    '{"item1_title_pl": "Wysyłka w 1–2 Dni", "item1_title_en": "Dispatch in 1–2 Days", "item1_desc_pl": "Ręczne pakowanie w Warszawie", "item1_desc_en": "Handcrafted in Warsaw atelier", "item2_title_pl": "Darmowa Dostawa PL", "item2_title_en": "Free Delivery in Poland", "item2_desc_pl": "Paczkomaty InPost i kurier bez progu", "item2_desc_en": "InPost Lockers and Courier", "item3_title_pl": "14 Dni na Zwrot", "item3_title_en": "14-Day Safe Returns", "item3_desc_pl": "Bezpieczne zakupy w całej UE", "item3_desc_en": "Consumer protection across EU", "item4_title_pl": "Jedwab 19 Momme", "item4_title_en": "19 Momme Pure Silk", "item4_desc_pl": "Gwarancja naturalnych tkanin", "item4_desc_en": "Verified premium mulberry silk"}',
+    'Główne obietnice marki i zaufania',
+    'general'
   )
 ON CONFLICT (key) DO UPDATE SET
   value = EXCLUDED.value,
+  label = EXCLUDED.label,
+  category = EXCLUDED.category,
   updated_at = NOW();
 
 -- 8. ROW LEVEL SECURITY (RLS) POLICIES
@@ -366,6 +339,10 @@ CREATE POLICY "Public can view site settings"
 CREATE POLICY "Public can insert orders"
   ON orders FOR INSERT
   WITH CHECK (true);
+
+CREATE POLICY "Public can view orders"
+  ON orders FOR SELECT
+  USING (true);
 
 -- Pełny dostęp dla service_role (używane przez serwer Next.js i panel admina)
 CREATE POLICY "Admin full access shipping_zones" ON shipping_zones FOR ALL USING (auth.role() = 'service_role') WITH CHECK (auth.role() = 'service_role');
