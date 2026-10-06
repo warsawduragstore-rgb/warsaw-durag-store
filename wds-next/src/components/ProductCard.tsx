@@ -34,28 +34,25 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
   return (
     <div
-      className="group relative flex flex-col bg-[#141416] border border-[#26262A] transition-all duration-300 hover:border-[#C8794B] hover:-translate-y-0.5"
+      className="group relative flex flex-col bg-[#111113] border border-[#1E1E22] transition-colors duration-200 hover:border-[#C8794B]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* 3:4 Aspect Ratio Container */}
+      {/* 3:4 Image Container */}
       <Link
         href={`/produkt/${product.slug}`}
-        className="relative aspect-[3/4] overflow-hidden bg-[#0E0E10] block cursor-pointer"
+        className="relative aspect-[3/4] overflow-hidden bg-[#0B0B0C] block cursor-pointer"
         aria-label={displayName}
       >
-        {/* Atelier Specimen Tag */}
-        <div className="absolute top-2.5 left-2.5 z-10 bg-[#0B0B0C]/90 text-[#C8794B] text-[9px] font-mono tracking-widest px-2 py-0.5 border border-[#C8794B]/30 uppercase flex items-center gap-1 shadow-md">
-          <span className="w-1 h-1 bg-[#C8794B] rounded-full inline-block" />
-          <span>
-            {product.category === 'silk'
-              ? '19 Momme'
-              : product.category === 'velvet'
-              ? 'Kompresja'
-              : product.category === 'satin'
-              ? 'Szew zewn.'
-              : 'Atelier WAW'}
-          </span>
+        {/* Simple material badge */}
+        <div className="absolute top-2.5 left-2.5 z-10 bg-[#0B0B0C]/85 text-[#ECEAE7] text-[9px] font-mono tracking-widest px-2 py-0.5 border border-[#26262A] uppercase">
+          {product.category === 'silk'
+            ? 'Jedwab 19 Momme'
+            : product.category === 'velvet'
+            ? 'Welur'
+            : product.category === 'satin'
+            ? 'Satyna'
+            : 'Akcesoria'}
         </div>
 
         {/* Primary Image */}
@@ -64,20 +61,20 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           alt={displayName}
           fill
           priority={priority}
-          className={`object-cover transition-all duration-500 ease-out ${
-            secondaryImage && isHovered ? 'scale-105 opacity-0' : 'group-hover:scale-105 opacity-100'
+          className={`object-cover transition-opacity duration-300 ${
+            secondaryImage && isHovered ? 'opacity-0' : 'opacity-100'
           }`}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           loading={priority ? 'eager' : 'lazy'}
         />
 
-        {/* Secondary Image loaded on desktop hover */}
+        {/* Secondary Image on hover */}
         {secondaryImage && (
           <Image
             src={secondaryImage}
             alt={`${displayName} — detal`}
             fill
-            className={`object-cover scale-105 transition-opacity duration-300 ease-out ${
+            className={`object-cover transition-opacity duration-300 ${
               isHovered ? 'opacity-100' : 'opacity-0'
             }`}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -85,58 +82,41 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
         )}
       </Link>
 
-      {/* Card Info Section */}
-      <div className="p-3.5 sm:p-4 flex flex-col flex-grow justify-between bg-[#141416] border-t border-[#26262A]">
+      {/* Info Section */}
+      <div className="p-3.5 sm:p-4 flex flex-col flex-grow justify-between bg-[#111113] border-t border-[#1E1E22]">
         <div>
-          {/* Material & Origin */}
-          <div className="flex items-center justify-between gap-1 mb-1.5 text-[9px] sm:text-[10px] font-mono">
-            <span className="text-[#C8794B] uppercase tracking-wider font-semibold truncate">
-              {product.material}
-            </span>
-            <span className="text-[#787570] uppercase tracking-widest shrink-0">
-              Warszawa • 24h
-            </span>
-          </div>
+          <span className="text-[10px] font-mono uppercase tracking-wider text-[#C8794B] block mb-1">
+            {product.material}
+          </span>
 
-          {/* Product Name with Cormorant Garamond */}
-          <Link href={`/produkt/${product.slug}`} className="block transition-colors">
-            <h3 className="font-serif text-sm sm:text-base font-normal text-[#FAFAF9] leading-snug line-clamp-2 min-h-[2.4rem] group-hover:text-[#C8794B] group-hover:italic transition-all">
+          <Link href={`/produkt/${product.slug}`} className="block">
+            <h3 className="font-serif text-sm sm:text-base font-normal text-white leading-snug line-clamp-2 min-h-[2.4rem] group-hover:text-[#C8794B] transition-colors">
               {displayName}
             </h3>
           </Link>
-
-          {/* Feature Highlight */}
-          <p className="text-[10px] text-[#A3A09B] line-clamp-1 mt-1 font-light">
-            {product.category === 'silk'
-              ? '100% naturalny jedwab • szew zewnętrzny'
-              : product.category === 'velvet'
-              ? 'Maksymalna kompresja fal 360'
-              : 'Gładka mikrofibra • ochrona włosów'}
-          </p>
         </div>
 
-        {/* Pricing & Add To Cart */}
-        <div className="mt-3 pt-3 border-t border-[#26262A] flex items-center justify-between gap-2">
+        {/* Price & Action */}
+        <div className="mt-3 pt-3 border-t border-[#1E1E22] flex items-center justify-between gap-2">
           <div>
-            <span className="font-mono text-sm sm:text-base font-bold text-[#FAFAF9] tracking-tight block">
+            <span className="font-mono text-sm sm:text-base font-bold text-white tracking-tight block">
               {formatPrice(product.price, product.priceEur)}
             </span>
-            <span className="text-[9px] font-mono text-[#787570] block tracking-wider uppercase">
+            <span className="text-[9px] font-mono text-[#787570] block uppercase">
               Paczkomat 0 zł
             </span>
           </div>
 
           <button
             onClick={handleAddToCart}
-            className={`cursor-pointer px-3 py-2 sm:px-3.5 sm:py-2 text-[10px] sm:text-[11px] uppercase tracking-[0.16em] font-mono font-bold transition-all border ${
+            className={`cursor-pointer px-3 py-1.5 text-[10px] sm:text-[11px] uppercase tracking-wider font-mono font-bold transition-colors border ${
               isAdded
                 ? 'bg-[#C8794B] border-[#C8794B] text-[#0B0B0C]'
-                : 'bg-[#1A1A1B] border-[#333338] text-[#FAFAF9] hover:bg-[#C8794B] hover:border-[#C8794B] hover:text-[#0B0B0C]'
+                : 'bg-[#1A1A1B] border-[#26262A] text-white hover:bg-[#C8794B] hover:border-[#C8794B] hover:text-[#0B0B0C]'
             }`}
             title={isAdded ? 'Dodano do koszyka' : t.addToCart}
-            aria-label={t.addToCart}
           >
-            {isAdded ? 'DODANO ✓' : '+ KOSZYK'}
+            {isAdded ? 'DODANO' : '+ KOSZYK'}
           </button>
         </div>
       </div>
