@@ -3,18 +3,17 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBag, Search, Menu, X, Globe, Sun, Moon } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Sun, Moon } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { useLanguage, Language } from '@/context/LanguageContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function Header() {
   const { cartCount, setIsCartOpen } = useCart();
-  const { language, setLanguage, currency, setCurrency } = useLanguage();
+  const { language, setLanguage, currency, setCurrency, t, isEn } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,28 +39,20 @@ export default function Header() {
     }
   }, [mobileMenuOpen]);
 
-  const languages: { code: Language; label: string }[] = [
-    { code: 'PL', label: 'Polski' },
-    { code: 'EN', label: 'English' },
-    { code: 'DE', label: 'Deutsch' },
-    { code: 'FR', label: 'Français' },
-    { code: 'ES', label: 'Español' },
-  ];
-
   const categories = [
-    { href: '/kolekcja/silk', label: 'Jedwab' },
-    { href: '/kolekcja/satin', label: 'Satyna' },
-    { href: '/kolekcja/velvet', label: 'Welur' },
-    { href: '/kolekcja/all', label: 'Wszystkie' },
-    { href: '/poradnik/wave-guide', label: 'Wave Guide' },
-    { href: '/o-nas', label: 'O nas' },
+    { href: '/kolekcja/silk', label: t.navSilk },
+    { href: '/kolekcja/satin', label: t.navSatin },
+    { href: '/kolekcja/velvet', label: t.navVelvet },
+    { href: '/kolekcja/all', label: t.navAll },
+    { href: '/poradnik/wave-guide', label: t.navGuide },
+    { href: '/o-nas', label: t.navAbout },
   ];
 
   return (
     <>
       {/* Top static bar: graphite/black, factual copy */}
       <div className="bg-[#141416] text-[#ECEAE7] text-[13px] font-medium py-2 px-4 text-center border-b border-[#1E1E22] tracking-[0.02em]">
-        Darmowa dostawa w Polsce · Kup 2, trzeci durag za 1 zł
+        {t.announcement}
       </div>
 
       {/* Main Header */}
@@ -96,22 +87,22 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-7 text-[14px] font-medium text-[#ECEAE7] tracking-[0.02em]">
             <Link href="/kolekcja/silk" className="hover:text-white transition-colors">
-              Jedwab
+              {t.navSilk}
             </Link>
             <Link href="/kolekcja/satin" className="hover:text-white transition-colors">
-              Satyna
+              {t.navSatin}
             </Link>
             <Link href="/kolekcja/velvet" className="hover:text-white transition-colors">
-              Welur
+              {t.navVelvet}
             </Link>
             <Link href="/kolekcja/all" className="hover:text-white transition-colors">
-              Wszystkie
+              {t.navAll}
             </Link>
             <Link href="/poradnik/wave-guide" className="hover:text-white text-[#C8794B] transition-colors">
-              Wave Guide
+              {t.navGuide}
             </Link>
             <Link href="/o-nas" className="text-[#A3A09B] hover:text-white transition-colors">
-              O nas
+              {t.navAbout}
             </Link>
           </nav>
 
@@ -121,27 +112,49 @@ export default function Header() {
             <button
               onClick={toggleTheme}
               className="p-1.5 sm:px-2.5 sm:py-1 border border-[#1E1E22] bg-[#141416] text-[#ECEAE7] hover:border-[#787570] hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 text-[13px] font-medium"
-              title={theme === 'dark' ? 'Przełącz na jasny motyw' : 'Przełącz na ciemny motyw'}
-              aria-label={theme === 'dark' ? 'Przełącz na jasny motyw' : 'Przełącz na ciemny motyw'}
+              title={theme === 'dark' ? (isEn ? 'Switch to light mode' : 'Przełącz na jasny motyw') : (isEn ? 'Switch to dark mode' : 'Przełącz na ciemny motyw')}
+              aria-label={theme === 'dark' ? 'Light mode' : 'Dark mode'}
             >
               {theme === 'dark' ? (
                 <>
                   <Sun className="w-4 h-4 text-[#C8794B]" />
-                  <span className="hidden xl:inline text-[12px]">Jasny</span>
+                  <span className="hidden xl:inline text-[12px]">{isEn ? 'Light' : 'Jasny'}</span>
                 </>
               ) : (
                 <>
                   <Moon className="w-4 h-4 text-[#C8794B]" />
-                  <span className="hidden xl:inline text-[12px]">Ciemny</span>
+                  <span className="hidden xl:inline text-[12px]">{isEn ? 'Dark' : 'Ciemny'}</span>
                 </>
               )}
             </button>
+
+            {/* Language toggle: strictly PL / EN */}
+            <div className="hidden sm:inline-flex items-center border border-[#1E1E22] text-[13px] font-medium bg-[#141416]">
+              <button
+                onClick={() => setLanguage('PL')}
+                className={`px-2.5 py-1 transition-colors cursor-pointer ${
+                  language === 'PL' ? 'bg-[#ECEAE7] text-[#0B0B0C] font-semibold' : 'text-[#787570] hover:text-white'
+                }`}
+                aria-label="Język polski"
+              >
+                PL
+              </button>
+              <button
+                onClick={() => setLanguage('EN')}
+                className={`px-2.5 py-1 transition-colors cursor-pointer ${
+                  language === 'EN' ? 'bg-[#ECEAE7] text-[#0B0B0C] font-semibold' : 'text-[#787570] hover:text-white'
+                }`}
+                aria-label="English language"
+              >
+                EN
+              </button>
+            </div>
 
             {/* Currency switch */}
             <div className="hidden sm:inline-flex items-center border border-[#1E1E22] text-[13px] font-medium bg-[#141416]">
               <button
                 onClick={() => setCurrency('PLN')}
-                className={`px-2.5 py-1 transition-colors ${
+                className={`px-2.5 py-1 transition-colors cursor-pointer ${
                   currency === 'PLN' ? 'bg-[#ECEAE7] text-[#0B0B0C] font-semibold' : 'text-[#787570] hover:text-white'
                 }`}
               >
@@ -149,7 +162,7 @@ export default function Header() {
               </button>
               <button
                 onClick={() => setCurrency('EUR')}
-                className={`px-2.5 py-1 transition-colors ${
+                className={`px-2.5 py-1 transition-colors cursor-pointer ${
                   currency === 'EUR' ? 'bg-[#ECEAE7] text-[#0B0B0C] font-semibold' : 'text-[#787570] hover:text-white'
                 }`}
               >
@@ -157,42 +170,11 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Language toggle */}
-            <div className="relative hidden sm:block">
-              <button
-                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="flex items-center gap-1.5 text-[13px] font-medium px-2.5 py-1 border border-[#1E1E22] bg-[#141416] text-[#FAFAF9] hover:border-[#787570] transition-colors"
-              >
-                <Globe className="w-3.5 h-3.5 text-[#C8794B]" />
-                <span>{language}</span>
-              </button>
-
-              {langDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-32 bg-[#141416] border border-[#1E1E22] shadow-2xl py-1 z-50 text-[13px] text-[#ECEAE7]">
-                  {languages.map(({ code, label }) => (
-                    <button
-                      key={code}
-                      onClick={() => {
-                        setLanguage(code);
-                        setLangDropdownOpen(false);
-                      }}
-                      className={`w-full text-left px-3 py-1.5 hover:bg-[#1E1E22] hover:text-white flex items-center justify-between transition-colors ${
-                        language === code ? 'text-[#C8794B] font-semibold' : ''
-                      }`}
-                    >
-                      <span>{label}</span>
-                      <span className="text-[11px] text-[#787570]">{code}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
             {/* Search */}
             <Link
               href="/szukaj"
               className="p-2 text-[#ECEAE7] hover:text-white transition-colors"
-              aria-label="Szukaj"
+              aria-label={isEn ? 'Search' : 'Szukaj'}
             >
               <Search className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.6]" />
             </Link>
@@ -201,7 +183,7 @@ export default function Header() {
             <button
               onClick={() => setIsCartOpen(true)}
               className="relative p-2 text-[#ECEAE7] hover:text-white transition-colors cursor-pointer"
-              aria-label="Koszyk"
+              aria-label={t.cartTitle}
             >
               <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.6]" />
               {cartCount > 0 && (
@@ -256,8 +238,8 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Mobile quick controls: Theme, Currency, Language */}
-            <div className="p-3 border-b border-[#1E1E22] bg-[#141416] flex items-center justify-between gap-2">
+            {/* Mobile quick controls: Theme, Language (PL/EN), Currency */}
+            <div className="p-3 border-b border-[#1E1E22] bg-[#141416] flex flex-wrap items-center justify-between gap-2">
               <button
                 onClick={toggleTheme}
                 className="flex items-center gap-1.5 px-2.5 py-1 text-xs border border-[#1E1E22] bg-[#0B0B0C] text-[#ECEAE7]"
@@ -265,15 +247,30 @@ export default function Header() {
                 {theme === 'dark' ? (
                   <>
                     <Sun className="w-3.5 h-3.5 text-[#C8794B]" />
-                    <span>Jasny motyw</span>
+                    <span>{isEn ? 'Light mode' : 'Jasny motyw'}</span>
                   </>
                 ) : (
                   <>
                     <Moon className="w-3.5 h-3.5 text-[#C8794B]" />
-                    <span>Ciemny motyw</span>
+                    <span>{isEn ? 'Dark mode' : 'Ciemny motyw'}</span>
                   </>
                 )}
               </button>
+
+              <div className="inline-flex items-center border border-[#1E1E22] text-xs font-medium bg-[#0B0B0C]">
+                <button
+                  onClick={() => setLanguage('PL')}
+                  className={`px-2 py-1 ${language === 'PL' ? 'bg-[#ECEAE7] text-[#0B0B0C] font-semibold' : 'text-[#787570]'}`}
+                >
+                  PL
+                </button>
+                <button
+                  onClick={() => setLanguage('EN')}
+                  className={`px-2 py-1 ${language === 'EN' ? 'bg-[#ECEAE7] text-[#0B0B0C] font-semibold' : 'text-[#787570]'}`}
+                >
+                  EN
+                </button>
+              </div>
 
               <div className="inline-flex items-center border border-[#1E1E22] text-xs font-medium bg-[#0B0B0C]">
                 <button
@@ -313,7 +310,7 @@ export default function Header() {
                 className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#C8794B] text-white font-medium text-[13px] tracking-[0.02em]"
               >
                 <ShoppingBag className="w-4 h-4" />
-                <span>Twój Koszyk <span className="tabular-nums">({cartCount})</span></span>
+                <span>{isEn ? 'Your Cart' : 'Twój Koszyk'} <span className="tabular-nums">({cartCount})</span></span>
               </Link>
             </div>
           </div>

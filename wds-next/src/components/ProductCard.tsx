@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Product } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { getLocalizedProduct } from '@/lib/translations/products';
 
 interface ProductCardProps {
   product: Product;
@@ -14,23 +15,36 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, priority = false }: ProductCardProps) {
   const { addToCart } = useCart();
-  const { formatPrice } = useLanguage();
+  const { formatPrice, language, isEn, t } = useLanguage();
   const [isAdded, setIsAdded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
+  const localized = getLocalizedProduct(product, language);
+
   // Model name (e.g. "Milanówek", "Warszawa", "Wrocław")
-  const rawName = product.name;
+  const rawName = localized.name;
   const modelName = rawName.replace(/^Durag\s+/i, '').split(/[—–-]/)[0].trim() || rawName;
 
   // Single material identifier
-  const materialLabel =
-    product.category === 'silk'
-      ? 'Jedwab'
-      : product.category === 'velvet'
-      ? 'Welur'
-      : product.category === 'satin'
-      ? 'Satyna'
-      : 'Akcesoria';
+  const materialLabel = isEn
+    ? (product.category === 'silk'
+        ? 'Mulberry Silk'
+        : product.category === 'velvet'
+        ? 'Velvet'
+        : product.category === 'satin'
+        ? 'Satin'
+        : product.category === 'accessories'
+        ? 'Accessories'
+        : 'Seasonal')
+    : (product.category === 'silk'
+        ? 'Jedwab'
+        : product.category === 'velvet'
+        ? 'Welur'
+        : product.category === 'satin'
+        ? 'Satyna'
+        : product.category === 'accessories'
+        ? 'Akcesoria'
+        : 'Tkaniny sezonowe');
 
   const singleColorName =
     product.colors && product.colors.length === 1 ? product.colors[0].name : '';
@@ -105,7 +119,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
             {/* Pastylki kolorów przy wielu kolorach */}
             {product.colors && product.colors.length > 1 && (
-              <div className="flex items-center gap-1 shrink-0" title="Dostępne kolory">
+              <div className="flex items-center gap-1 shrink-0" title={isEn ? 'Available colors' : 'Dostępne kolory'}>
                 {product.colors.map((c, i) => (
                   <span
                     key={i}
@@ -135,7 +149,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
                 : 'bg-[#ECEAE7] text-[#0B0B0C] border-[#ECEAE7] hover:bg-white hover:border-white'
             }`}
           >
-            {isAdded ? 'Dodano' : 'Do koszyka'}
+            {isAdded ? (isEn ? 'Added' : 'Dodano') : (isEn ? 'Add to cart' : 'Do koszyka')}
           </button>
         </div>
       </div>

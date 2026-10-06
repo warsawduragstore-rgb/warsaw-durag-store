@@ -5,10 +5,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { getLocalizedProduct } from '@/lib/translations/products';
 import { X, Trash2, Plus, Minus, ArrowRight, ShoppingBag, Check } from 'lucide-react';
 
 export default function CartDrawer() {
-  const { formatPrice } = useLanguage();
+  const { language, formatPrice, t, isEn } = useLanguage();
   const {
     cart,
     cartCount,
@@ -45,13 +46,13 @@ export default function CartDrawer() {
           <div className="flex items-center gap-2.5">
             <ShoppingBag className="w-5 h-5 text-white" />
             <h2 className="font-serif text-xl font-medium text-white">
-              Twój Koszyk <span className="text-[#A3A09B] text-base tabular-nums">({cartCount})</span>
+              {t.cartTitle} <span className="text-[#A3A09B] text-base tabular-nums">({cartCount})</span>
             </h2>
           </div>
           <button
             onClick={() => setIsCartOpen(false)}
             className="p-1.5 text-gray-400 hover:text-white transition-colors cursor-pointer"
-            aria-label="Zamknij koszyk"
+            aria-label={isEn ? 'Close cart' : 'Zamknij koszyk'}
           >
             <X className="w-5 h-5" />
           </button>
@@ -60,19 +61,19 @@ export default function CartDrawer() {
         {/* 2+1 Promo Banner */}
         <div className="bg-[#141416] px-5 py-3 border-b border-[#1E1E22]">
           <h4 className="text-[13px] font-medium text-white">
-            Promocja: kup 2, trzeci losowy durag za 1 zł
+            {t.cartPromoBannerTitle}
           </h4>
           <p className="text-[13px] text-[#A3A09B] mt-0.5">
             {freeItemsCount > 0 ? (
               <span className="text-emerald-400 font-medium flex items-center gap-1.5 mt-0.5">
-                <Check className="w-3.5 h-3.5" /> Naliczono rabat na trzeci durag w koszyku!
+                <Check className="w-3.5 h-3.5" /> {t.cartPromoBannerSuccess}
               </span>
             ) : neededForNextFree === 3 ? (
-              'Wybierz 2 duragi, a trzeci model otrzymasz za 1 zł.'
+              t.cartPromoBannerDesc0
             ) : neededForNextFree === 1 ? (
-              'Dodaj jeszcze 1 durag, aby odebrać kolejny za 1 zł.'
+              t.cartPromoBannerDesc1
             ) : (
-              'Dodaj jeszcze 2 duragi, aby odebrać kolejny za 1 zł.'
+              t.cartPromoBannerDesc2
             )}
           </p>
         </div>
@@ -82,90 +83,98 @@ export default function CartDrawer() {
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center py-16 text-gray-400 space-y-3">
               <ShoppingBag className="w-10 h-10 stroke-[1.2] text-gray-600" />
-              <p className="font-serif text-lg text-white">Twój koszyk jest pusty</p>
+              <p className="font-serif text-lg text-white">{t.cartEmpty}</p>
               <p className="text-[14px] text-[#A3A09B] max-w-xs">
-                Szyte ręcznie w Warszawie z jedwabiu morwowego, satyny i aksamitu.
+                {isEn
+                  ? 'Handcrafted in Warsaw from 19 Momme mulberry silk, velvet and satin.'
+                  : 'Szyte ręcznie w Warszawie z jedwabiu morwowego, satyny i aksamitu.'}
               </p>
               <Link
                 href="/kolekcja/all"
                 onClick={() => setIsCartOpen(false)}
                 className="mt-2 inline-flex items-center gap-2 px-6 py-2.5 bg-[#ECEAE7] text-[#0B0B0C] font-medium text-[13px] hover:bg-white transition-colors"
               >
-                Zobacz duragi <ArrowRight className="w-3.5 h-3.5" />
+                {isEn ? 'Browse durags' : 'Zobacz duragi'} <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           ) : (
-            cart.map((item, idx) => (
-              <div key={`${item.product.id}-${item.variant || ''}-${idx}`} className="pt-4 first:pt-0 flex gap-4">
-                {/* Thumbnail */}
-                <div className="relative w-20 h-20 bg-[#141416] overflow-hidden shrink-0 border border-[#1E1E22]">
-                  <Image
-                    src={item.product.images?.[0] || '/assets/durag_silk_black.png'}
-                    alt={item.product.name}
-                    fill
-                    sizes="80px"
-                    className="object-cover"
-                  />
-                </div>
+            cart.map((item, idx) => {
+              const localizedItem = getLocalizedProduct(item.product, language);
 
-                {/* Details */}
-                <div className="flex-1 flex flex-col justify-between">
-                  <div>
-                    <div className="flex justify-between items-start gap-2">
-                      <Link
-                        href={`/produkt/${item.product.slug}`}
-                        onClick={() => setIsCartOpen(false)}
-                        className="font-serif text-[15px] font-medium text-white hover:text-[#ECEAE7] transition-colors line-clamp-1"
-                      >
-                        {item.product.name}
-                      </Link>
-                      <button
-                        onClick={() => removeFromCart(item.product.id, item.variant)}
-                        className="text-gray-500 hover:text-red-400 p-1 transition-colors cursor-pointer"
-                        title="Usuń z koszyka"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-
-                    {item.variant && (
-                      <p className="text-[13px] text-gray-400 mt-0.5">Wariant: {item.variant}</p>
-                    )}
-                    <p className="text-[13px] text-[#A3A09B] mt-0.5">{item.product.material}</p>
+              return (
+                <div key={`${item.product.id}-${item.variant || ''}-${idx}`} className="pt-4 first:pt-0 flex gap-4">
+                  {/* Thumbnail */}
+                  <div className="relative w-20 h-20 bg-[#141416] overflow-hidden shrink-0 border border-[#1E1E22]">
+                    <Image
+                      src={item.product.images?.[0] || '/assets/durag_silk_black.png'}
+                      alt={localizedItem.name}
+                      fill
+                      sizes="80px"
+                      className="object-cover"
+                    />
                   </div>
 
-                  <div className="flex items-center justify-between mt-3">
-                    {/* Quantity Selector */}
-                    <div className="flex items-center border border-[#1E1E22] bg-[#141416]">
-                      <button
-                        onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.variant)}
-                        className="p-1.5 text-gray-400 hover:text-white transition-colors cursor-pointer"
-                        aria-label="Zmniejsz ilość"
-                      >
-                        <Minus className="w-3 h-3" />
-                      </button>
-                      <span className="px-2 text-[13px] font-medium text-white min-w-[24px] text-center tabular-nums">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.variant)}
-                        className="p-1.5 text-gray-400 hover:text-white transition-colors cursor-pointer"
-                        aria-label="Zwiększ ilość"
-                      >
-                        <Plus className="w-3 h-3" />
-                      </button>
+                  {/* Details */}
+                  <div className="flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-start gap-2">
+                        <Link
+                          href={`/produkt/${item.product.slug}`}
+                          onClick={() => setIsCartOpen(false)}
+                          className="font-serif text-[15px] font-medium text-white hover:text-[#ECEAE7] transition-colors line-clamp-1"
+                        >
+                          {localizedItem.name}
+                        </Link>
+                        <button
+                          onClick={() => removeFromCart(item.product.id, item.variant)}
+                          className="text-gray-500 hover:text-red-400 p-1 transition-colors cursor-pointer"
+                          title={isEn ? 'Remove from cart' : 'Usuń z koszyka'}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      {item.variant && (
+                        <p className="text-[13px] text-gray-400 mt-0.5">
+                          {isEn ? 'Variant:' : 'Wariant:'} {item.variant}
+                        </p>
+                      )}
+                      <p className="text-[13px] text-[#A3A09B] mt-0.5">{localizedItem.material}</p>
                     </div>
 
-                    {/* Unit Price */}
-                    <div className="text-right">
-                      <span className="text-[15px] font-semibold text-white tabular-nums">
-                        {formatPrice(item.unitPrice * item.quantity, item.product.priceEur ? item.product.priceEur * item.quantity : undefined)}
-                      </span>
+                    <div className="flex items-center justify-between mt-3">
+                      {/* Quantity Selector */}
+                      <div className="flex items-center border border-[#1E1E22] bg-[#141416]">
+                        <button
+                          onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.variant)}
+                          className="p-1.5 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                          aria-label={isEn ? 'Decrease' : 'Zmniejsz ilość'}
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="px-2 text-[13px] font-medium text-white min-w-[24px] text-center tabular-nums">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.variant)}
+                          className="p-1.5 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                          aria-label={isEn ? 'Increase' : 'Zwiększ ilość'}
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
+
+                      {/* Unit Price */}
+                      <div className="text-right">
+                        <span className="text-[15px] font-semibold text-white tabular-nums">
+                          {formatPrice(item.unitPrice * item.quantity, item.product.priceEur ? item.product.priceEur * item.quantity : undefined)}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 
@@ -174,14 +183,14 @@ export default function CartDrawer() {
           <div className="p-5 bg-[#141416] border-t border-[#1E1E22] space-y-2.5">
             {/* Subtotal */}
             <div className="flex justify-between text-[13px] text-[#A3A09B]">
-              <span>Wartość produktów:</span>
+              <span>{t.cartSubtotal}:</span>
               <span className="text-white tabular-nums font-medium">{formatPrice(subtotal)}</span>
             </div>
 
             {/* Free items discount */}
             {freeItemsDiscount > 0 && (
               <div className="flex justify-between text-[13px] text-emerald-400">
-                <span>Rabat 2+1:</span>
+                <span>{t.cartDiscount2plus1}:</span>
                 <span className="tabular-nums font-medium">-{formatPrice(freeItemsDiscount)}</span>
               </div>
             )}
@@ -189,21 +198,21 @@ export default function CartDrawer() {
             {/* Promo code discount */}
             {promoDiscount > 0 && (
               <div className="flex justify-between text-[13px] text-[#C8794B]">
-                <span>Kod rabatowy ({appliedPromoCode}):</span>
+                <span>{t.cartPromoCode} ({appliedPromoCode}):</span>
                 <span className="tabular-nums font-medium">-{formatPrice(promoDiscount)}</span>
               </div>
             )}
 
             {/* Delivery */}
             <div className="flex justify-between text-[13px] text-[#A3A09B]">
-              <span>Dostawa w Polsce:</span>
-              <span className="text-emerald-400 font-medium">0 zł (darmowa dostawa)</span>
+              <span>{t.cartShipping}:</span>
+              <span className="text-emerald-400 font-medium">{t.cartShippingFree}</span>
             </div>
 
             {/* Total */}
             <div className="pt-2 border-t border-[#1E1E22] flex justify-between items-baseline">
               <span className="font-serif text-base font-medium text-white">
-                Do zapłaty:
+                {t.cartTotal}:
               </span>
               <span className="text-xl font-bold text-white tabular-nums">
                 {formatPrice(total)}
@@ -217,7 +226,7 @@ export default function CartDrawer() {
                 onClick={() => setIsCartOpen(false)}
                 className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-[#ECEAE7] text-[#0B0B0C] font-medium text-[14px] hover:bg-white transition-colors cursor-pointer"
               >
-                Przejdź do kasy <ArrowRight className="w-4 h-4" />
+                {t.cartCheckout} <ArrowRight className="w-4 h-4" />
               </Link>
 
               <Link
@@ -225,7 +234,7 @@ export default function CartDrawer() {
                 onClick={() => setIsCartOpen(false)}
                 className="w-full flex items-center justify-center py-2 px-4 text-[13px] text-[#A3A09B] hover:text-white transition-colors cursor-pointer"
               >
-                Zobacz pełny koszyk
+                {t.cartViewFull}
               </Link>
             </div>
           </div>

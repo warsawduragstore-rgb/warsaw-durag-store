@@ -1,9 +1,9 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
 import TrustBanner from '@/components/TrustBanner';
+import CategoryHeroAndTabs from '@/components/CategoryHeroAndTabs';
 import { fetchProducts } from '@/lib/products-db';
 import { SITE_URL } from '@/lib/siteConfig';
 
@@ -21,7 +21,7 @@ export function generateStaticParams() {
   }));
 }
 
-const CATEGORY_NAMES: Record<string, { title: string; desc: string; label: string }> = {
+const CATEGORY_SEO: Record<string, { title: string; desc: string; label: string }> = {
   all: {
     title: 'Wszystkie Duragi i Akcesoria Streetwear',
     desc: 'Odkryj pełną kolekcję Warsaw Durag Store. Luksusowe duragi z naturalnego jedwabiu morwowego 19 Momme, aksamitu, satyny oraz materiałów sezonowych.',
@@ -56,7 +56,7 @@ const CATEGORY_NAMES: Record<string, { title: string; desc: string; label: strin
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const categoryInfo = CATEGORY_NAMES[slug];
+  const categoryInfo = CATEGORY_SEO[slug];
   if (!categoryInfo) {
     return { title: 'Kolekcja | Warsaw Durag Store' };
   }
@@ -83,7 +83,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params;
-  const categoryInfo = CATEGORY_NAMES[slug];
+  const categoryInfo = CATEGORY_SEO[slug];
 
   if (!categoryInfo) {
     notFound();
@@ -94,6 +94,15 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     fetchProducts({ category: slug }),
     fetchProducts(),
   ]);
+
+  const categoryCounts: Record<string, number> = {
+    all: allProducts.length,
+    silk: allProducts.filter((p) => p.category === 'silk').length,
+    satin: allProducts.filter((p) => p.category === 'satin').length,
+    velvet: allProducts.filter((p) => p.category === 'velvet').length,
+    seasonal: allProducts.filter((p) => p.category === 'seasonal').length,
+    accessories: allProducts.filter((p) => p.category === 'accessories').length,
+  };
 
   const categoryUrl = `${SITE_URL}/kolekcja/${slug}`;
 
@@ -142,43 +151,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdItemList) }}
       />
 
-      {/* Category Hero Header */}
-      <section className="bg-[#0B0B0C] text-white py-12 sm:py-16 border-b border-[#1E1E22]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium mb-3 text-[#FAFAF9]">
-            {categoryInfo.title}
-          </h1>
-          <p className="text-[14px] text-[#A3A09B] max-w-2xl mx-auto leading-relaxed">
-            {categoryInfo.desc}
-          </p>
-        </div>
-      </section>
-
-      {/* Category Tabs */}
-      <section className="py-4 sm:py-6 bg-[#0E0E10] border-b border-[#1E1E22]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex overflow-x-auto no-scrollbar scroll-smooth justify-start sm:justify-center gap-2 pb-1 sm:pb-0 text-[13px]">
-          {Object.entries(CATEGORY_NAMES).map(([catKey, catVal]) => {
-            const count =
-              catKey === 'all'
-                ? allProducts.length
-                : allProducts.filter((p) => p.category === catKey).length;
-            const isActive = slug === catKey;
-            return (
-              <Link
-                key={catKey}
-                href={`/kolekcja/${catKey}`}
-                className={`px-4 sm:px-5 py-2 whitespace-nowrap shrink-0 font-medium border transition-colors ${
-                  isActive
-                    ? 'bg-[#ECEAE7] text-[#0B0B0C] border-[#ECEAE7]'
-                    : 'bg-[#141416] text-[#ECEAE7] hover:border-[#787570] border-[#1E1E22]'
-                }`}
-              >
-                {catVal.label} <span className="opacity-70 tabular-nums">({count})</span>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
+      {/* Reactive Category Hero & Category Tabs */}
+      <CategoryHeroAndTabs slug={slug} categoryCounts={categoryCounts} />
 
       <TrustBanner />
 

@@ -79,10 +79,10 @@ export default function Footer() {
             <div className="text-[13px] text-[#A3A09B] space-y-1.5 leading-relaxed">
               <p className="text-white font-medium">Warsaw Durag Store Michał Wyszyński</p>
               <p className="text-[#ECEAE7] tabular-nums">NIP: 7011275454</p>
-              <p>Adres: ul. Grójecka 186/212, 02-390 Warszawa</p>
+              <p>{isEn ? 'Registered address: ul. Grójecka 186/212, 02-390 Warsaw, Poland' : 'Adres: ul. Grójecka 186/212, 02-390 Warszawa'}</p>
               <div className="pt-1.5 border-t border-[#1E1E22]">
-                <p className="text-white font-medium text-[13px]">Odbiór osobisty (po umówieniu):</p>
-                <p>ul. Włodarzewska 4, Warszawa</p>
+                <p className="text-white font-medium text-[13px]">{isEn ? 'Local pickup (by appointment):' : 'Odbiór osobisty (po umówieniu):'}</p>
+                <p>ul. Włodarzewska 4, {isEn ? 'Warsaw' : 'Warszawa'}</p>
               </div>
               <div className="pt-1.5 border-t border-[#1E1E22] space-y-1">
                 <p className="flex items-center gap-1.5 text-gray-300">

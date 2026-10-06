@@ -2,10 +2,11 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type Language = 'PL' | 'EN' | 'DE' | 'FR' | 'ES' | 'CZ' | 'LT';
+export type Language = 'PL' | 'EN';
 
 export interface Translations {
   // Navigation
+  navHome: string;
   navAll: string;
   navSilk: string;
   navSatin: string;
@@ -13,410 +14,238 @@ export interface Translations {
   navSeasonal: string;
   navAccessories: string;
   navGuide: string;
+  navAbout: string;
 
   // Announcement
   announcement: string;
 
-  // Cart
+  // Trust Banner
+  trustFacts: [string, string, string, string];
+
+  // Cart Drawer & Page
   cartTitle: string;
   cartEmpty: string;
   cartSubtotal: string;
   cartShipping: string;
   cartShippingFree: string;
+  cartDiscount2plus1: string;
+  cartPromoCode: string;
   cartTotal: string;
   cartCheckout: string;
-  cartPromoPlaceholder: string;
-  cartPromoApply: string;
+  cartViewFull: string;
+  cartPromoBannerTitle: string;
+  cartPromoBannerDesc0: string;
+  cartPromoBannerDesc1: string;
+  cartPromoBannerDesc2: string;
+  cartPromoBannerSuccess: string;
   cartFreeShippingInfo: string;
 
-  // Product
+  // Product Card & Details
   addToCart: string;
   addedToCart: string;
+  addedConfirmation: string;
+  goToCart: string;
   outOfStock: string;
   inStock: string;
-  selectColor: string;
-  descriptionTab: string;
-  materialTab: string;
-  reviewsTab: string;
-  ratingAverage: string;
+  deliveryNote: string;
+  factStraps: string;
+  factSeam: string;
+  factHandmade: string;
+  factReturns: string;
 
-  // Trust Banner
-  trustHandmadeTitle: string;
-  trustHandmadeDesc: string;
-  trustSilkTitle: string;
-  trustSilkDesc: string;
-  trustShippingTitle: string;
-  trustShippingDesc: string;
-  trustReturnsTitle: string;
-  trustReturnsDesc: string;
+  // Accordions
+  tabShippingTitle: string;
+  tabShippingLine1: string;
+  tabShippingLine2: string;
+  tabShippingLine3: string;
+  tabReturnsTitle: string;
+  tabReturnsLine1: string;
+  tabReturnsLine2: string;
+  tabMaterialTitle: string;
+  tabMaterialLine1: string;
+  tabMaterialLine2: string;
 
-  // Footer
-  footerAbout: string;
-  footerShop: string;
-  footerInfo: string;
-  footerNewsletterTitle: string;
-  footerNewsletterDesc: string;
-  footerEmailPlaceholder: string;
-  footerSubscribeBtn: string;
-  footerRights: string;
+  // Catalog
+  catalogTitle: string;
+  catalogEmpty: string;
+  catAll: string;
+  catSilk: string;
+  catSatin: string;
+  catVelvet: string;
+  catSeasonal: string;
+  catAccessories: string;
+
+  // Home Hero & Promo
+  heroTitle: string;
+  heroDesc: string;
+  heroCta: string;
+  bestsellersTitle: string;
+  promoStripTitle: string;
+  promoStripDesc: string;
+  promoStripCta: string;
+  chooseFabricTitle: string;
+  chooseFabricDesc: string;
 }
 
 const TRANSLATIONS: Record<Language, Translations> = {
   PL: {
-    navAll: 'Wszystko',
-    navSilk: 'Jedwabne',
-    navSatin: 'Satynowe',
-    navVelvet: 'Welurowe',
-    navSeasonal: 'Sezonowe',
+    navHome: 'Start',
+    navAll: 'Wszystkie',
+    navSilk: 'Jedwab',
+    navSatin: 'Satyna',
+    navVelvet: 'Welur',
+    navSeasonal: 'Tkaniny sezonowe',
     navAccessories: 'Akcesoria',
     navGuide: 'Wave Guide',
+    navAbout: 'O nas',
 
     announcement: 'Darmowa dostawa w Polsce · Kup 2, trzeci durag za 1 zł',
+
+    trustFacts: [
+      'Wysyłka z Warszawy w 1–2 dni robocze',
+      'Darmowa dostawa w Polsce',
+      '14 dni na zwrot',
+      'Odbiór osobisty w Warszawie po umówieniu',
+    ],
 
     cartTitle: 'Twój Koszyk',
     cartEmpty: 'Twój koszyk jest pusty',
     cartSubtotal: 'Suma częściowa',
-    cartShipping: 'Wysyłka',
-    cartShippingFree: 'Darmowa',
-    cartTotal: 'Łącznie',
-    cartCheckout: 'Przejdź do dostawy i płatności',
-    cartPromoPlaceholder: 'Kod rabatowy (np. WARSAW10)',
-    cartPromoApply: 'Zastosuj',
-    cartFreeShippingInfo: 'Darmowa dostawa w Polsce dla każdego zamówienia.',
+    cartShipping: 'Dostawa w Polsce',
+    cartShippingFree: '0 zł (darmowa dostawa)',
+    cartDiscount2plus1: 'Rabat 2+1',
+    cartPromoCode: 'Kod rabatowy',
+    cartTotal: 'Do zapłaty',
+    cartCheckout: 'Przejdź do kasy',
+    cartViewFull: 'Zobacz pełny koszyk',
+    cartPromoBannerTitle: 'Promocja: kup 2, trzeci losowy durag za 1 zł',
+    cartPromoBannerDesc0: 'Wybierz 2 duragi, a trzeci model otrzymasz za 1 zł.',
+    cartPromoBannerDesc1: 'Dodaj jeszcze 1 durag, aby odebrać kolejny za 1 zł.',
+    cartPromoBannerDesc2: 'Dodaj jeszcze 2 duragi, aby odebrać kolejny za 1 zł.',
+    cartPromoBannerSuccess: 'Naliczono rabat na trzeci durag w koszyku!',
+    cartFreeShippingInfo: 'Darmowa dostawa dla wszystkich zamówień w Polsce.',
 
-    addToCart: 'Dodaj do koszyka',
-    addedToCart: 'Dodano do koszyka',
+    addToCart: 'Do koszyka',
+    addedToCart: 'Dodano',
+    addedConfirmation: 'Produkt został dodany do koszyka.',
+    goToCart: 'Przejdź do koszyka',
     outOfStock: 'Brak w magazynie',
     inStock: 'Dostępny w magazynie',
-    selectColor: 'Wybierz kolor',
-    descriptionTab: 'Opis i Materiał',
-    materialTab: 'Tkanina i Pielęgnacja',
-    reviewsTab: 'Opinie Klientów',
-    ratingAverage: 'Średnia ocena',
+    deliveryNote: 'Darmowa dostawa w Polsce · Wysyłka z Warszawy w 1–2 dni robocze',
+    factStraps: '• Pasy: 100 cm',
+    factSeam: '• Bezodciskowy szew na zewnątrz',
+    factHandmade: '• Szyte ręcznie w Warszawie',
+    factReturns: '• 14 dni na zwrot',
 
-    trustHandmadeTitle: 'Szyte ręcznie w Warszawie',
-    trustHandmadeDesc: 'Autorski krój z zewnętrznym płaskim szwem.',
-    trustSilkTitle: 'Jedwab morwowy 19 Momme',
-    trustSilkDesc: 'Naturalny jedwab morwowy z Milanówka.',
-    trustShippingTitle: 'Wysyłka w 1–2 dni robocze',
-    trustShippingDesc: 'Wysyłka z Warszawy. Darmowa dostawa w Polsce.',
-    trustReturnsTitle: '14 dni na zwrot',
-    trustReturnsDesc: '14 dni na bezproblemowy zwrot.',
+    tabShippingTitle: 'Dostawa i odbiór osobisty',
+    tabShippingLine1: 'Wysyłka z Warszawy w 1–2 dni robocze',
+    tabShippingLine2: 'Darmowa dostawa w Polsce: Paczkomaty InPost i kurier dla każdego zamówienia',
+    tabShippingLine3: 'Odbiór osobisty w Warszawie: ul. Włodarzewska 4 po umówieniu',
+    tabReturnsTitle: 'Zwroty i 14 dni na odstąpienie',
+    tabReturnsLine1: 'Masz pełne 14 dni na zwrot od momentu odebrania przesyłki',
+    tabReturnsLine2: 'Produkt nie może nosić śladów użytkowania, w oryginalnym opakowaniu',
+    tabMaterialTitle: 'Tkanina i pielęgnacja',
+    tabMaterialLine1: 'Prać ręcznie w chłodnej wodzie (max 30°C) z delikatnym detergentem',
+    tabMaterialLine2: 'Suszyć na płasko, nie wykręcać, prasować na najniższej temperaturze',
 
-    footerAbout: 'Jedyne duragi szyte w Polsce z jedwabiu morwowego, satyny i weluru. Warszawski kunszt i luksusowa pielęgnacja fal 360.',
-    footerShop: 'Kolekcja',
-    footerInfo: 'Obsługa Klienta',
-    footerNewsletterTitle: 'Dołącz do WDS Club',
-    footerNewsletterDesc: 'Otrzymaj 10% rabatu na pierwsze zamówienie i dostęp do limitowanych dropów.',
-    footerEmailPlaceholder: 'Twój adres e-mail',
-    footerSubscribeBtn: 'Zapisz się',
-    footerRights: 'Wszelkie prawa zastrzeżone.',
+    catalogTitle: 'Katalog duragów',
+    catalogEmpty: 'Brak produktów w tej kategorii.',
+    catAll: 'Wszystkie',
+    catSilk: 'Jedwab',
+    catSatin: 'Satyna',
+    catVelvet: 'Welur',
+    catSeasonal: 'Tkaniny sezonowe',
+    catAccessories: 'Akcesoria',
+
+    heroTitle: 'Duragi szyte w Warszawie z jedwabiu morwowego',
+    heroDesc: 'Szyte ręcznie w Warszawie z naturalnego jedwabiu morwowego, satyny i weluru. Bezodciskowy szew zewnętrzny i długie pasy.',
+    heroCta: 'Zobacz duragi',
+    bestsellersTitle: 'Bestsellery',
+    promoStripTitle: 'Kup 2, trzeci losowy durag za 1 zł',
+    promoStripDesc: 'Wybierz dwa dowolne duragi do koszyka, a trzeci losowy model otrzymasz za 1 zł. Rabat nalicza się automatycznie.',
+    promoStripCta: 'Zobacz duragi',
+    chooseFabricTitle: 'Wybierz tkaninę',
+    chooseFabricDesc: 'Materiały: jedwab, satyna, welur, tkaniny sezonowe.',
   },
 
   EN: {
-    navAll: 'All Products',
-    navSilk: 'Silk Durags',
-    navSatin: 'Satin Durags',
-    navVelvet: 'Velvet Durags',
+    navHome: 'Home',
+    navAll: 'All durags',
+    navSilk: 'Silk',
+    navSatin: 'Satin',
+    navVelvet: 'Velvet',
     navSeasonal: 'Seasonal',
     navAccessories: 'Accessories',
     navGuide: 'Wave Guide',
+    navAbout: 'About us',
 
-    announcement: 'Express shipping from Warsaw in 24h • Buy 2 Get 1 Free • Free shipping in EU • Handcrafted Premium Durags • ',
+    announcement: 'Free shipping across Poland · Buy 2, get 3rd durag for 1 PLN / €0.25',
+
+    trustFacts: [
+      'Dispatched from Warsaw in 1–2 business days',
+      'Free shipping across Poland',
+      '14-day return policy',
+      'Warsaw local pickup by appointment',
+    ],
 
     cartTitle: 'Your Cart',
     cartEmpty: 'Your shopping cart is empty',
     cartSubtotal: 'Subtotal',
-    cartShipping: 'Shipping',
-    cartShippingFree: 'Free',
+    cartShipping: 'Shipping in Poland',
+    cartShippingFree: 'Free shipping (0 PLN)',
+    cartDiscount2plus1: 'Buy 2 Get 1 Promo',
+    cartPromoCode: 'Promo code',
     cartTotal: 'Total',
-    cartCheckout: 'Proceed to Checkout',
-    cartPromoPlaceholder: 'Promo Code (e.g. WARSAW10)',
-    cartPromoApply: 'Apply',
-    cartFreeShippingInfo: 'Add {amount} PLN more for Free Express EU Shipping!',
+    cartCheckout: 'Checkout',
+    cartViewFull: 'View full cart',
+    cartPromoBannerTitle: 'Offer: Buy 2, get 3rd random durag for 1 PLN',
+    cartPromoBannerDesc0: 'Add 2 durags to receive a 3rd durag for 1 PLN.',
+    cartPromoBannerDesc1: 'Add 1 more durag to unlock your next durag for 1 PLN.',
+    cartPromoBannerDesc2: 'Add 2 more durags to unlock your next durag for 1 PLN.',
+    cartPromoBannerSuccess: 'Discount applied to the 3rd durag in cart!',
+    cartFreeShippingInfo: 'Free shipping across Poland on all orders.',
 
-    addToCart: 'Add to Cart',
-    addedToCart: 'Added to Cart!',
-    outOfStock: 'Out of Stock',
-    inStock: 'In Stock',
-    selectColor: 'Select Color',
-    descriptionTab: 'Description & Story',
-    materialTab: 'Material & Care',
-    reviewsTab: 'Customer Reviews',
-    ratingAverage: 'Average Rating',
+    addToCart: 'Add to cart',
+    addedToCart: 'Added',
+    addedConfirmation: 'Item has been added to your cart.',
+    goToCart: 'Go to cart',
+    outOfStock: 'Out of stock',
+    inStock: 'In stock',
+    deliveryNote: 'Free shipping in Poland · Dispatched from Warsaw in 1–2 business days',
+    factStraps: '• Straps: 100 cm',
+    factSeam: '• Seamless exterior flat stitch',
+    factHandmade: '• Handcrafted in Warsaw',
+    factReturns: '• 14-day returns',
 
-    trustHandmadeTitle: 'Handmade in Warsaw',
-    trustHandmadeDesc: 'Crafted locally with passion and ultimate precision.',
-    trustSilkTitle: '19 Momme Mulberry Silk',
-    trustSilkDesc: 'Natural grade-A Mulberry silk for 360 wave protection.',
-    trustShippingTitle: '24h EU Shipping',
-    trustShippingDesc: 'Fast tracked courier delivery from Warsaw across Europe.',
-    trustReturnsTitle: '14-Day Easy Returns',
-    trustReturnsDesc: 'Hassle-free return guarantee on all orders.',
+    tabShippingTitle: 'Shipping & Pickup',
+    tabShippingLine1: 'Dispatched from Warsaw in 1–2 business days',
+    tabShippingLine2: 'Free shipping across Poland: InPost Paczkomat and courier on all orders',
+    tabShippingLine3: 'Local pickup in Warsaw: ul. Włodarzewska 4 by appointment',
+    tabReturnsTitle: 'Returns & 14-Day Guarantee',
+    tabReturnsLine1: 'Full 14 days to return your order from the delivery date',
+    tabReturnsLine2: 'Product must be unworn in its original packaging',
+    tabMaterialTitle: 'Fabric & Garment Care',
+    tabMaterialLine1: 'Hand wash in cold water (max 30°C / 86°F) with delicate silk detergent',
+    tabMaterialLine2: 'Dry flat, do not wring or tumble dry, iron on lowest silk setting',
 
-    footerAbout: 'The premier European luxury durag brand. Handcrafted in Warsaw using 19 Momme mulberry silk, satin and velvet.',
-    footerShop: 'Collection',
-    footerInfo: 'Customer Care',
-    footerNewsletterTitle: 'Join the WDS Club',
-    footerNewsletterDesc: 'Get 10% off your first order and exclusive access to limited drops.',
-    footerEmailPlaceholder: 'Enter your email',
-    footerSubscribeBtn: 'Subscribe',
-    footerRights: 'All Rights Reserved.',
-  },
+    catalogTitle: 'Durag Collection',
+    catalogEmpty: 'No items in this category.',
+    catAll: 'All',
+    catSilk: 'Silk',
+    catSatin: 'Satin',
+    catVelvet: 'Velvet',
+    catSeasonal: 'Seasonal',
+    catAccessories: 'Accessories',
 
-  DE: {
-    navAll: 'Alle Produkte',
-    navSilk: 'Seide Durags',
-    navSatin: 'Satin Durags',
-    navVelvet: 'Samt Durags',
-    navSeasonal: 'Saisonal',
-    navAccessories: 'Zubehör',
-    navGuide: 'Wave Guide',
-
-    announcement: 'Express-Versand aus Warschau in 24 Std. • Nimm 3 Zahle 2 • Kostenloser Versand in Europa • Handgefertigte Durags • ',
-
-    cartTitle: 'Ihr Warenkorb',
-    cartEmpty: 'Ihr Warenkorb ist leer',
-    cartSubtotal: 'Zwischensumme',
-    cartShipping: 'Versand',
-    cartShippingFree: 'Kostenlos',
-    cartTotal: 'Gesamtsumme',
-    cartCheckout: 'Zur Kasse gehen',
-    cartPromoPlaceholder: 'Gutscheincode',
-    cartPromoApply: 'Einlösen',
-    cartFreeShippingInfo: 'Noch {amount} PLN bis zum kostenlosen Versand!',
-
-    addToCart: 'In den Warenkorb',
-    addedToCart: 'Hinzugefügt!',
-    outOfStock: 'Ausverkauft',
-    inStock: 'Auf Lager',
-    selectColor: 'Farbe wählen',
-    descriptionTab: 'Beschreibung & Geschichte',
-    materialTab: 'Material & Pflege',
-    reviewsTab: 'Kundenbewertungen',
-    ratingAverage: 'Durchschnittliche Bewertung',
-
-    trustHandmadeTitle: 'Handgefertigt in Warschau',
-    trustHandmadeDesc: 'Lokal gefertigt mit Leidenschaft und Präzision.',
-    trustSilkTitle: '19 Momme Maulbeerseide',
-    trustSilkDesc: 'Natürliche Maulbeerseide höchster Qualität.',
-    trustShippingTitle: '24h EU Versand',
-    trustShippingDesc: 'Schnelle Kurierzustellung aus Warschau europaweit.',
-    trustReturnsTitle: '14 Tage Rückgaberecht',
-    trustReturnsDesc: 'Garantie für einfache Rücksendungen.',
-
-    footerAbout: 'Premium Durag-Marke aus Europa. Handgefertigt in Warschau aus 19 Momme Maulbeerseide, Satin und Samt.',
-    footerShop: 'Kollektion',
-    footerInfo: 'Kundenservice',
-    footerNewsletterTitle: 'WDS Club beitreten',
-    footerNewsletterDesc: 'Erhalten Sie 10% Rabatt auf Ihre erste Bestellung.',
-    footerEmailPlaceholder: 'Ihre E-Mail-Adresse',
-    footerSubscribeBtn: 'Abonnieren',
-    footerRights: 'Alle Rechte vorbehalten.',
-  },
-
-  FR: {
-    navAll: 'Tous les produits',
-    navSilk: 'Durags en Soie',
-    navSatin: 'Durags en Satin',
-    navVelvet: 'Durags en Velours',
-    navSeasonal: 'Saisonnier',
-    navAccessories: 'Accessoires',
-    navGuide: 'Guide Wave',
-
-    announcement: 'Expédition express depuis Varsovie en 24h • 2 achetés 1 offert • Livraison gratuite en Europe • ',
-
-    cartTitle: 'Votre Panier',
-    cartEmpty: 'Votre panier est vide',
-    cartSubtotal: 'Sous-total',
-    cartShipping: 'Livraison',
-    cartShippingFree: 'Gratuite',
-    cartTotal: 'Total',
-    cartCheckout: 'Commander',
-    cartPromoPlaceholder: 'Code promo',
-    cartPromoApply: 'Appliquer',
-    cartFreeShippingInfo: 'Plus que {amount} PLN pour la livraison gratuite !',
-
-    addToCart: 'Ajouter au panier',
-    addedToCart: 'Ajouté !',
-    outOfStock: 'Rupture de stock',
-    inStock: 'En stock',
-    selectColor: 'Sélectionner la couleur',
-    descriptionTab: 'Description et Histoire',
-    materialTab: 'Matériau et Entretien',
-    reviewsTab: 'Avis clients',
-    ratingAverage: 'Note moyenne',
-
-    trustHandmadeTitle: 'Fabriqué à Varsovie',
-    trustHandmadeDesc: 'Fait main avec passion et précision.',
-    trustSilkTitle: 'Soie de Mûrier 19 Momme',
-    trustSilkDesc: 'Soie naturelle de qualité supérieure pour vagues 360.',
-    trustShippingTitle: 'Livraison 24h Europe',
-    trustShippingDesc: 'Expédition rapide par courrier depuis Varsovie.',
-    trustReturnsTitle: 'Retours sous 14 jours',
-    trustReturnsDesc: 'Garantie de retour facile sur toutes vos commandes.',
-
-    footerAbout: 'Marque européenne de durags de luxe. Fabriqué à la main à Varsovie.',
-    footerShop: 'Collection',
-    footerInfo: 'Service Client',
-    footerNewsletterTitle: 'Rejoignez le WDS Club',
-    footerNewsletterDesc: 'Obtenez 10% de réduction sur votre première commande.',
-    footerEmailPlaceholder: 'Votre e-mail',
-    footerSubscribeBtn: 'S’abonner',
-    footerRights: 'Tous droits réservés.',
-  },
-
-  ES: {
-    navAll: 'Todos los productos',
-    navSilk: 'Durags de Seda',
-    navSatin: 'Durags de Satén',
-    navVelvet: 'Durags de Terciopelo',
-    navSeasonal: 'De Temporada',
-    navAccessories: 'Accesorios',
-    navGuide: 'Guía Wave',
-
-    announcement: 'Envío exprés desde Varsovia en 24h • Compra 2 y Llévate 1 Gratis • Envío gratis en Europa • ',
-
-    cartTitle: 'Tu Cesta',
-    cartEmpty: 'Tu cesta está vacía',
-    cartSubtotal: 'Subtotal',
-    cartShipping: 'Envío',
-    cartShippingFree: 'Gratis',
-    cartTotal: 'Total',
-    cartCheckout: 'Tramitar Pedido',
-    cartPromoPlaceholder: 'Código de descuento',
-    cartPromoApply: 'Aplicar',
-    cartFreeShippingInfo: '¡Faltan {amount} PLN para envío gratis!',
-
-    addToCart: 'Añadir a la cesta',
-    addedToCart: '¡Añadido!',
-    outOfStock: 'Agotado',
-    inStock: 'En stock',
-    selectColor: 'Seleccionar color',
-    descriptionTab: 'Descripción e Historia',
-    materialTab: 'Material y Cuidados',
-    reviewsTab: 'Opiniones de clientes',
-    ratingAverage: 'Puntuación media',
-
-    trustHandmadeTitle: 'Hecho a mano en Varsovia',
-    trustHandmadeDesc: 'Elaborado localmente con pasión y precisión.',
-    trustSilkTitle: 'Seda de Morera 19 Momme',
-    trustSilkDesc: 'Seda natural de primera calidad para protección 360.',
-    trustShippingTitle: 'Envío 24h a Europa',
-    trustShippingDesc: 'Entrega rápida en toda Europa desde Varsovia.',
-    trustReturnsTitle: '14 Días de Devolución',
-    trustReturnsDesc: 'Garantía de devolución fácil y segura.',
-
-    footerAbout: 'Marca europea de durags de lujo. Hecho a mano en Varsovia con seda, satén y terciopelo.',
-    footerShop: 'Colección',
-    footerInfo: 'Atención al Cliente',
-    footerNewsletterTitle: 'Únete al WDS Club',
-    footerNewsletterDesc: 'Obtén un 10% de descuento en tu primer pedido.',
-    footerEmailPlaceholder: 'Tu correo electrónico',
-    footerSubscribeBtn: 'Suscribirse',
-    footerRights: 'Todos los derechos reservados.',
-  },
-
-  CZ: {
-    navAll: 'Všechny Produkty',
-    navSilk: 'Hedvábné Duragy',
-    navSatin: 'Saténové Duragy',
-    navVelvet: 'Sametové Duragy',
-    navSeasonal: 'Sezónní',
-    navAccessories: 'Doplňky',
-    navGuide: 'Wave Guide',
-
-    announcement: 'Expresní doručení z Varšavy do 24 hodin • Koupit 2 Získejte 1 Zdarma • Doprava zdarma v EU • ',
-
-    cartTitle: 'Váš Košík',
-    cartEmpty: 'Váš nákupní košík je prázdný',
-    cartSubtotal: 'Mezisoučet',
-    cartShipping: 'Doprava',
-    cartShippingFree: 'Zdarma',
-    cartTotal: 'Celkem',
-    cartCheckout: 'Pokračovat k objednávce',
-    cartPromoPlaceholder: 'Slevový kód',
-    cartPromoApply: 'Použít',
-    cartFreeShippingInfo: 'Chybí vám {amount} PLN do dopravy zdarma!',
-
-    addToCart: 'Přidat do košíku',
-    addedToCart: 'Přidáno do košíku!',
-    outOfStock: 'Vyprodáno',
-    inStock: 'Skladem',
-    selectColor: 'Vybrat barvu',
-    descriptionTab: 'Popis a Příběh',
-    materialTab: 'Materiál a Péče',
-    reviewsTab: 'Hodnocení zákazníků',
-    ratingAverage: 'Průměrné hodnocení',
-
-    trustHandmadeTitle: 'Ručně šité ve Varšavě',
-    trustHandmadeDesc: 'Vyrobeno lokálně s vášní a přesností.',
-    trustSilkTitle: 'Hedvábí 19 Momme',
-    trustSilkDesc: 'Přírodní hedvábí nejvyšší kvality.',
-    trustShippingTitle: 'Rychlé doručení v EU',
-    trustShippingDesc: 'Expresní kurýr z Varšavy po celé Evropě.',
-    trustReturnsTitle: '14 Dní na vrácení',
-    trustReturnsDesc: 'Záruka snadného vrácení zboží.',
-
-    footerAbout: 'Prémiová evropská značka duragů. Ruční výroba ve Varšavě z hedvábí, saténu a sametu.',
-    footerShop: 'Kolekce',
-    footerInfo: 'Zákaznický servis',
-    footerNewsletterTitle: 'Připojte se k WDS Clubu',
-    footerNewsletterDesc: 'Získejte 10% slevu na první objednávku.',
-    footerEmailPlaceholder: 'Váš e-mail',
-    footerSubscribeBtn: 'Odebírat',
-    footerRights: 'Všechna práva vyhrazena.',
-  },
-
-  LT: {
-    navAll: 'Visi Produktai',
-    navSilk: 'Šilkiniai Duragai',
-    navSatin: 'Satininiai Duragai',
-    navVelvet: 'Velūriniai Duragai',
-    navSeasonal: 'Sezoniniai',
-    navAccessories: 'Atsargos ir Priedai',
-    navGuide: 'Wave Guide',
-
-    announcement: 'Greitas pristatymas iš Varšuvos per 24 val. • Pirkite 2 Gaukite 1 Nemokamai • Nemokamas pristatymas ES • ',
-
-    cartTitle: 'Jūsų Krepšelis',
-    cartEmpty: 'Jūsų pirkinių krepšelis tuščias',
-    cartSubtotal: 'Tarpinė suma',
-    cartShipping: 'Pristatymas',
-    cartShippingFree: 'Nemokamas',
-    cartTotal: 'Iš viso',
-    cartCheckout: 'Tęsti Apmokėjimą',
-    cartPromoPlaceholder: 'Nuolaidos kodas',
-    cartPromoApply: 'Taikyti',
-    cartFreeShippingInfo: 'Liko {amount} PLN iki nemokamo pristatymo!',
-
-    addToCart: 'Įdėti į krepšelį',
-    addedToCart: 'Įdėta!',
-    outOfStock: 'Išparduota',
-    inStock: 'Yra sandėlyje',
-    selectColor: 'Pasirinkite spalvą',
-    descriptionTab: 'Aprašymas ir Istorija',
-    materialTab: 'Medžiaga ir Priežiūra',
-    reviewsTab: 'Klientų Atsiliepimai',
-    ratingAverage: 'Vidutinis įvertinimas',
-
-    trustHandmadeTitle: 'Rankų darbas Varšuvoje',
-    trustHandmadeDesc: 'Pagaminta vietiniu būdu su aistra ir tikslumu.',
-    trustSilkTitle: '19 Momme Šilkas',
-    trustSilkDesc: 'Aukščiausios kokybės natūralus šilkas.',
-    trustShippingTitle: 'Greitas 24 val. pristatymas ES',
-    trustShippingDesc: 'Greitas kurjeris iš Varšuvos į visą Europą.',
-    trustReturnsTitle: '14 Dienų Grąžinimas',
-    trustReturnsDesc: 'Paprasta ir saugi grąžinimo garantija.',
-
-    footerAbout: 'Aukščiausios kokybės europietiškas durag prekės ženklas. Rankų darbas Varšuvoje iš šilko, satino ir velūro.',
-    footerShop: 'Kolekcija',
-    footerInfo: 'Klientų Aptarnavimas',
-    footerNewsletterTitle: 'Prisijunkite prie WDS Klubo',
-    footerNewsletterDesc: 'Gaukite 10% nuolaidą pirmajam užsakymui.',
-    footerEmailPlaceholder: 'Jūsų el. paštas',
-    footerSubscribeBtn: 'Prenumeruoti',
-    footerRights: 'Visos teisės saugomos.',
+    heroTitle: 'Handcrafted in Warsaw from Natural Mulberry Silk',
+    heroDesc: 'Sewn by hand in Warsaw from natural 19 Momme mulberry silk, satin and velvet. Seamless exterior stitch and 100 cm straps.',
+    heroCta: 'Explore durags',
+    bestsellersTitle: 'Bestsellers',
+    promoStripTitle: 'Buy 2, get the 3rd durag for 1 PLN',
+    promoStripDesc: 'Add any two durags to your cart and the third random durag is automatically discounted to 1 PLN at checkout.',
+    promoStripCta: 'Explore durags',
+    chooseFabricTitle: 'Choose Fabric',
+    chooseFabricDesc: 'Curated textiles: mulberry silk, satin, velvet, seasonal weaves.',
   },
 };
 
@@ -427,6 +256,7 @@ interface LanguageContextType {
   setCurrency: (curr: 'PLN' | 'EUR') => void;
   formatPrice: (pricePln: number, priceEur?: number) => string;
   t: Translations;
+  isEn: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -436,40 +266,63 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [currency, setCurrencyState] = useState<'PLN' | 'EUR'>('PLN');
 
   useEffect(() => {
-    const saved = localStorage.getItem('wds_lang') as Language;
-    if (saved && TRANSLATIONS[saved]) {
-      setLanguageState(saved);
-      if (saved !== 'PL') {
-        setCurrencyState('EUR');
+    try {
+      const urlLang = new URLSearchParams(window.location.search).get('lang')?.toUpperCase();
+      if (urlLang === 'PL' || urlLang === 'EN') {
+        setLanguageState(urlLang as Language);
+        localStorage.setItem('wds_lang', urlLang);
+        if (urlLang === 'EN') {
+          setCurrencyState('EUR');
+          localStorage.setItem('wds_currency', 'EUR');
+        }
+        return;
       }
-    }
-    const savedCurr = localStorage.getItem('wds_currency') as 'PLN' | 'EUR';
-    if (savedCurr === 'PLN' || savedCurr === 'EUR') {
-      setCurrencyState(savedCurr);
+
+      const saved = localStorage.getItem('wds_lang') as Language;
+      if (saved === 'PL' || saved === 'EN') {
+        setLanguageState(saved);
+        if (saved === 'EN') {
+          setCurrencyState('EUR');
+        }
+      }
+      const savedCurr = localStorage.getItem('wds_currency') as 'PLN' | 'EUR';
+      if (savedCurr === 'PLN' || savedCurr === 'EUR') {
+        setCurrencyState(savedCurr);
+      }
+    } catch {
+      // ignore
     }
   }, []);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem('wds_lang', lang);
-    if (lang === 'PL') {
-      setCurrencyState('PLN');
-      localStorage.setItem('wds_currency', 'PLN');
-    } else {
-      setCurrencyState('EUR');
-      localStorage.setItem('wds_currency', 'EUR');
+    try {
+      localStorage.setItem('wds_lang', lang);
+      if (lang === 'PL') {
+        setCurrencyState('PLN');
+        localStorage.setItem('wds_currency', 'PLN');
+      } else {
+        setCurrencyState('EUR');
+        localStorage.setItem('wds_currency', 'EUR');
+      }
+    } catch {
+      // ignore
     }
   };
 
   const setCurrency = (curr: 'PLN' | 'EUR') => {
     setCurrencyState(curr);
-    localStorage.setItem('wds_currency', curr);
+    try {
+      localStorage.setItem('wds_currency', curr);
+    } catch {
+      // ignore
+    }
   };
 
   const formatPrice = (pricePln: number, priceEur?: number): string => {
     if (currency === 'EUR') {
       const val = priceEur !== undefined && priceEur > 0 ? priceEur : Math.round((pricePln / 4.3) * 100) / 100;
-      const locale = language === 'PL' ? 'pl-PL' : 'de-DE';
+      const locale = language === 'PL' ? 'pl-PL' : 'en-US';
       const hasDecimals = val % 1 !== 0;
       return new Intl.NumberFormat(locale, {
         style: 'currency',
@@ -488,9 +341,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   };
 
   const t = TRANSLATIONS[language] || TRANSLATIONS.PL;
+  const isEn = language === 'EN';
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, currency, setCurrency, formatPrice, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, currency, setCurrency, formatPrice, t, isEn }}>
       {children}
     </LanguageContext.Provider>
   );

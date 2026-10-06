@@ -54,11 +54,6 @@ export const metadata: Metadata = {
     languages: {
       'pl': SITE_URL,
       'en': `${SITE_URL}?lang=EN`,
-      'de': `${SITE_URL}?lang=DE`,
-      'fr': `${SITE_URL}?lang=FR`,
-      'es': `${SITE_URL}?lang=ES`,
-      'cs': `${SITE_URL}?lang=CZ`,
-      'lt': `${SITE_URL}?lang=LT`,
       'x-default': SITE_URL,
     },
   },

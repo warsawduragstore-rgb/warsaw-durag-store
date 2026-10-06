@@ -3,22 +3,24 @@
 import React, { useState, useMemo } from 'react';
 import ProductCard from '@/components/ProductCard';
 import { Product } from '@/lib/products';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface HomeProductCatalogProps {
   initialProducts: Product[];
 }
 
-const CATEGORIES: Array<{ key: string; label: string }> = [
-  { key: 'all', label: 'Wszystkie' },
-  { key: 'silk', label: 'Jedwab' },
-  { key: 'satin', label: 'Satyna' },
-  { key: 'velvet', label: 'Welur' },
-  { key: 'seasonal', label: 'Tkaniny sezonowe' },
-  { key: 'accessories', label: 'Akcesoria' },
-];
-
 export default function HomeProductCatalog({ initialProducts }: HomeProductCatalogProps) {
+  const { t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  const categories = [
+    { key: 'all', label: t.catAll },
+    { key: 'silk', label: t.catSilk },
+    { key: 'satin', label: t.catSatin },
+    { key: 'velvet', label: t.catVelvet },
+    { key: 'seasonal', label: t.catSeasonal },
+    { key: 'accessories', label: t.catAccessories },
+  ];
 
   const filteredProducts = useMemo(() => {
     if (selectedCategory === 'all') return initialProducts;
@@ -30,13 +32,13 @@ export default function HomeProductCatalog({ initialProducts }: HomeProductCatal
       {/* Heading (No eyebrow) */}
       <div className="mb-8 pb-3 border-b border-[#1E1E22]">
         <h2 className="font-serif text-2xl sm:text-3xl text-white font-medium">
-          Katalog duragów
+          {t.catalogTitle}
         </h2>
       </div>
 
       {/* Category Tabs */}
       <div className="flex overflow-x-auto no-scrollbar scroll-smooth gap-2 mb-8 pb-2 sm:pb-0">
-        {CATEGORIES.map((cat) => {
+        {categories.map((cat) => {
           const count =
             cat.key === 'all'
               ? initialProducts.length
@@ -70,7 +72,7 @@ export default function HomeProductCatalog({ initialProducts }: HomeProductCatal
       ) : (
         <div className="text-center py-16 bg-[#141416] border border-[#1E1E22]">
           <p className="text-[#A3A09B] text-[14px]">
-            Brak produktów w tej kategorii.
+            {t.catalogEmpty}
           </p>
         </div>
       )}

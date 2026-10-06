@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Product } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { getLocalizedProduct } from '@/lib/translations/products';
 import { Star, ChevronDown, Check } from 'lucide-react';
 
 interface ProductDetailsClientProps {
@@ -14,17 +15,19 @@ interface ProductDetailsClientProps {
 
 export default function ProductDetailsClient({ product }: ProductDetailsClientProps) {
   const { addToCart } = useCart();
-  const { language, formatPrice } = useLanguage();
+  const { language, formatPrice, t, isEn } = useLanguage();
+
+  const localized = getLocalizedProduct(product, language);
 
   const [selectedImage, setSelectedImage] = useState<string>(product.images[0] || '/assets/durag_silk_black.png');
   const [quantity, setQuantity] = useState<number>(1);
-  const [activeTab, setActiveTab] = useState<'shipping' | 'payments' | 'reviews' | null>(null);
+  const [activeTab, setActiveTab] = useState<'shipping' | 'payments' | 'materials' | 'reviews' | null>(null);
   const [addedMessage, setAddedMessage] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
 
   const mainBuyBoxRef = useRef<HTMLDivElement>(null);
 
-  const displayName = language !== 'PL' && product.nameEn ? product.nameEn : product.name;
+  const displayName = localized.name;
   const mainImage = selectedImage || product.images[0] || '/assets/durag_silk_black.png';
 
   useEffect(() => {
@@ -68,34 +71,40 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
             />
           </div>
 
-          {product.images.length > 1 && (
-            <div className="flex gap-2.5 overflow-x-auto no-scrollbar scroll-smooth pb-1">
+          {/* Thumbnails */}
+          {product.images && product.images.length > 1 && (
+            <div className="flex gap-2.5 overflow-x-auto pb-2 no-scrollbar">
               {product.images.map((img, idx) => (
                 <button
                   key={idx}
                   onClick={() => setSelectedImage(img)}
                   className={`relative w-16 h-20 sm:w-20 sm:h-24 shrink-0 bg-[#0E0E10] border transition-colors cursor-pointer ${
-                    (selectedImage === img || (!selectedImage && idx === 0))
-                      ? 'border-[#ECEAE7]'
-                      : 'border-[#1E1E22] opacity-75 hover:opacity-100 hover:border-[#787570]'
+                    selectedImage === img
+                      ? 'border-[#C8794B]'
+                      : 'border-[#1E1E22] hover:border-[#787570]'
                   }`}
-                  aria-label={`Pokaż zdjęcie ${idx + 1}`}
                 >
-                  <Image src={img} alt={`${displayName} - ${idx + 1}`} fill className="object-cover" sizes="80px" />
+                  <Image
+                    src={img}
+                    alt={`${displayName} — miniatura ${idx + 1}`}
+                    fill
+                    className="object-cover"
+                    sizes="80px"
+                  />
                 </button>
               ))}
             </div>
           )}
         </div>
 
-        {/* Right: Product Info & Buy Action */}
+        {/* Right: Info & Actions */}
         <div className="space-y-6">
           <div>
-            <span className="text-[13px] text-[#A3A09B] block mb-1">
-              {product.material}
+            <span className="text-[13px] font-medium text-[#C8794B] tracking-[0.02em] block mb-1">
+              {localized.material}
             </span>
 
-            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl text-white font-medium leading-tight">
+            <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-medium text-white tracking-tight leading-tight">
               {displayName}
             </h1>
 
@@ -104,17 +113,20 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
                 <Star className="w-3.5 h-3.5 fill-[#C8794B]" /> 5.0
               </span>
               <span>•</span>
-              <span>{Math.max(product.reviews?.length || 1, 1)} opinie klientów</span>
+              <span>
+                {Math.max(product.reviews?.length || 1, 1)}{' '}
+                {isEn ? 'customer reviews' : 'opinie klientów'}
+              </span>
             </div>
           </div>
 
           {/* Promo: Kup 2, trzeci durag za 1 zł */}
           <div className="bg-[#141416] p-4 border border-[#1E1E22]">
             <h4 className="text-[14px] font-medium text-white mb-0.5">
-              Promocja: kup 2, trzeci losowy durag za 1 zł
+              {t.promoStripTitle}
             </h4>
             <p className="text-[13px] text-[#A3A09B] leading-relaxed">
-              Wybierz dwa dowolne duragi do koszyka, a trzeci losowy model otrzymasz za 1 zł. Rabat nalicza się automatycznie.
+              {t.promoStripDesc}
             </p>
           </div>
 
@@ -126,21 +138,21 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
               </span>
             </div>
             <p className="text-[13px] text-[#787570] mt-1">
-              Darmowa dostawa w Polsce · Wysyłka z Warszawy w 1–2 dni robocze
+              {t.deliveryNote}
             </p>
           </div>
 
           {/* Key Product Facts */}
           <div className="grid grid-cols-2 gap-2 text-[13px] text-[#ECEAE7] bg-[#141416] p-4 border border-[#1E1E22]">
-            <div>• Pasy: 100 cm</div>
-            <div>• Bezodciskowy szew na zewnątrz</div>
-            <div>• Szyte ręcznie w Warszawie</div>
-            <div>• 14 dni na zwrot</div>
+            <div>{t.factStraps}</div>
+            <div>{t.factSeam}</div>
+            <div>{t.factHandmade}</div>
+            <div>{t.factReturns}</div>
           </div>
 
           {/* Description */}
           <div className="text-[14px] text-[#A3A09B] leading-relaxed whitespace-pre-line border-b border-[#1E1E22] pb-4">
-            {product.description}
+            {localized.description}
           </div>
 
           {/* Main Quantity & Add to Cart */}
@@ -150,7 +162,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="px-4 py-3 text-sm text-white hover:bg-[#1E1E22] cursor-pointer transition-colors"
-                  aria-label="Zmniejsz ilość"
+                  aria-label={isEn ? 'Decrease quantity' : 'Zmniejsz ilość'}
                 >
                   -
                 </button>
@@ -160,7 +172,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
                 <button
                   onClick={() => setQuantity(quantity + 1)}
                   className="px-4 py-3 text-sm text-white hover:bg-[#1E1E22] cursor-pointer transition-colors"
-                  aria-label="Zwiększ ilość"
+                  aria-label={isEn ? 'Increase quantity' : 'Zwiększ ilość'}
                 >
                   +
                 </button>
@@ -175,8 +187,8 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
                 }`}
               >
                 {addedMessage
-                  ? 'Dodano do koszyka'
-                  : `Dodaj do koszyka · ${formatPrice(product.price * quantity, product.priceEur ? product.priceEur * quantity : undefined)}`}
+                  ? t.addedToCart
+                  : `${t.addToCart} · ${formatPrice(product.price * quantity, product.priceEur ? product.priceEur * quantity : undefined)}`}
               </button>
             </div>
 
@@ -184,13 +196,13 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
               <div className="bg-[#141416] text-[#ECEAE7] text-[13px] p-3 border border-[#1E1E22] flex items-center justify-between gap-2">
                 <span className="flex items-center gap-1.5">
                   <Check className="w-4 h-4 text-emerald-400" />
-                  Produkt został dodany do koszyka.
+                  {t.addedConfirmation}
                 </span>
                 <Link
                   href="/koszyk"
                   className="font-medium text-white underline hover:text-[#C8794B]"
                 >
-                  Przejdź do koszyka
+                  {t.goToCart}
                 </Link>
               </div>
             )}
@@ -204,7 +216,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
                 onClick={() => setActiveTab(activeTab === 'shipping' ? null : 'shipping')}
                 className="w-full px-4 py-3 text-left font-medium text-[14px] flex items-center justify-between hover:bg-[#1A1A1B] transition-colors cursor-pointer text-white"
               >
-                <span>Dostawa i odbiór osobisty</span>
+                <span>{t.tabShippingTitle}</span>
                 <ChevronDown
                   className={`w-4 h-4 text-[#787570] transition-transform duration-200 ${
                     activeTab === 'shipping' ? 'rotate-180 text-white' : ''
@@ -213,20 +225,20 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
               </button>
               {activeTab === 'shipping' && (
                 <div className="px-4 pb-4 pt-1 text-[13px] text-[#A3A09B] space-y-2 border-t border-[#1E1E22]">
-                  <p>• <strong>Wysyłka z Warszawy:</strong> w 1–2 dni robocze</p>
-                  <p>• <strong>Darmowa dostawa w Polsce:</strong> Paczkomaty InPost i kurier dla każdego zamówienia</p>
-                  <p>• <strong>Odbiór osobisty w Warszawie:</strong> ul. Włodarzewska 4 po umówieniu</p>
+                  <p>• <strong>{isEn ? 'Dispatched from Warsaw:' : 'Wysyłka z Warszawy:'}</strong> {t.tabShippingLine1}</p>
+                  <p>• <strong>{isEn ? 'Free shipping across Poland:' : 'Darmowa dostawa w Polsce:'}</strong> {t.tabShippingLine2}</p>
+                  <p>• <strong>{isEn ? 'Warsaw local pickup:' : 'Odbiór osobisty w Warszawie:'}</strong> {t.tabShippingLine3}</p>
                 </div>
               )}
             </div>
 
-            {/* Payments Accordion */}
+            {/* Payments & Returns Accordion */}
             <div className="border border-[#1E1E22] bg-[#141416]">
               <button
                 onClick={() => setActiveTab(activeTab === 'payments' ? null : 'payments')}
                 className="w-full px-4 py-3 text-left font-medium text-[14px] flex items-center justify-between hover:bg-[#1A1A1B] transition-colors cursor-pointer text-white"
               >
-                <span>Płatności i 14 dni na zwrot</span>
+                <span>{t.tabReturnsTitle}</span>
                 <ChevronDown
                   className={`w-4 h-4 text-[#787570] transition-transform duration-200 ${
                     activeTab === 'payments' ? 'rotate-180 text-white' : ''
@@ -235,8 +247,29 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
               </button>
               {activeTab === 'payments' && (
                 <div className="px-4 pb-4 pt-1 text-[13px] text-[#A3A09B] space-y-2 border-t border-[#1E1E22]">
-                  <p>• <strong>Metody płatności:</strong> BLIK, karty płatnicze (Visa, Mastercard, Apple Pay, Google Pay)</p>
-                  <p>• <strong>Zwroty:</strong> 14 dni na zwrot bez podawania przyczyny</p>
+                  <p>• <strong>{isEn ? 'Return window:' : 'Termin zwrotu:'}</strong> {t.tabReturnsLine1}</p>
+                  <p>• <strong>{isEn ? 'Condition:' : 'Stan:'}</strong> {t.tabReturnsLine2}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Fabric & Care Accordion */}
+            <div className="border border-[#1E1E22] bg-[#141416]">
+              <button
+                onClick={() => setActiveTab(activeTab === 'materials' ? null : 'materials')}
+                className="w-full px-4 py-3 text-left font-medium text-[14px] flex items-center justify-between hover:bg-[#1A1A1B] transition-colors cursor-pointer text-white"
+              >
+                <span>{t.tabMaterialTitle}</span>
+                <ChevronDown
+                  className={`w-4 h-4 text-[#787570] transition-transform duration-200 ${
+                    activeTab === 'materials' ? 'rotate-180 text-white' : ''
+                  }`}
+                />
+              </button>
+              {activeTab === 'materials' && (
+                <div className="px-4 pb-4 pt-1 text-[13px] text-[#A3A09B] space-y-2 border-t border-[#1E1E22]">
+                  <p>• {t.tabMaterialLine1}</p>
+                  <p>• {t.tabMaterialLine2}</p>
                 </div>
               )}
             </div>
@@ -247,7 +280,9 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
                 onClick={() => setActiveTab(activeTab === 'reviews' ? null : 'reviews')}
                 className="w-full px-4 py-3 text-left font-medium text-[14px] flex items-center justify-between hover:bg-[#1A1A1B] transition-colors cursor-pointer text-white"
               >
-                <span>Opinie klientów ({product.reviews?.length || 1})</span>
+                <span>
+                  {isEn ? 'Customer reviews' : 'Opinie klientów'} ({product.reviews?.length || 1})
+                </span>
                 <ChevronDown
                   className={`w-4 h-4 text-[#787570] transition-transform duration-200 ${
                     activeTab === 'reviews' ? 'rotate-180 text-white' : ''
@@ -269,10 +304,14 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
                   ) : (
                     <div className="border-b border-[#1E1E22] pb-2.5">
                       <div className="flex items-center justify-between mb-1 text-[13px]">
-                        <span className="font-medium text-white">Tomasz K., Warszawa</span>
+                        <span className="font-medium text-white">
+                          {isEn ? 'Tomasz K., Warsaw' : 'Tomasz K., Warszawa'}
+                        </span>
                         <span className="text-[#C8794B] font-medium">★ 5.0</span>
                       </div>
-                      <p className="text-[#ECEAE7]">&ldquo;Wysoka jakość jedwabiu. Pasy są długie, szew nie zostawia śladów na czole po nocy. Polecam.&rdquo;</p>
+                      <p className="text-[#ECEAE7]">
+                        &ldquo;{isEn ? 'Superior silk quality. Long straps, exterior seam leaves zero forehead marks. Highly recommended.' : 'Wysoka jakość jedwabiu. Pasy są długie, szew nie zostawia śladów na czole po nocy. Polecam.'}&rdquo;
+                      </p>
                     </div>
                   )}
                 </div>
@@ -312,7 +351,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
                   : 'bg-[#ECEAE7] border-[#ECEAE7] text-[#0B0B0C]'
               }`}
             >
-              {addedMessage ? 'Dodano' : 'Dodaj do koszyka'}
+              {addedMessage ? t.addedToCart : t.addToCart}
             </button>
           </div>
         </div>

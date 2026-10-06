@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { getLocalizedProduct } from '@/lib/translations/products';
 import { InPostPoint } from '@/components/InPostPicker';
 import {
   ArrowLeft,
@@ -34,7 +35,7 @@ const InPostPicker = dynamic(() => import('@/components/InPostPicker'), {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { formatPrice } = useLanguage();
+  const { formatPrice, language, isEn } = useLanguage();
   const {
     cart,
     cartCount,
@@ -45,7 +46,6 @@ export default function CheckoutPage() {
     total,
     appliedPromoCode,
     refreshCart,
-    clearCart,
   } = useCart();
 
   // Form Fields
@@ -74,17 +74,29 @@ export default function CheckoutPage() {
     setErrorMessage(null);
 
     if (!customerName.trim() || !customerEmail.trim() || !customerPhone.trim()) {
-      setErrorMessage('Uzupełnij wszystkie dane kontaktowe (imię i nazwisko, e-mail, telefon).');
+      setErrorMessage(
+        isEn
+          ? 'Please fill in all contact details (full name, email, phone).'
+          : 'Uzupełnij wszystkie dane kontaktowe (imię i nazwisko, e-mail, telefon).'
+      );
       return;
     }
 
     if (deliveryMethod === 'paczkomat' && !selectedInpost) {
-      setErrorMessage('Wybierz Paczkomat InPost, do którego mamy dostarczyć zamówienie.');
+      setErrorMessage(
+        isEn
+          ? 'Please select an InPost parcel locker for delivery.'
+          : 'Wybierz Paczkomat InPost, do którego mamy dostarczyć zamówienie.'
+      );
       return;
     }
 
     if (deliveryMethod === 'courier' && (!courierStreet.trim() || !courierCity.trim() || !courierPostCode.trim())) {
-      setErrorMessage('Uzupełnij pełny adres doręczenia przesyłki kurierskiej.');
+      setErrorMessage(
+        isEn
+          ? 'Please complete the full delivery address for courier shipping.'
+          : 'Uzupełnij pełny adres doręczenia przesyłki kurierskiej.'
+      );
       return;
     }
 
@@ -104,7 +116,6 @@ export default function CheckoutPage() {
       lockerCode: selectedInpost?.name || null,
       pointId: selectedInpost?.name || null,
       lockerAddress,
-      // Pass canonical references ({ productId, variant, qty }) — server verifies prices!
       items: cart.map((i) => ({
         productId: i.product.id,
         variant: i.variant,
@@ -123,17 +134,16 @@ export default function CheckoutPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Wystąpił błąd podczas inicjalizacji płatności.');
+        throw new Error(data.error || (isEn ? 'Payment initialization error.' : 'Wystąpił błąd podczas inicjalizacji płatności.'));
       }
 
       if (data.url) {
-        // Redirect directly to Stripe Checkout
         window.location.href = data.url;
       } else {
-        throw new Error('Brak adresu przekierowania do płatności.');
+        throw new Error(isEn ? 'Payment redirect URL missing.' : 'Brak adresu przekierowania do płatności.');
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.');
+      setErrorMessage(err.message || (isEn ? 'An unexpected error occurred. Please try again.' : 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.'));
       setIsSubmitting(false);
     }
   };
@@ -142,15 +152,15 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen bg-[#0B0B0C] text-[#FAFAF9] pt-32 pb-20 px-4 text-center">
         <div className="max-w-md mx-auto bg-[#141416] border border-[#26262A] p-8 space-y-4">
-          <p className="font-serif text-2xl text-white">Twój koszyk jest pusty</p>
-          <p className="text-xs text-[#A3A09B]">
-            Aby przejść do kasy, dodaj przynajmniej jeden produkt do koszyka.
+          <p className="font-serif text-2xl text-white">{isEn ? 'Your cart is empty' : 'Twój koszyk jest pusty'}</p>
+          <p className="text-sm text-[#A3A09B]">
+            {isEn ? 'Add items to proceed to checkout.' : 'Dodaj produkty, aby przejść do kasy.'}
           </p>
           <Link
             href="/produkty"
-            className="inline-block mt-4 px-6 py-3 bg-[#C8794B] text-[#0B0B0C] font-semibold text-sm hover:bg-[#FAFAF9] transition-colors"
+            className="inline-block px-6 py-2.5 bg-[#C8794B] text-[#0B0B0C] text-sm font-semibold hover:bg-white transition-colors"
           >
-            Zobacz duragi
+            {isEn ? 'Discover Durags' : 'Zobacz ofertę'}
           </Link>
         </div>
       </div>
@@ -160,50 +170,59 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-[#0B0B0C] text-[#FAFAF9] pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Top Back Link & Heading */}
-        <div className="mb-8 flex items-center justify-between">
+        {/* Navigation back */}
+        <div className="mb-6">
+          <Link
+            href="/koszyk"
+            className="inline-flex items-center gap-2 text-xs text-[#A3A09B] hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>{isEn ? 'Back to shopping bag' : 'Wróć do koszyka'}</span>
+          </Link>
+        </div>
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-[#26262A] gap-4 mb-8">
           <div>
-            <Link
-              href="/koszyk"
-              className="inline-flex items-center gap-1.5 text-xs text-[#A3A09B] hover:text-white transition-colors mb-2"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" /> Wróć do koszyka
-            </Link>
             <h1 className="font-serif text-3xl sm:text-4xl font-medium tracking-tight text-white">
-              Kasa i płatność
+              {isEn ? 'Checkout' : 'Kasa i Zamówienie'}
             </h1>
+            <p className="text-xs text-[#A3A09B] mt-1">
+              {isEn ? 'Fast shipping from Warsaw · Secure Stripe payment' : 'Szybka wysyłka z Warszawy · Bezpieczna płatność Stripe'}
+            </p>
           </div>
-          <div className="hidden sm:flex items-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 px-3 py-1.5 border border-emerald-500/20">
-            <Lock className="w-3.5 h-3.5" /> Szyfrowanie SSL 256-bit
+          <div className="flex items-center gap-2 text-xs text-emerald-400">
+            <Lock className="w-4 h-4" />
+            <span>{isEn ? 'SSL 256-bit encrypted checkout' : 'Bezpieczne szyfrowanie SSL'}</span>
           </div>
         </div>
 
         {errorMessage && (
-          <div className="mb-6 p-4 bg-red-950/40 border border-red-800/60 text-red-200 text-xs flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 shrink-0 text-red-400" />
+          <div className="mb-6 p-4 bg-red-950/40 border border-red-500/40 text-red-200 text-xs flex items-start gap-3">
+            <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
             <span>{errorMessage}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmitOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Main Checkout Form */}
+          {/* Main Form (Contact & Shipping) */}
           <div className="lg:col-span-7 space-y-6">
-            {/* Section 1: Customer Info */}
+            {/* Section 1: Customer Contact Info */}
             <div className="bg-[#141416] border border-[#26262A] p-6 space-y-4">
               <h2 className="font-serif text-lg font-medium text-white flex items-center gap-2">
                 <span className="w-6 h-6 bg-[#C8794B] text-[#0B0B0C] text-xs flex items-center justify-center font-bold">1</span>
-                Dane zamawiającego
+                {isEn ? 'Contact Information' : 'Dane kontaktowe'}
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="sm:col-span-2">
+
+              <div className="space-y-4">
+                <div>
                   <label htmlFor="name" className="text-xs text-[#A3A09B] block mb-1">
-                    Imię i nazwisko *
+                    {isEn ? 'Full name *' : 'Imię i nazwisko *'}
                   </label>
                   <input
                     id="name"
                     type="text"
                     required
-                    placeholder="np. Jan Kowalski"
+                    placeholder={isEn ? 'e.g. John Smith' : 'np. Jan Kowalski'}
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
                     className="w-full bg-[#0B0B0C] border border-[#26262A] px-4 py-3 text-sm text-white placeholder-[#787570] focus:outline-none focus:border-[#C8794B]"
@@ -212,7 +231,7 @@ export default function CheckoutPage() {
 
                 <div>
                   <label htmlFor="email" className="text-xs text-[#A3A09B] block mb-1">
-                    Adres e-mail *
+                    {isEn ? 'Email address *' : 'Adres e-mail *'}
                   </label>
                   <input
                     id="email"
@@ -227,7 +246,7 @@ export default function CheckoutPage() {
 
                 <div>
                   <label htmlFor="phone" className="text-xs text-[#A3A09B] block mb-1">
-                    Telefon (do powiadomień InPost) *
+                    {isEn ? 'Phone (for delivery notifications) *' : 'Telefon (do powiadomień InPost) *'}
                   </label>
                   <input
                     id="phone"
@@ -246,7 +265,7 @@ export default function CheckoutPage() {
             <div className="bg-[#141416] border border-[#26262A] p-6 space-y-5">
               <h2 className="font-serif text-lg font-medium text-white flex items-center gap-2">
                 <span className="w-6 h-6 bg-[#C8794B] text-[#0B0B0C] text-xs flex items-center justify-center font-bold">2</span>
-                Sposób dostawy
+                {isEn ? 'Delivery Method' : 'Sposób dostawy'}
               </h2>
 
               {/* Delivery tabs */}
@@ -261,10 +280,10 @@ export default function CheckoutPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-sm text-white">Paczkomat InPost</span>
-                    <span className="text-xs text-emerald-400 font-medium tabular-nums">0 zł</span>
+                    <span className="font-medium text-sm text-white">InPost Locker</span>
+                    <span className="text-xs text-emerald-400 font-medium tabular-nums">{isEn ? 'Free' : '0 zł'}</span>
                   </div>
-                  <p className="text-xs text-[#A3A09B]">Wysyłka z Warszawy w 1–2 dni</p>
+                  <p className="text-xs text-[#A3A09B]">{isEn ? 'Shipping 1–2 days' : 'Wysyłka z Warszawy w 1–2 dni'}</p>
                 </button>
 
                 <button
@@ -277,10 +296,10 @@ export default function CheckoutPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-sm text-white">Kurier DPD / InPost</span>
-                    <span className="text-xs text-emerald-400 font-medium tabular-nums">0 zł</span>
+                    <span className="font-medium text-sm text-white">{isEn ? 'Courier DPD / InPost' : 'Kurier DPD / InPost'}</span>
+                    <span className="text-xs text-emerald-400 font-medium tabular-nums">{isEn ? 'Free' : '0 zł'}</span>
                   </div>
-                  <p className="text-xs text-[#A3A09B]">Dostawa pod adres</p>
+                  <p className="text-xs text-[#A3A09B]">{isEn ? 'Direct to address' : 'Dostawa pod adres'}</p>
                 </button>
 
                 <button
@@ -293,18 +312,18 @@ export default function CheckoutPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-sm text-white">Odbiór osobisty</span>
-                    <span className="text-xs text-emerald-400 font-medium tabular-nums">0 zł</span>
+                    <span className="font-medium text-sm text-white">{isEn ? 'Local Pickup' : 'Odbiór osobisty'}</span>
+                    <span className="text-xs text-emerald-400 font-medium tabular-nums">{isEn ? 'Free' : '0 zł'}</span>
                   </div>
-                  <p className="text-xs text-[#A3A09B]">Warszawa (po umówieniu)</p>
+                  <p className="text-xs text-[#A3A09B]">{isEn ? 'Warsaw (by appointment)' : 'Warszawa (po umówieniu)'}</p>
                 </button>
               </div>
 
-              {/* InPost Picker (Loaded ONLY when Paczkomat selected) */}
+              {/* InPost Picker */}
               {deliveryMethod === 'paczkomat' && (
                 <div className="pt-2 space-y-3">
                   <label className="text-xs text-[#ECEAE7] block">
-                    Wybierz Paczkomat odbioru na mapie lub wyszukaj po ulicy:
+                    {isEn ? 'Select your InPost locker on map or search by street:' : 'Wybierz Paczkomat odbioru na mapie lub wyszukaj po ulicy:'}
                   </label>
                   <InPostPicker
                     selectedPoint={selectedInpost}
@@ -315,7 +334,7 @@ export default function CheckoutPage() {
                     <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-300 flex items-start gap-2">
                       <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-400" />
                       <div>
-                        <strong>Wybrany Paczkomat: {selectedInpost.name}</strong>
+                        <strong>{isEn ? 'Selected Locker: ' : 'Wybrany Paczkomat: '}{selectedInpost.name}</strong>
                         <p className="text-xs text-emerald-400/90">
                           {selectedInpost.street} {selectedInpost.buildingNumber}, {selectedInpost.postCode} {selectedInpost.city}
                         </p>
@@ -330,7 +349,7 @@ export default function CheckoutPage() {
                 <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
                     <label htmlFor="street" className="text-xs text-[#A3A09B] block mb-1">
-                      Ulica i numer domu/lokalu *
+                      {isEn ? 'Street & building/apartment number *' : 'Ulica i numer domu/lokalu *'}
                     </label>
                     <input
                       id="street"
@@ -344,7 +363,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label htmlFor="postcode" className="text-xs text-[#A3A09B] block mb-1">
-                      Kod pocztowy *
+                      {isEn ? 'Postal code *' : 'Kod pocztowy *'}
                     </label>
                     <input
                       id="postcode"
@@ -358,7 +377,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label htmlFor="city" className="text-xs text-[#A3A09B] block mb-1">
-                      Miejscowość *
+                      {isEn ? 'City *' : 'Miejscowość *'}
                     </label>
                     <input
                       id="city"
@@ -377,10 +396,12 @@ export default function CheckoutPage() {
               {deliveryMethod === 'pickup' && (
                 <div className="p-4 bg-[#0B0B0C] border border-[#26262A] space-y-2 text-xs">
                   <p className="text-white font-medium flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-[#C8794B]" /> Odbiór osobisty w Warszawie:
+                    <MapPin className="w-4 h-4 text-[#C8794B]" /> {isEn ? 'Local pickup in Warsaw:' : 'Odbiór osobisty w Warszawie:'}
                   </p>
                   <p className="text-[#A3A09B]">
-                    Odbiór osobisty w Warszawie po wcześniejszym umówieniu telefonicznym lub mailowym.
+                    {isEn
+                      ? 'Local pickup available in Warsaw upon phone or email agreement.'
+                      : 'Odbiór osobisty w Warszawie po wcześniejszym umówieniu telefonicznym lub mailowym.'}
                   </p>
                 </div>
               )}
@@ -390,17 +411,17 @@ export default function CheckoutPage() {
             <div className="bg-[#141416] border border-[#26262A] p-6 space-y-3">
               <h2 className="font-serif text-lg font-medium text-white flex items-center gap-2">
                 <span className="w-6 h-6 bg-[#C8794B] text-[#0B0B0C] text-xs flex items-center justify-center font-bold">3</span>
-                Płatność
+                {isEn ? 'Payment Method' : 'Płatność'}
               </h2>
               <p className="text-xs text-[#A3A09B]">
-                Płatności obsługiwane są bezpiecznie przez Stripe.
+                {isEn ? 'Payments are securely processed via Stripe.' : 'Płatności obsługiwane są bezpiecznie przez Stripe.'}
               </p>
               <div className="flex flex-wrap gap-2 pt-2">
                 <span className="px-3 py-1.5 bg-[#0B0B0C] border border-[#26262A] text-xs text-[#ECEAE7]">
                   BLIK
                 </span>
                 <span className="px-3 py-1.5 bg-[#0B0B0C] border border-[#26262A] text-xs text-[#ECEAE7]">
-                  Karta Visa / Mastercard
+                  Visa / Mastercard
                 </span>
                 <span className="px-3 py-1.5 bg-[#0B0B0C] border border-[#26262A] text-xs text-[#ECEAE7]">
                   Apple Pay / Google Pay
@@ -416,46 +437,49 @@ export default function CheckoutPage() {
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-[#141416] border border-[#26262A] p-6 space-y-5 sticky top-28">
               <h3 className="font-serif text-lg font-medium text-white pb-3 border-b border-[#26262A]">
-                Twoje zamówienie ({cartCount})
+                {isEn ? 'Your Order' : 'Twoje zamówienie'} ({cartCount})
               </h3>
 
               {/* Items List */}
               <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
-                {cart.map((item, idx) => (
-                  <div key={`${item.product.id}-${idx}`} className="flex items-center gap-3 text-xs">
-                    <div className="relative w-12 h-12 bg-[#0E0E10] overflow-hidden shrink-0 border border-[#26262A]">
-                      <Image
-                        src={item.product.images?.[0] || '/assets/durag_silk_black.png'}
-                        alt={item.product.name}
-                        fill
-                        sizes="48px"
-                        className="object-cover"
-                      />
+                {cart.map((item, idx) => {
+                  const localizedProd = getLocalizedProduct(item.product, language);
+                  return (
+                    <div key={`${item.product.id}-${idx}`} className="flex items-center gap-3 text-xs">
+                      <div className="relative w-12 h-12 bg-[#0E0E10] overflow-hidden shrink-0 border border-[#26262A]">
+                        <Image
+                          src={item.product.images?.[0] || '/assets/durag_silk_black.png'}
+                          alt={localizedProd.name}
+                          fill
+                          sizes="48px"
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-white truncate">{localizedProd.name}</p>
+                        <p className="text-xs text-[#A3A09B]">
+                          {isEn ? 'Qty: ' : 'Ilość: '}{item.quantity} {item.variant ? `(${item.variant})` : ''}
+                        </p>
+                      </div>
+                      <div className="text-white text-right font-semibold tabular-nums">
+                        {formatPrice(item.unitPrice * item.quantity, item.product.priceEur ? item.product.priceEur * item.quantity : undefined)}
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-white truncate">{item.product.name}</p>
-                      <p className="text-xs text-[#A3A09B]">
-                        Ilość: {item.quantity} {item.variant ? `(${item.variant})` : ''}
-                      </p>
-                    </div>
-                    <div className="text-white text-right font-semibold tabular-nums">
-                      {formatPrice(item.unitPrice * item.quantity, item.product.priceEur ? item.product.priceEur * item.quantity : undefined)}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Price Details */}
               <div className="pt-4 border-t border-[#26262A] space-y-2.5 text-xs">
                 <div className="flex justify-between text-[#A3A09B]">
-                  <span>Wartość koszyka:</span>
+                  <span>{isEn ? 'Subtotal:' : 'Wartość koszyka:'}</span>
                   <span className="text-white tabular-nums">{formatPrice(subtotal)}</span>
                 </div>
 
                 {freeItemsDiscount > 0 && (
                   <div className="flex justify-between text-emerald-400 font-medium">
                     <span className="flex items-center gap-1">
-                      <Sparkles className="w-3.5 h-3.5" /> Rabat promocyjny:
+                      <Sparkles className="w-3.5 h-3.5" /> {isEn ? 'Deal discount:' : 'Rabat promocyjny:'}
                     </span>
                     <span className="tabular-nums">-{formatPrice(freeItemsDiscount)}</span>
                   </div>
@@ -463,19 +487,19 @@ export default function CheckoutPage() {
 
                 {promoDiscount > 0 && (
                   <div className="flex justify-between text-[#C8794B] font-medium">
-                    <span>Kod rabatowy ({appliedPromoCode}):</span>
+                    <span>{isEn ? `Discount (${appliedPromoCode}):` : `Kod rabatowy (${appliedPromoCode}):`}</span>
                     <span className="tabular-nums">-{formatPrice(promoDiscount)}</span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-[#A3A09B]">
-                  <span>Dostawa w Polsce:</span>
-                  <span className="text-emerald-400 font-medium">0 zł (Darmowa)</span>
+                  <span>{isEn ? 'Shipping in Poland:' : 'Dostawa w Polsce:'}</span>
+                  <span className="text-emerald-400 font-medium">{isEn ? 'Free' : '0 zł (Darmowa)'}</span>
                 </div>
 
                 <div className="pt-3 border-t border-[#26262A] flex justify-between items-baseline">
                   <span className="font-serif text-base font-medium text-white">
-                    Do zapłaty:
+                    {isEn ? 'Total:' : 'Do zapłaty:'}
                   </span>
                   <span className="text-2xl font-semibold text-[#C8794B] tabular-nums">
                     {formatPrice(total)}
@@ -491,18 +515,24 @@ export default function CheckoutPage() {
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Przekierowywanie do Stripe...
+                    <Loader2 className="w-4 h-4 animate-spin" /> {isEn ? 'Redirecting to Stripe...' : 'Przekierowywanie do Stripe...'}
                   </>
                 ) : (
                   <>
-                    <CreditCard className="w-4 h-4" /> Opłać zamówienie ({formatPrice(total)})
+                    <CreditCard className="w-4 h-4" /> {isEn ? 'Pay with Stripe' : 'Opłać zamówienie'} ({formatPrice(total)})
                   </>
                 )}
               </button>
 
               <div className="pt-2 border-t border-[#26262A] space-y-1.5 text-xs text-[#A3A09B] text-center">
-                <p>Klikając przycisk akceptujesz <Link href="/regulamin" className="underline hover:text-white">Regulamin</Link> oraz <Link href="/polityka-prywatnosci" className="underline hover:text-white">Politykę prywatności</Link>.</p>
-                <p>Bezpieczna płatność Stripe. Szyfrowanie SSL.</p>
+                <p>
+                  {isEn ? (
+                    <>By clicking you accept our <Link href="/regulamin" className="underline hover:text-white">Terms of Service</Link> and <Link href="/polityka-prywatnosci" className="underline hover:text-white">Privacy Policy</Link>.</>
+                  ) : (
+                    <>Klikając przycisk akceptujesz <Link href="/regulamin" className="underline hover:text-white">Regulamin</Link> oraz <Link href="/polityka-prywatnosci" className="underline hover:text-white">Politykę prywatności</Link>.</>
+                  )}
+                </p>
+                <p>{isEn ? 'Secure Stripe payment · SSL Encryption' : 'Bezpieczna płatność Stripe. Szyfrowanie SSL.'}</p>
               </div>
             </div>
           </div>
