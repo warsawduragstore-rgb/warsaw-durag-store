@@ -9,7 +9,7 @@ export const revalidate = 3600; // ISR cache for 1 hour
 
 export const metadata: Metadata = {
   title: 'Katalog Duragów — Warsaw Durag Store',
-  description: 'Przeglądaj pełną ofertę duragów szytych w Polsce. Naturalny jedwab morwowy 19 Momme, luksusowy aksamit, satyna i akcesoria do pielęgnacji 360 waves.',
+  description: 'Duragi szyte w Warszawie z jedwabiu, satyny i weluru. Bezodciskowy szew zewnętrzny i długie pasy.',
   alternates: {
     canonical: 'https://warsawduragstore.pl/produkty',
   },
@@ -17,10 +17,10 @@ export const metadata: Metadata = {
 
 const CATEGORIES = [
   { slug: 'all', label: 'Wszystkie produkty' },
-  { slug: 'silk', label: 'Jedwab morwowy 19 Momme' },
+  { slug: 'silk', label: 'Jedwab morwowy' },
   { slug: 'satin', label: 'Satyna' },
-  { slug: 'velvet', label: 'Welur / Aksamit' },
-  { slug: 'seasonal', label: 'Kolekcje sezonowe' },
+  { slug: 'velvet', label: 'Welur' },
+  { slug: 'seasonal', label: 'Tkaniny sezonowe' },
   { slug: 'accessories', label: 'Akcesoria i Wave Capy' },
 ];
 
@@ -66,25 +66,25 @@ export default async function ProductsCatalogPage({ searchParams }: PageProps) {
       <div className="max-w-7xl mx-auto">
         {/* Breadcrumb & Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 text-xs font-mono text-[#787570] uppercase tracking-wider mb-2">
+          <div className="flex items-center gap-2 text-xs text-[#A3A09B] mb-2">
             <Link href="/" className="hover:text-white transition-colors">Start</Link>
             <span>/</span>
-            <span className="text-[#C8794B]">Katalog Produktów</span>
+            <span className="text-[#C8794B]">Katalog duragów</span>
           </div>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <h1 className="font-serif text-3xl sm:text-5xl font-normal tracking-tight uppercase">
-                Katalog Duragów
+              <h1 className="font-serif text-3xl sm:text-4xl font-medium tracking-tight text-white">
+                Katalog duragów
               </h1>
-              <p className="text-xs sm:text-sm text-[#A3A09B] mt-2 max-w-xl font-light">
-                Jedyne duragi szyte w Polsce. Ochrona nawilżenia włosa, autorski szew bezodciskowy i formowanie fal 360 waves.
+              <p className="text-sm text-[#A3A09B] mt-2 max-w-xl">
+                Szyte ręcznie w Warszawie z jedwabiu, satyny, weluru i tkanin sezonowych.
               </p>
             </div>
 
-            {/* 2+1 Reminder Pill */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#141416] text-[#C8794B] border border-[#C8794B]/30 text-xs font-mono uppercase tracking-wider self-start md:self-auto">
+            {/* Promo Reminder */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#141416] text-[#C8794B] border border-[#26262A] text-xs self-start md:self-auto">
               <Sparkles className="w-3.5 h-3.5 text-[#C8794B]" />
-              <span>Promocja: Kup 2, 3. model za 1 zł</span>
+              <span>Promocja: kup 2, trzeci losowy durag za 1 zł</span>
             </div>
           </div>
         </div>
@@ -99,9 +99,9 @@ export default async function ProductsCatalogPage({ searchParams }: PageProps) {
                 <Link
                   key={cat.slug}
                   href={`/produkty?kategoria=${cat.slug}${currentSort !== 'default' ? `&sort=${currentSort}` : ''}`}
-                  className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider transition-all border ${
+                  className={`px-3 py-1.5 text-xs transition-all border ${
                     isActive
-                      ? 'bg-[#C8794B] text-[#0B0B0C] border-[#C8794B] font-bold'
+                      ? 'bg-[#C8794B] text-[#0B0B0C] border-[#C8794B] font-semibold'
                       : 'bg-[#1A1A1B] text-[#ECEAE7] border-[#26262A] hover:border-[#C8794B]'
                   }`}
                 >
@@ -112,32 +112,32 @@ export default async function ProductsCatalogPage({ searchParams }: PageProps) {
           </div>
 
           {/* Sort Selector */}
-          <div className="flex items-center gap-2 self-end md:self-auto text-xs font-mono shrink-0">
+          <div className="flex items-center gap-2 self-end md:self-auto text-xs shrink-0">
             <SlidersHorizontal className="w-3.5 h-3.5 text-[#787570]" />
-            <span className="text-[#787570]">Sortuj:</span>
-            <div className="flex gap-1">
+            <span className="text-[#A3A09B]">Sortuj:</span>
+            <div className="flex gap-1.5 items-center">
               <Link
                 href={`/produkty?kategoria=${currentCategory}&sort=default`}
                 className={`px-2 py-1 text-xs ${
-                  currentSort === 'default' ? 'font-bold text-[#C8794B] underline' : 'text-[#A3A09B] hover:text-white'
+                  currentSort === 'default' ? 'font-semibold text-[#C8794B]' : 'text-[#A3A09B] hover:text-white'
                 }`}
               >
                 Domyślnie
               </Link>
-              <span className="text-[#26262A]">|</span>
+              <span className="text-[#26262A]">·</span>
               <Link
                 href={`/produkty?kategoria=${currentCategory}&sort=price-asc`}
                 className={`px-2 py-1 text-xs ${
-                  currentSort === 'price-asc' ? 'font-bold text-[#C8794B] underline' : 'text-[#A3A09B] hover:text-white'
+                  currentSort === 'price-asc' ? 'font-semibold text-[#C8794B]' : 'text-[#A3A09B] hover:text-white'
                 }`}
               >
                 Cena: rosnąco
               </Link>
-              <span className="text-[#26262A]">|</span>
+              <span className="text-[#26262A]">·</span>
               <Link
                 href={`/produkty?kategoria=${currentCategory}&sort=price-desc`}
                 className={`px-2 py-1 text-xs ${
-                  currentSort === 'price-desc' ? 'font-bold text-[#C8794B] underline' : 'text-[#A3A09B] hover:text-white'
+                  currentSort === 'price-desc' ? 'font-semibold text-[#C8794B]' : 'text-[#A3A09B] hover:text-white'
                 }`}
               >
                 Cena: malejąco
@@ -150,12 +150,12 @@ export default async function ProductsCatalogPage({ searchParams }: PageProps) {
         {paginatedProducts.length === 0 ? (
           <div className="bg-[#141416] border border-[#26262A] p-16 text-center space-y-4">
             <p className="font-serif text-2xl text-white">Brak produktów w tej kategorii</p>
-            <p className="text-xs text-[#A3A09B]">Sprawdź inne kategorie lub wróć do pełnej oferty.</p>
+            <p className="text-sm text-[#A3A09B]">Sprawdź inne kategorie lub wróć do pełnej oferty.</p>
             <Link
               href="/produkty"
-              className="inline-block px-6 py-2.5 bg-[#C8794B] text-[#0B0B0C] text-xs font-mono font-bold uppercase tracking-wider hover:bg-white transition-colors"
+              className="inline-block px-6 py-2.5 bg-[#C8794B] text-[#0B0B0C] text-sm font-semibold hover:bg-white transition-colors"
             >
-              Pokaż wszystkie produkty
+              Zobacz duragi
             </Link>
           </div>
         ) : (
@@ -178,17 +178,17 @@ export default async function ProductsCatalogPage({ searchParams }: PageProps) {
                 href={`/produkty?kategoria=${currentCategory}&strona=${currentPage - 1}${
                   currentSort !== 'default' ? `&sort=${currentSort}` : ''
                 }`}
-                className="flex items-center gap-1 px-4 py-2 bg-[#141416] border border-[#26262A] text-xs font-mono uppercase tracking-wider hover:border-[#C8794B] transition-colors"
+                className="flex items-center gap-1 px-4 py-2 bg-[#141416] border border-[#26262A] text-xs hover:border-[#C8794B] transition-colors"
               >
                 <ArrowLeft className="w-3.5 h-3.5" /> Poprzednia
               </Link>
             ) : (
-              <span className="px-4 py-2 text-xs font-mono uppercase text-[#787570]">
+              <span className="px-4 py-2 text-xs text-[#787570]">
                 Poprzednia
               </span>
             )}
 
-            <div className="flex items-center gap-1 font-mono text-xs">
+            <div className="flex items-center gap-1 text-xs tabular-nums">
               {Array.from({ length: totalPages }).map((_, i) => {
                 const pageNumber = i + 1;
                 const isCurrent = pageNumber === currentPage;
@@ -200,7 +200,7 @@ export default async function ProductsCatalogPage({ searchParams }: PageProps) {
                     }`}
                     className={`w-8 h-8 flex items-center justify-center transition-colors border ${
                       isCurrent
-                        ? 'bg-[#C8794B] border-[#C8794B] text-[#0B0B0C] font-bold'
+                        ? 'bg-[#C8794B] border-[#C8794B] text-[#0B0B0C] font-semibold'
                         : 'bg-[#141416] border-[#26262A] text-[#ECEAE7] hover:border-[#C8794B]'
                     }`}
                   >
@@ -215,12 +215,12 @@ export default async function ProductsCatalogPage({ searchParams }: PageProps) {
                 href={`/produkty?kategoria=${currentCategory}&strona=${currentPage + 1}${
                   currentSort !== 'default' ? `&sort=${currentSort}` : ''
                 }`}
-                className="flex items-center gap-1 px-4 py-2 bg-[#141416] border border-[#26262A] text-xs font-mono uppercase tracking-wider hover:border-[#C8794B] transition-colors"
+                className="flex items-center gap-1 px-4 py-2 bg-[#141416] border border-[#26262A] text-xs hover:border-[#C8794B] transition-colors"
               >
                 Następna <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             ) : (
-              <span className="px-4 py-2 text-xs font-mono uppercase text-[#787570]">
+              <span className="px-4 py-2 text-xs text-[#787570]">
                 Następna
               </span>
             )}

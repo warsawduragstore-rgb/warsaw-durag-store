@@ -444,13 +444,13 @@ export default async function StaticInfoPage({ params }: PageProps) {
 
       <section className="bg-[#0D0D0B] text-white py-16">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <span className="text-[#C8794B] text-[10px] font-mono uppercase tracking-[0.2em] block mb-3">
+          <span className="text-[#C8794B] text-xs font-medium block mb-2">
             Warsaw Durag Store
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-normal mb-3">
+          <h1 className="font-serif text-3xl sm:text-4xl font-medium mb-3">
             {pageData.title}
           </h1>
-          <p className="text-xs text-gray-300 font-light">{pageData.subtitle}</p>
+          <p className="text-sm text-gray-300">{pageData.subtitle}</p>
         </div>
       </section>
 

@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBag, Search, Menu, X, Globe, ChevronRight } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Globe } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useLanguage, Language } from '@/context/LanguageContext';
 
 export default function Header() {
   const { cartCount, setIsCartOpen } = useCart();
-  const { language, setLanguage, currency, setCurrency, t } = useLanguage();
+  const { language, setLanguage, currency, setCurrency } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
@@ -47,26 +47,26 @@ export default function Header() {
   ];
 
   const categories = [
-    { href: '/kolekcja/all', label: 'Wszystkie duragi' },
-    { href: '/kolekcja/silk', label: 'Jedwab morwowy 19 Momme' },
+    { href: '/kolekcja/silk', label: 'Jedwab' },
     { href: '/kolekcja/satin', label: 'Satyna' },
-    { href: '/kolekcja/velvet', label: 'Welur (kompresja)' },
-    { href: '/kolekcja/seasonal', label: 'Kolekcje sezonowe' },
-    { href: '/kolekcja/accessories', label: 'Akcesoria & Fale 360' },
+    { href: '/kolekcja/velvet', label: 'Welur' },
+    { href: '/kolekcja/all', label: 'Wszystkie' },
+    { href: '/poradnik/wave-guide', label: 'Wave Guide' },
+    { href: '/o-nas', label: 'O nas' },
   ];
 
   return (
     <>
-      {/* Top minimal bar */}
-      <div className="bg-[#0B0B0C] text-[#C8794B] text-[10px] uppercase font-mono tracking-[0.2em] py-2 px-4 text-center border-b border-[#1E1E22]">
-        Kup 2 duragi, 3. model za 1 zł • Darmowy Paczkomat w Polsce • Wysyłka w 24h z Warszawy
+      {/* Top static bar: graphite/black, factual copy */}
+      <div className="bg-[#141416] text-[#ECEAE7] text-[13px] font-medium py-2 px-4 text-center border-b border-[#1E1E22] tracking-[0.02em]">
+        Darmowa dostawa w Polsce · Kup 2, trzeci durag za 1 zł
       </div>
 
       {/* Main Header */}
       <header
         className={`sticky top-0 z-40 transition-all duration-200 ${
           isScrolled
-            ? 'bg-[#0B0B0C]/95 backdrop-blur-md border-b border-[#26262A] py-3'
+            ? 'bg-[#0B0B0C]/95 backdrop-blur-md border-b border-[#1E1E22] py-3'
             : 'bg-[#0B0B0C] border-b border-[#1E1E22] py-4'
         }`}
       >
@@ -78,29 +78,29 @@ export default function Header() {
               alt="Warsaw Durag Store"
               width={240}
               height={70}
-              className="h-8 sm:h-10 w-auto object-contain transition-opacity duration-200 group-hover:opacity-85"
+              className="h-8 sm:h-9 w-auto object-contain transition-opacity duration-200 group-hover:opacity-85"
               priority
             />
           </Link>
 
-          {/* Clean Desktop Navigation (No fake numbering, authentic streetwear) */}
-          <nav className="hidden lg:flex items-center gap-7 text-[11px] font-mono uppercase tracking-[0.18em] text-[#ECEAE7]">
-            <Link href="/kolekcja/silk" className="hover:text-[#C8794B] transition-colors">
-              Jedwab 19 Momme
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-7 text-[14px] font-medium text-[#ECEAE7] tracking-[0.02em]">
+            <Link href="/kolekcja/silk" className="hover:text-white transition-colors">
+              Jedwab
             </Link>
-            <Link href="/kolekcja/satin" className="hover:text-[#C8794B] transition-colors">
+            <Link href="/kolekcja/satin" className="hover:text-white transition-colors">
               Satyna
             </Link>
-            <Link href="/kolekcja/velvet" className="hover:text-[#C8794B] transition-colors">
+            <Link href="/kolekcja/velvet" className="hover:text-white transition-colors">
               Welur
             </Link>
-            <Link href="/kolekcja/all" className="hover:text-[#C8794B] transition-colors">
+            <Link href="/kolekcja/all" className="hover:text-white transition-colors">
               Wszystkie
             </Link>
-            <Link href="/poradnik/wave-guide" className="hover:text-[#C8794B] transition-colors text-[#C8794B]">
+            <Link href="/poradnik/wave-guide" className="hover:text-white text-[#C8794B] transition-colors">
               Wave Guide
             </Link>
-            <Link href="/o-nas" className="hover:text-[#C8794B] transition-colors text-[#A3A09B]">
+            <Link href="/o-nas" className="text-[#A3A09B] hover:text-white transition-colors">
               O nas
             </Link>
           </nav>
@@ -108,19 +108,19 @@ export default function Header() {
           {/* Right Controls */}
           <div className="flex items-center gap-2 sm:gap-4">
             {/* Currency switch */}
-            <div className="hidden sm:inline-flex items-center border border-[#26262A] text-[10px] font-mono uppercase bg-[#141416]">
+            <div className="hidden sm:inline-flex items-center border border-[#1E1E22] text-[13px] font-medium bg-[#141416]">
               <button
                 onClick={() => setCurrency('PLN')}
-                className={`px-2 py-1 transition-colors ${
-                  currency === 'PLN' ? 'bg-[#C8794B] text-[#0B0B0C] font-bold' : 'text-[#787570] hover:text-white'
+                className={`px-2.5 py-1 transition-colors ${
+                  currency === 'PLN' ? 'bg-[#ECEAE7] text-[#0B0B0C] font-semibold' : 'text-[#787570] hover:text-white'
                 }`}
               >
                 PLN
               </button>
               <button
                 onClick={() => setCurrency('EUR')}
-                className={`px-2 py-1 transition-colors ${
-                  currency === 'EUR' ? 'bg-[#C8794B] text-[#0B0B0C] font-bold' : 'text-[#787570] hover:text-white'
+                className={`px-2.5 py-1 transition-colors ${
+                  currency === 'EUR' ? 'bg-[#ECEAE7] text-[#0B0B0C] font-semibold' : 'text-[#787570] hover:text-white'
                 }`}
               >
                 EUR
@@ -131,14 +131,14 @@ export default function Header() {
             <div className="relative hidden sm:block">
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="flex items-center gap-1 text-[11px] font-mono uppercase px-2 py-1 border border-[#26262A] bg-[#141416] text-[#FAFAF9] hover:border-[#C8794B] transition-colors"
+                className="flex items-center gap-1.5 text-[13px] font-medium px-2.5 py-1 border border-[#1E1E22] bg-[#141416] text-[#FAFAF9] hover:border-[#787570] transition-colors"
               >
                 <Globe className="w-3.5 h-3.5 text-[#C8794B]" />
                 <span>{language}</span>
               </button>
 
               {langDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-32 bg-[#141416] border border-[#26262A] shadow-2xl py-1 z-50 text-xs font-mono text-[#ECEAE7]">
+                <div className="absolute right-0 mt-2 w-32 bg-[#141416] border border-[#1E1E22] shadow-2xl py-1 z-50 text-[13px] text-[#ECEAE7]">
                   {languages.map(({ code, label }) => (
                     <button
                       key={code}
@@ -146,12 +146,12 @@ export default function Header() {
                         setLanguage(code);
                         setLangDropdownOpen(false);
                       }}
-                      className={`w-full text-left px-3 py-1.5 hover:bg-[#1E1E22] hover:text-[#C8794B] flex items-center justify-between transition-colors ${
-                        language === code ? 'text-[#C8794B] font-bold' : ''
+                      className={`w-full text-left px-3 py-1.5 hover:bg-[#1E1E22] hover:text-white flex items-center justify-between transition-colors ${
+                        language === code ? 'text-[#C8794B] font-semibold' : ''
                       }`}
                     >
                       <span>{label}</span>
-                      <span className="text-[10px] text-[#787570]">{code}</span>
+                      <span className="text-[11px] text-[#787570]">{code}</span>
                     </button>
                   ))}
                 </div>
@@ -161,7 +161,7 @@ export default function Header() {
             {/* Search */}
             <Link
               href="/szukaj"
-              className="p-2 text-[#ECEAE7] hover:text-[#C8794B] transition-colors"
+              className="p-2 text-[#ECEAE7] hover:text-white transition-colors"
               aria-label="Szukaj"
             >
               <Search className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.6]" />
@@ -170,12 +170,12 @@ export default function Header() {
             {/* Cart */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-[#ECEAE7] hover:text-[#C8794B] transition-colors cursor-pointer"
+              className="relative p-2 text-[#ECEAE7] hover:text-white transition-colors cursor-pointer"
               aria-label="Koszyk"
             >
               <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.6]" />
               {cartCount > 0 && (
-                <span className="absolute top-1 right-1 bg-[#C8794B] text-[#0B0B0C] text-[9px] font-mono font-bold px-1 min-w-[16px] h-4 flex items-center justify-center">
+                <span className="absolute top-1 right-1 bg-[#C8794B] text-white text-[11px] font-medium tabular-nums px-1 min-w-[16px] h-4 flex items-center justify-center rounded-xs">
                   {cartCount}
                 </span>
               )}
@@ -200,8 +200,8 @@ export default function Header() {
             className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
             onClick={() => setMobileMenuOpen(false)}
           />
-          <div className="relative w-full max-w-[320px] bg-[#0B0B0C] text-white h-full shadow-2xl flex flex-col z-10 border-r border-[#26262A]">
-            <div className="p-4 border-b border-[#26262A] flex items-center justify-between">
+          <div className="relative w-full max-w-[320px] bg-[#0B0B0C] text-white h-full shadow-2xl flex flex-col z-10 border-r border-[#1E1E22]">
+            <div className="p-4 border-b border-[#1E1E22] flex items-center justify-between">
               <Image
                 src="/assets/logo_white.png"
                 alt="Warsaw Durag Store"
@@ -218,42 +218,28 @@ export default function Header() {
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              <div className="space-y-1 font-mono uppercase text-xs tracking-wider">
+              <div className="space-y-1 text-[14px] font-medium tracking-[0.02em]">
                 {categories.map((cat) => (
                   <Link
                     key={cat.href}
                     href={cat.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2.5 px-3 hover:bg-[#141416] text-[#ECEAE7] hover:text-[#C8794B] transition-colors border-b border-[#1E1E22]"
+                    className="block py-2.5 px-3 hover:bg-[#141416] text-[#ECEAE7] hover:text-white transition-colors border-b border-[#1E1E22]"
                   >
                     {cat.label}
                   </Link>
                 ))}
-                <Link
-                  href="/poradnik/wave-guide"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2.5 px-3 text-[#C8794B] hover:bg-[#141416] transition-colors border-b border-[#1E1E22]"
-                >
-                  Poradnik 360 Waves
-                </Link>
-                <Link
-                  href="/o-nas"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2.5 px-3 text-gray-400 hover:bg-[#141416] hover:text-white transition-colors"
-                >
-                  O nas & Pracownia
-                </Link>
               </div>
             </div>
 
-            <div className="p-4 border-t border-[#26262A] bg-[#141416]">
+            <div className="p-4 border-t border-[#1E1E22] bg-[#141416]">
               <Link
                 href="/koszyk"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#C8794B] text-[#0B0B0C] font-mono font-bold text-xs uppercase tracking-wider"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#C8794B] text-white font-medium text-[13px] tracking-[0.02em]"
               >
                 <ShoppingBag className="w-4 h-4" />
-                <span>Twój Koszyk ({cartCount})</span>
+                <span>Twój Koszyk <span className="tabular-nums">({cartCount})</span></span>
               </Link>
             </div>
           </div>

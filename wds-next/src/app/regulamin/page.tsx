@@ -15,7 +15,7 @@ export default function RegulaminPage() {
     <div className="min-h-screen bg-[#0B0B0C] text-[#ECEAE7] pt-28 pb-24 selection:bg-[#C8794B] selection:text-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs font-mono text-[#787570] uppercase tracking-wider mb-4">
+        <div className="flex items-center gap-2 text-xs text-[#787570] mb-4">
           <Link href="/" className="hover:text-white transition-colors">Start</Link>
           <span>/</span>
           <span className="text-[#C8794B]">Regulamin</span>
@@ -23,26 +23,26 @@ export default function RegulaminPage() {
 
         {/* Page Header */}
         <header className="mb-10 pb-6 border-b border-[#1E1E22]">
-          <h1 className="font-serif text-3xl sm:text-5xl text-white font-normal tracking-tight mb-3">
+          <h1 className="font-serif text-3xl sm:text-4xl text-white font-medium tracking-tight mb-3">
             Regulamin sklepu internetowego
           </h1>
-          <p className="text-xs text-[#787570] font-mono uppercase tracking-wider">
-            Warsaw Durag Store Michał Wyszyński • NIP: 7011275454 • support@warsawduragstore.pl
+          <p className="text-xs text-[#787570]">
+            Warsaw Durag Store Michał Wyszyński · NIP: 7011275454 · support@warsawduragstore.pl
           </p>
         </header>
 
         {/* Spis treści & Wstęp */}
         <div className="bg-[#111113] border border-[#1E1E22] p-6 sm:p-8 mb-8 space-y-6">
           <div>
-            <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-[#C8794B] mb-3">
+            <h2 className="text-sm font-semibold text-[#C8794B] mb-3">
               Spis treści
             </h2>
-            <ol className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono text-[#A3A09B]">
-              <li><a href="#postanowienia-ogolne" className="hover:text-white transition-colors">1. POSTANOWIENIA OGÓLNE</a></li>
-              <li><a href="#uslugi-elektroniczne" className="hover:text-white transition-colors">2. USŁUGI ELEKTRONICZNE W SKLEPIE</a></li>
-              <li><a href="#umowa-sprzedazy" className="hover:text-white transition-colors">3. WARUNKI ZAWIERANIA UMOWY</a></li>
-              <li><a href="#platnosci" className="hover:text-white transition-colors">4. SPOSOBY I TERMINY PŁATNOŚCI</a></li>
-              <li><a href="#dostawa" className="hover:text-white transition-colors">5. KOSZT, SPOSOBY I TERMIN DOSTAWY</a></li>
+            <ol className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#A3A09B]">
+              <li><a href="#postanowienia-ogolne" className="hover:text-white transition-colors">1. Postanowienia ogólne</a></li>
+              <li><a href="#uslugi-elektroniczne" className="hover:text-white transition-colors">2. Usługi elektroniczne w sklepie</a></li>
+              <li><a href="#umowa-sprzedazy" className="hover:text-white transition-colors">3. Warunki zawierania umowy</a></li>
+              <li><a href="#platnosci" className="hover:text-white transition-colors">4. Sposoby i terminy płatności</a></li>
+              <li><a href="#dostawa" className="hover:text-white transition-colors">5. Koszt, sposoby i termin dostawy</a></li>
               <li><a href="#reklamacja" className="hover:text-white transition-colors">6. REKLAMACJA PRODUKTU</a></li>
               <li><a href="#pozasadowe" className="hover:text-white transition-colors">7. POZASĄDOWE ROZPATRYWANIE SPORÓW</a></li>
               <li><a href="#odstapienie" className="hover:text-white transition-colors">8. PRAWO ODSTĄPIENIA OD UMOWY</a></li>
@@ -423,7 +423,7 @@ export default function RegulaminPage() {
             <p>
               <strong className="text-white">10.6.</strong> W razie uznania jednego z postanowień niniejszego Regulaminu lub zapisów Umowy za nieważne na podstawie prawomocnej decyzji właściwego organu administracji publicznej albo prawomocnego wyroku sądu powszechnego, pozostałe postanowienia i warunki niniejszego Regulaminu pozostaną w mocy, a wspomniane stwierdzenie nieważności nie będzie ich dotyczyć.
             </p>
-            <p className="pt-4 text-xs font-mono text-[#787570]">
+            <p className="pt-4 text-xs text-[#787570]">
               Regulamin sklepu internetowego https://warsawduragstore.com w formacie tekstowym jest dostępny pod adresem:{' '}
               <a
                 href="https://docs.google.com/document/d/1IkJvluVzaFTAo7LA5EbEsvwSpMCiOK-BvmA3JwL5Y_4/edit?usp=sharing"

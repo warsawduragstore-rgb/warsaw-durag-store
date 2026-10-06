@@ -16,19 +16,19 @@ export default function PolitykaPrywatnosciPage() {
     <div className="min-h-screen bg-[#0B0B0C] text-[#ECEAE7] pt-28 pb-24 selection:bg-[#C8794B] selection:text-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs font-mono text-[#787570] uppercase tracking-wider mb-4">
+        <div className="flex items-center gap-2 text-xs text-[#787570] mb-4">
           <Link href="/" className="hover:text-white transition-colors">Start</Link>
           <span>/</span>
-          <span className="text-[#C8794B]">Polityka Prywatności</span>
+          <span className="text-[#C8794B]">Polityka prywatności</span>
         </div>
 
         {/* Page Header */}
         <header className="mb-10 pb-6 border-b border-[#1E1E22]">
-          <h1 className="font-serif text-3xl sm:text-5xl text-white font-normal tracking-tight mb-3">
-            Polityka Prywatności & RODO
+          <h1 className="font-serif text-3xl sm:text-4xl text-white font-medium tracking-tight mb-3">
+            Polityka prywatności i RODO
           </h1>
-          <p className="text-xs text-[#787570] font-mono uppercase tracking-wider">
-            Zasady przetwarzania danych osobowych, cookies i bezpieczeństwa • Warsaw Durag Store
+          <p className="text-xs text-[#787570]">
+            Zasady przetwarzania danych osobowych, cookies i bezpieczeństwa · Warsaw Durag Store
           </p>
         </header>
 

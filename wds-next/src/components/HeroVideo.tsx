@@ -70,29 +70,21 @@ export default function HeroVideo({ poster = '/media/wds/wyszol1126.jpg' }: Hero
       <div className="absolute bottom-6 right-6 z-20 hidden sm:flex items-center gap-2">
         <button
           onClick={togglePlay}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#0D0D0B]/80 backdrop-blur-xs border border-white/20 text-white hover:border-[#D9A87E] hover:text-[#D9A87E] transition-colors text-[10px] font-mono uppercase tracking-wider cursor-pointer"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#0D0D0B]/80 backdrop-blur-xs border border-white/20 text-white hover:border-[#C8794B] hover:text-[#C8794B] transition-colors text-xs cursor-pointer"
           aria-label={isPlaying ? 'Wstrzymaj film' : 'Odtwórz film'}
         >
           {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
-          <span>{isPlaying ? 'PAUSE' : 'PLAY'}</span>
+          <span>{isPlaying ? 'Wstrzymaj' : 'Odtwórz'}</span>
         </button>
 
         <button
           onClick={toggleSound}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#0D0D0B]/80 backdrop-blur-xs border border-white/20 text-white hover:border-[#D9A87E] hover:text-[#D9A87E] transition-colors text-[10px] font-mono uppercase tracking-wider cursor-pointer"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#0D0D0B]/80 backdrop-blur-xs border border-white/20 text-white hover:border-[#C8794B] hover:text-[#C8794B] transition-colors text-xs cursor-pointer"
           aria-label={isMuted ? 'Włącz dźwięk' : 'Wycisz film'}
         >
-          {isMuted ? <VolumeX className="w-3 h-3 text-gray-400" /> : <Volume2 className="w-3 h-3 text-[#D9A87E]" />}
-          <span>{isMuted ? 'MUTE' : 'SOUND ON'}</span>
+          {isMuted ? <VolumeX className="w-3 h-3 text-gray-400" /> : <Volume2 className="w-3 h-3 text-[#C8794B]" />}
+          <span>{isMuted ? 'Dźwięk wył.' : 'Dźwięk wł.'}</span>
         </button>
-      </div>
-
-      {/* Live Feed Tech Stamp (Top Left) */}
-      <div className="absolute top-6 left-6 z-20 hidden md:flex items-center gap-2 pointer-events-none">
-        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/70">
-          WDS ARCHIVE // WARSZAWA 2026
-        </span>
       </div>
     </div>
   );

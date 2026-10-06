@@ -143,26 +143,20 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       />
 
       {/* Category Hero Header */}
-      <section className="bg-[#0B0B0C] text-white py-14 sm:py-20 border-b border-[#26262A]">
+      <section className="bg-[#0B0B0C] text-white py-12 sm:py-16 border-b border-[#1E1E22]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <span className="w-1.5 h-1.5 bg-[#C8794B] rounded-full inline-block animate-pulse" />
-            <span className="text-[#C8794B] text-xs uppercase font-mono tracking-[0.3em] font-semibold">
-              Kolekcja Atelier • Warszawa
-            </span>
-          </div>
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal mb-4 text-[#FAFAF9]">
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium mb-3 text-[#FAFAF9]">
             {categoryInfo.title}
           </h1>
-          <p className="text-xs sm:text-sm text-[#A3A09B] font-light max-w-2xl mx-auto leading-relaxed">
+          <p className="text-[14px] text-[#A3A09B] max-w-2xl mx-auto leading-relaxed">
             {categoryInfo.desc}
           </p>
         </div>
       </section>
 
       {/* Category Tabs */}
-      <section className="py-6 sm:py-8 bg-[#0E0E10] border-b border-[#26262A]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex overflow-x-auto no-scrollbar scroll-smooth justify-start sm:justify-center gap-2 pb-2 sm:pb-0 text-xs font-mono uppercase tracking-wider">
+      <section className="py-4 sm:py-6 bg-[#0E0E10] border-b border-[#1E1E22]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex overflow-x-auto no-scrollbar scroll-smooth justify-start sm:justify-center gap-2 pb-1 sm:pb-0 text-[13px]">
           {Object.entries(CATEGORY_NAMES).map(([catKey, catVal]) => {
             const count =
               catKey === 'all'
@@ -173,13 +167,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               <Link
                 key={catKey}
                 href={`/kolekcja/${catKey}`}
-                className={`px-4 sm:px-5 py-2.5 transition-all whitespace-nowrap shrink-0 font-medium border ${
+                className={`px-4 sm:px-5 py-2 whitespace-nowrap shrink-0 font-medium border transition-colors ${
                   isActive
-                    ? 'bg-[#C8794B] text-[#0B0B0C] border-[#C8794B] font-bold shadow-lg shadow-[#C8794B]/10'
-                    : 'bg-[#141416] text-[#ECEAE7] hover:border-[#C8794B] border-[#26262A]'
+                    ? 'bg-[#ECEAE7] text-[#0B0B0C] border-[#ECEAE7]'
+                    : 'bg-[#141416] text-[#ECEAE7] hover:border-[#787570] border-[#1E1E22]'
                 }`}
               >
-                {catVal.label.toUpperCase()} <span className="text-[10px] opacity-75 font-mono">({count})</span>
+                {catVal.label} <span className="opacity-70 tabular-nums">({count})</span>
               </Link>
             );
           })}
@@ -191,10 +185,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       {/* Responsive Grid */}
       <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6">
         {products.length === 0 ? (
-          <div className="text-center py-20 bg-[#141416] border border-[#26262A] p-8">
-            <span className="font-mono text-xs text-[#C8794B] uppercase tracking-widest block mb-2">Atelier Status //</span>
-            <p className="font-serif text-xl text-white">Brak produktów w tej kategorii atelier.</p>
-            <p className="text-xs text-[#A3A09B] mt-1 font-light">Nowy drop w przygotowaniu w Warszawie.</p>
+          <div className="text-center py-16 bg-[#141416] border border-[#1E1E22] p-8">
+            <p className="font-serif text-xl text-white">Brak produktów w tej kategorii.</p>
+            <p className="text-[14px] text-[#A3A09B] mt-1">Sprawdź pozostałe kategorie lub wróć do strony głównej.</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">

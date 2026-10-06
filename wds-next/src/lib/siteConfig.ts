@@ -6,5 +6,5 @@
  * or update the fallback below.
  */
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://warsawduragstore.com'
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://warsaw-durag-store.vercel.app'
 ).replace(/\/+$/, '');

@@ -53,13 +53,13 @@ export default function CartPage() {
       <div className="max-w-6xl mx-auto">
         {/* Breadcrumb / Title */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 text-xs font-mono text-[#787570] uppercase tracking-wider mb-2">
+          <div className="flex items-center gap-2 text-xs text-[#A3A09B] mb-2">
             <Link href="/" className="hover:text-white transition-colors">Start</Link>
             <span>/</span>
             <span className="text-[#C8794B]">Koszyk</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl font-normal tracking-tight uppercase text-[#FAFAF9]">
-            Twój Koszyk {cartCount > 0 && <span className="text-[#C8794B] font-mono text-2xl">({cartCount})</span>}
+          <h1 className="font-serif text-3xl sm:text-4xl font-medium tracking-tight text-[#FAFAF9]">
+            Twój koszyk {cartCount > 0 && <span className="text-[#C8794B] text-2xl font-sans tabular-nums">({cartCount})</span>}
           </h1>
         </div>
 
@@ -69,16 +69,16 @@ export default function CartPage() {
               <ShoppingBag className="w-8 h-8 stroke-[1.5]" />
             </div>
             <div className="space-y-2">
-              <h2 className="font-serif text-2xl font-normal text-white">Twój koszyk jest pusty</h2>
-              <p className="text-xs text-[#A3A09B]">
-                Nie dodałeś jeszcze żadnych produktów. Odkryj naszą kolekcję duragów z naturalnego jedwabiu morwowego 19 Momme, weluru i satyny.
+              <h2 className="font-serif text-2xl font-medium text-white">Twój koszyk jest pusty</h2>
+              <p className="text-sm text-[#A3A09B]">
+                Nie dodałeś jeszcze żadnych produktów. Duragi szyte w Warszawie z jedwabiu, satyny i weluru.
               </p>
             </div>
             <Link
               href="/produkty"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#C8794B] text-[#0B0B0C] font-mono font-bold text-xs uppercase tracking-widest hover:bg-[#FAFAF9] transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#C8794B] text-[#0B0B0C] font-semibold text-sm hover:bg-[#FAFAF9] transition-colors"
             >
-              Zobacz całą kolekcję <ArrowRight className="w-4 h-4" />
+              Zobacz duragi <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         ) : (
@@ -86,28 +86,28 @@ export default function CartPage() {
             {/* Products List & 2+1 Promo */}
             <div className="lg:col-span-8 space-y-6">
               {/* 2+1 Banner */}
-              <div className="bg-[#141416] border border-[#C8794B]/30 p-5 relative overflow-hidden">
+              <div className="bg-[#141416] border border-[#26262A] p-5 relative overflow-hidden">
                 <div className="flex items-start gap-3">
                   <div className="p-2 bg-[#C8794B]/10 text-[#C8794B] shrink-0">
                     <Sparkles className="w-5 h-5" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-serif text-base font-medium text-white uppercase tracking-wider">
-                        Promocja: Kup 2, trzeci durag GRATIS
+                      <h3 className="font-serif text-base font-medium text-white">
+                        Promocja: kup 2, trzeci losowy durag za 1 zł
                       </h3>
                       {freeItemsCount > 0 && (
-                        <span className="px-2.5 py-0.5 bg-emerald-500/20 text-emerald-400 text-[11px] font-mono font-medium border border-emerald-500/30">
-                          Naliczono {freeItemsCount}x gratis
+                        <span className="px-2.5 py-0.5 bg-emerald-500/20 text-emerald-400 text-xs font-medium border border-emerald-500/30 tabular-nums">
+                          Naliczono {freeItemsCount}x
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-[#A3A09B] mt-1 font-light">
+                    <p className="text-xs text-[#A3A09B] mt-1">
                       {freeItemsCount > 0
-                        ? `Otrzymujesz ${freeItemsCount} ${freeItemsCount === 1 ? 'najtańszy durag' : 'najtańsze duragi'} za 0 zł! Promocja naliczana jest automatycznie.`
+                        ? `Promocja naliczona automatycznie w koszyku.`
                         : neededForNextFree === 1
-                        ? 'Dodaj do koszyka jeszcze tylko 1 kwalifikujący się durag, aby odebrać go za 0 zł!'
-                        : 'Kup dowolne 2 duragi, a 3. najtańszy w koszyku otrzymasz w prezencie za darmo.'}
+                        ? 'Dodaj jeszcze 1 durag, aby odebrać trzeci losowy durag za 1 zł.'
+                        : 'Kup 2 duragi, a trzeci losowy otrzymasz za 1 zł.'}
                     </p>
                   </div>
                 </div>
@@ -134,14 +134,14 @@ export default function CartPage() {
                         <div>
                           <Link
                             href={`/produkt/${item.product.slug}`}
-                            className="font-serif text-lg font-normal text-white hover:text-[#C8794B] transition-colors"
+                            className="font-serif text-lg font-medium text-white hover:text-[#C8794B] transition-colors"
                           >
                             {item.product.name}
                           </Link>
                           {item.variant && (
-                            <p className="text-xs text-[#787570] mt-0.5 font-mono">Wariant: <span className="text-[#ECEAE7]">{item.variant}</span></p>
+                            <p className="text-xs text-[#A3A09B] mt-0.5">Wariant: <span className="text-[#ECEAE7]">{item.variant}</span></p>
                           )}
-                          <p className="text-xs text-[#C8794B] mt-1 font-mono">{item.product.material}</p>
+                          <p className="text-xs text-[#A3A09B] mt-1">{item.product.material}</p>
                         </div>
 
                         <button
@@ -163,7 +163,7 @@ export default function CartPage() {
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
-                          <span className="px-3 text-xs font-mono font-bold text-white min-w-[28px] text-center">
+                          <span className="px-3 text-xs font-medium text-white min-w-[28px] text-center tabular-nums">
                             {item.quantity}
                           </span>
                           <button
@@ -177,7 +177,7 @@ export default function CartPage() {
 
                         {/* Price */}
                         <div className="text-right">
-                          <span className="font-mono text-base font-bold text-[#FAFAF9]">
+                          <span className="text-base font-semibold text-[#FAFAF9] tabular-nums">
                             {formatPrice(item.unitPrice * item.quantity, item.product.priceEur ? item.product.priceEur * item.quantity : undefined)}
                           </span>
                         </div>
@@ -195,19 +195,19 @@ export default function CartPage() {
                     value={promoInput}
                     onChange={(e) => setPromoInput(e.target.value)}
                     placeholder="Kod rabatowy (np. WARSAW10)"
-                    className="flex-1 bg-[#0B0B0C] border border-[#26262A] px-4 py-2.5 text-xs font-mono text-white placeholder-[#787570] focus:outline-none focus:border-[#C8794B]"
+                    className="flex-1 bg-[#0B0B0C] border border-[#26262A] px-4 py-2.5 text-xs text-white placeholder-[#787570] focus:outline-none focus:border-[#C8794B]"
                   />
                   <button
                     type="submit"
                     disabled={isApplying}
-                    className="px-6 py-2.5 bg-[#1A1A1B] border border-[#333338] text-white hover:bg-[#C8794B] hover:text-[#0B0B0C] hover:border-[#C8794B] text-xs font-mono font-bold uppercase tracking-wider transition-colors disabled:opacity-50 cursor-pointer"
+                    className="px-6 py-2.5 bg-[#1A1A1B] border border-[#333338] text-white hover:bg-[#C8794B] hover:text-[#0B0B0C] hover:border-[#C8794B] text-xs font-medium transition-colors disabled:opacity-50 cursor-pointer"
                   >
                     {isApplying ? 'Sprawdzam...' : 'Zastosuj'}
                   </button>
                 </form>
 
                 {promoMessage && (
-                  <p className={`text-xs mt-3 font-mono ${promoMessage.isError ? 'text-red-400' : 'text-emerald-400'}`}>
+                  <p className={`text-xs mt-3 ${promoMessage.isError ? 'text-red-400' : 'text-emerald-400'}`}>
                     {promoMessage.text}
                   </p>
                 )}
@@ -217,42 +217,42 @@ export default function CartPage() {
             {/* Order Summary Sidebar */}
             <div className="lg:col-span-4 space-y-6">
               <div className="bg-[#141416] border border-[#26262A] p-6 space-y-5 sticky top-28">
-                <h3 className="font-serif text-lg font-medium text-white uppercase tracking-wider pb-3 border-b border-[#26262A]">
-                  Podsumowanie Zamówienia
+                <h3 className="font-serif text-lg font-medium text-white pb-3 border-b border-[#26262A]">
+                  Podsumowanie zamówienia
                 </h3>
 
                 <div className="space-y-3 text-xs">
                   <div className="flex justify-between text-[#A3A09B]">
                     <span>Wartość produktów:</span>
-                    <span className="font-mono text-white">{formatPrice(subtotal)}</span>
+                    <span className="text-white tabular-nums">{formatPrice(subtotal)}</span>
                   </div>
 
                   {freeItemsDiscount > 0 && (
                     <div className="flex justify-between text-emerald-400 font-medium">
                       <span className="flex items-center gap-1">
-                        <Sparkles className="w-3.5 h-3.5" /> Kup 2, trzeci gratis:
+                        <Sparkles className="w-3.5 h-3.5" /> Rabat promocyjny:
                       </span>
-                      <span className="font-mono">-{formatPrice(freeItemsDiscount)}</span>
+                      <span className="tabular-nums">-{formatPrice(freeItemsDiscount)}</span>
                     </div>
                   )}
 
                   {promoDiscount > 0 && (
                     <div className="flex justify-between text-[#C8794B] font-medium">
                       <span>Kod rabatowy ({appliedPromoCode}):</span>
-                      <span className="font-mono">-{formatPrice(promoDiscount)}</span>
+                      <span className="tabular-nums">-{formatPrice(promoDiscount)}</span>
                     </div>
                   )}
 
                   <div className="flex justify-between text-[#A3A09B]">
                     <span>Dostawa w Polsce:</span>
-                    <span className="font-mono text-emerald-400 font-medium">0.00 zł (Paczkomat InPost)</span>
+                    <span className="text-emerald-400 font-medium">0 zł (Darmowa dostawa)</span>
                   </div>
 
                   <div className="pt-3 border-t border-[#26262A] flex justify-between items-baseline">
-                    <span className="font-serif text-base font-semibold text-white uppercase tracking-wider">
+                    <span className="font-serif text-base font-medium text-white">
                       Łącznie:
                     </span>
-                    <span className="font-mono text-2xl font-bold text-[#C8794B]">
+                    <span className="text-2xl font-semibold text-[#C8794B] tabular-nums">
                       {formatPrice(total)}
                     </span>
                   </div>
@@ -260,23 +260,23 @@ export default function CartPage() {
 
                 <Link
                   href="/checkout"
-                  className="w-full flex items-center justify-center gap-2 py-4 px-6 bg-[#C8794B] text-[#0B0B0C] font-mono font-bold text-xs uppercase tracking-widest hover:bg-[#FAFAF9] transition-all shadow-lg shadow-[#C8794B]/10 cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 py-4 px-6 bg-[#C8794B] text-[#0B0B0C] font-semibold text-sm hover:bg-[#FAFAF9] transition-all cursor-pointer"
                 >
                   Przejdź do kasy <ArrowRight className="w-4 h-4" />
                 </Link>
 
-                <div className="pt-3 border-t border-[#26262A] space-y-2 text-[11px] text-[#787570]">
+                <div className="pt-3 border-t border-[#26262A] space-y-2 text-xs text-[#A3A09B]">
                   <div className="flex items-center gap-2">
                     <Truck className="w-3.5 h-3.5 text-[#C8794B]" />
-                    <span>Wysyłka w 24h z Warszawy</span>
+                    <span>Wysyłka z Warszawy w 1–2 dni robocze</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <RotateCcw className="w-3.5 h-3.5 text-[#C8794B]" />
-                    <span>14 dni na darmowy zwrot</span>
+                    <span>14 dni na zwrot</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#C8794B]" />
-                    <span>Bezpieczna płatność Stripe (BLIK / P24 / Karty)</span>
+                    <span>Odbiór osobisty w Warszawie po umówieniu</span>
                   </div>
                 </div>
               </div>

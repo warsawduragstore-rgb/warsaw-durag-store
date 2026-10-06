@@ -39,12 +39,12 @@ export default async function OrderLookupPage({ params }: OrderPageProps) {
         <div className="max-w-md mx-auto bg-[#141412] border border-[#222220] rounded-2xl p-8 space-y-4">
           <p className="font-serif text-2xl text-white">Nie znaleziono zamówienia</p>
           <p className="text-xs text-gray-400">
-            Nie odnaleźliśmy zamówienia o numerze <span className="font-mono text-white">{decodedId}</span>.
+            Nie odnaleźliśmy zamówienia o numerze <span className="text-white font-medium">{decodedId}</span>.
             Sprawdź czy numer z e-maila jest poprawny.
           </p>
           <Link
             href="/"
-            className="inline-block mt-4 px-6 py-3 bg-[#D9A87E] text-black font-semibold text-xs uppercase tracking-widest rounded-xl hover:bg-[#e4b58e] transition-colors"
+            className="inline-block mt-4 px-6 py-3 bg-[#C8794B] text-black font-semibold text-xs rounded-xl hover:bg-[#e4b58e] transition-colors"
           >
             Strona główna
           </Link>
@@ -61,7 +61,7 @@ export default async function OrderLookupPage({ params }: OrderPageProps) {
       <div className="max-w-2xl mx-auto space-y-6">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" /> Wróć do sklepu
         </Link>
@@ -73,11 +73,11 @@ export default async function OrderLookupPage({ params }: OrderPageProps) {
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
-            <div className="inline-block px-3 py-1 bg-[#222220] rounded-full text-xs uppercase tracking-widest text-[#D9A87E] font-semibold mb-3">
-              {isPaid ? 'Opłacone • W realizacji' : 'Oczekuje na płatność'}
+            <div className="inline-block px-3 py-1 bg-[#222220] rounded-full text-xs text-[#C8794B] font-semibold mb-3">
+              {isPaid ? 'Opłacone · W realizacji' : 'Oczekuje na płatność'}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">
               Zamówienie {order.order_no}
             </h1>
             <p className="text-gray-400 text-xs sm:text-sm max-w-md mx-auto">
@@ -91,14 +91,14 @@ export default async function OrderLookupPage({ params }: OrderPageProps) {
               {/* Delivery */}
               <div className="p-4 bg-[#1A1A18] rounded-xl border border-[#2A2A28]">
                 <div className="flex items-center gap-2 text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">
-                  {isPaczkomat ? <PackageCheck className="w-4 h-4 text-[#FFD100]" /> : <Truck className="w-4 h-4 text-[#D9A87E]" />}
+                  {isPaczkomat ? <PackageCheck className="w-4 h-4 text-[#C8794B]" /> : <Truck className="w-4 h-4 text-[#C8794B]" />}
                   Dostawa
                 </div>
                 <div className="font-semibold text-white text-sm">
                   {isPaczkomat ? 'Paczkomat InPost 24/7' : 'Kurier'}
                 </div>
                 {order.locker_code && (
-                  <div className="text-xs font-mono text-[#FFD100] mt-1 font-bold">
+                  <div className="text-xs text-[#C8794B] mt-1 font-semibold tabular-nums">
                     Paczkomat: {order.locker_code}
                   </div>
                 )}
@@ -114,7 +114,7 @@ export default async function OrderLookupPage({ params }: OrderPageProps) {
               <div className="p-4 bg-[#1A1A18] rounded-xl border border-[#2A2A28]">
                 <div className="flex items-center gap-2 text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  Płatność & Klient
+                  Płatność i dane
                 </div>
                 <div className="font-semibold text-emerald-400 text-sm">
                   {isPaid ? 'Opłacono przez Stripe' : 'Oczekuje na zaksięgowanie'}
@@ -126,7 +126,7 @@ export default async function OrderLookupPage({ params }: OrderPageProps) {
                   E-mail: <span className="text-white">{order.customer_email}</span>
                 </div>
                 <div className="text-xs text-gray-400 mt-1">
-                  Łączna kwota: <strong className="text-white font-mono">{Number(order.total || 0).toFixed(2)} PLN</strong>
+                  Łączna kwota: <strong className="text-white tabular-nums">{Number(order.total || 0).toLocaleString('pl-PL', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} zł</strong>
                 </div>
               </div>
             </div>
@@ -135,10 +135,10 @@ export default async function OrderLookupPage({ params }: OrderPageProps) {
             {order.items_summary && (
               <div className="p-4 bg-[#1A1A18] rounded-xl border border-[#2A2A28]">
                 <div className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium flex items-center gap-2">
-                  <ShoppingBag className="w-3.5 h-3.5 text-[#D9A87E]" />
+                  <ShoppingBag className="w-3.5 h-3.5 text-[#C8794B]" />
                   Zamówione pozycje
                 </div>
-                <div className="text-xs text-gray-300 leading-relaxed font-mono">
+                <div className="text-xs text-gray-300 leading-relaxed">
                   {order.items_summary}
                 </div>
               </div>

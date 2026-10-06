@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, Plus_Jakarta_Sans } from 'next/font/google';
+import { Newsreader, Hanken_Grotesk } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { LanguageProvider } from '@/context/LanguageContext';
@@ -9,17 +9,18 @@ import CartDrawer from '@/components/CartDrawer';
 import CookieBanner from '@/components/CookieBanner';
 import { SITE_URL } from '@/lib/siteConfig';
 
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['400', '600'],
-  variable: '--font-cormorant',
+const newsreader = Newsreader({
+  subsets: ['latin', 'latin-ext'],
+  style: ['normal'],
+  axes: ['opsz'],
+  variable: '--font-serif',
   display: 'swap',
 });
 
-const jakarta = Plus_Jakarta_Sans({
+const hanken = Hanken_Grotesk({
   subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500', '700'],
-  variable: '--font-jakarta',
+  weight: ['400', '500', '600'],
+  variable: '--font-sans',
   display: 'swap',
 });
 
@@ -28,10 +29,10 @@ const isProduction = process.env.VERCEL_ENV === 'production' || process.env.NODE
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Warsaw Durag Store — Jedyne duragi szyte w Polsce | 100% Jedwab Morwowy',
+    default: 'Warsaw Durag Store — Duragi szyte w Warszawie | Jedwab morwowy',
     template: '%s | Warsaw Durag Store',
   },
-  description: 'Jedyne duragi szyte w Polsce z prawdziwego jedwabiu morwowego 19 Momme, aksamitu i satyny. Darmowa dostawa InPost w całej Polsce, wysyłka w 24h z Warszawy. Odkryj unikalne duragi streetwear.',
+  description: 'Duragi szyte ręcznie w Warszawie z naturalnego jedwabiu morwowego, satyny i weluru. Darmowa dostawa w Polsce, wysyłka w 1–2 dni robocze.',
   keywords: [
     'durag',
     'duragi',
@@ -159,14 +160,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${cormorant.variable} ${jakarta.variable}`}>
+    <html lang="pl" className={`${newsreader.variable} ${hanken.variable}`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
         />
       </head>
-      <body className="bg-white text-[#0D0D0B] font-sans antialiased selection:bg-[#D9A87E] selection:text-black">
+      <body className="bg-[#0B0B0C] text-[#FAFAF9] font-sans antialiased selection:bg-[#C8794B] selection:text-[#0B0B0C]">
         <LanguageProvider>
           <CartProvider>
             <Header />

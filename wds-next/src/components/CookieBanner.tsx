@@ -50,25 +50,25 @@ export default function CookieBanner() {
           <ShieldCheck className="w-4 h-4" />
         </div>
         <div className="flex-1 space-y-2">
-          <h4 className="font-serif text-sm font-semibold tracking-wide uppercase text-white">
-            Prywatność & Pliki Cookies
+          <h4 className="font-serif text-base font-medium text-white">
+            Prywatność i pliki cookies
           </h4>
-          <p className="text-[11px] text-gray-400 leading-relaxed">
-            Używamy niezbędnych plików cookies do działania koszyka oraz opcjonalnych narzędzi analitycznych, aby ulepszać sklep. Dowiedz się więcej w naszej{' '}
-            <Link href="/polityka-prywatnosci" className="underline text-gray-300 hover:text-[#D9A87E]">
+          <p className="text-xs text-gray-400 leading-relaxed">
+            Używamy niezbędnych plików cookies do działania koszyka oraz opcjonalnych narzędzi analitycznych. Dowiedz się więcej w naszej{' '}
+            <Link href="/polityka-prywatnosci" className="underline text-gray-300 hover:text-[#C8794B]">
               Polityce prywatności
             </Link>.
           </p>
           <div className="flex items-center gap-2 pt-1">
             <button
               onClick={handleAccept}
-              className="px-4 py-2 bg-[#D9A87E] text-black font-semibold text-[11px] uppercase tracking-wider rounded-lg hover:bg-[#e4b58e] transition-colors"
+              className="px-4 py-2 bg-[#C8794B] text-black font-semibold text-xs rounded-lg hover:bg-[#d98b5d] transition-colors"
             >
               Akceptuję
             </button>
             <button
               onClick={handleDecline}
-              className="px-3 py-2 text-[11px] font-mono uppercase text-gray-400 hover:text-white transition-colors"
+              className="px-3 py-2 text-xs text-gray-400 hover:text-white transition-colors"
             >
               Tylko niezbędne
             </button>

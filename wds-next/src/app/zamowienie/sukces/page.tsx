@@ -72,7 +72,7 @@ function SuccessContent() {
 
             <div className="mt-6 p-4 bg-[#0D0D0B] border border-[#2A2A28] rounded-xl inline-block text-left">
               <div className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Numer zamówienia</div>
-              <div className="text-xl sm:text-2xl font-mono font-bold text-white mt-0.5 tracking-wider">
+              <div className="text-xl sm:text-2xl font-bold text-white mt-0.5 tracking-wider tabular-nums">
                 {orderNo}
               </div>
             </div>
@@ -98,7 +98,7 @@ function SuccessContent() {
                       {isPaczkomat ? 'Paczkomat InPost 24/7' : 'Kurier pod wskazany adres'}
                     </div>
                     {orderDetails?.locker_code && (
-                      <div className="text-sm font-mono text-[#D4AF37] mt-1 font-semibold">
+                      <div className="text-sm text-[#D4AF37] mt-1 font-semibold tabular-nums">
                         Punkt: {orderDetails.locker_code}
                       </div>
                     )}

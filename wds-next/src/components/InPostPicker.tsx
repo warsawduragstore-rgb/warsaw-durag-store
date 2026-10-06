@@ -189,7 +189,7 @@ export default function InPostPicker({
         <button
           type="button"
           onClick={openGeowidgetModal}
-          className="text-xs text-[#FFD100] hover:text-[#FFE04D] font-mono font-bold flex items-center gap-1.5 px-3 py-1.5 bg-[#FFD100]/10 border border-[#FFD100]/30 rounded-lg transition-all hover:bg-[#FFD100]/20"
+          className="text-xs text-[#FFD100] hover:text-[#FFE04D] font-semibold flex items-center gap-1.5 px-3 py-1.5 bg-[#FFD100]/10 border border-[#FFD100]/30 rounded-lg transition-all hover:bg-[#FFD100]/20"
         >
           <MapPin className="w-3.5 h-3.5" />
           <span>Wybierz na mapie</span>
@@ -200,15 +200,15 @@ export default function InPostPicker({
       {selectedPoint ? (
         <div className="p-4 bg-[#141412] border border-[#2B2B28] rounded-xl relative flex items-start justify-between group transition-all shadow-md">
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#FFD100] text-black flex items-center justify-center font-mono text-sm font-bold shrink-0 mt-0.5 shadow-sm">
+            <div className="w-9 h-9 rounded-lg bg-[#FFD100] text-black flex items-center justify-center text-sm font-bold shrink-0 mt-0.5 shadow-sm">
               📦
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-sm font-extrabold text-[#FFD100] tracking-wider">
+                <span className="text-sm font-bold text-[#FFD100] tracking-wider tabular-nums">
                   {selectedPoint.name}
                 </span>
-                <span className="text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-mono font-semibold">
+                <span className="text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-semibold">
                   DOSTĘPNY 24/7
                 </span>
               </div>
@@ -225,7 +225,7 @@ export default function InPostPicker({
           <button
             type="button"
             onClick={handleClear}
-            className="text-gray-400 hover:text-white hover:border-gray-500 px-2.5 py-1 text-xs font-mono border border-white/10 rounded transition-colors flex items-center gap-1"
+            className="text-gray-400 hover:text-white hover:border-gray-500 px-2.5 py-1 text-xs border border-white/10 rounded transition-colors flex items-center gap-1"
             title="Zmień paczkomat"
           >
             <RefreshCw className="w-3 h-3" /> Zmień
@@ -272,7 +272,7 @@ export default function InPostPicker({
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-[#FFD100] bg-[#FFD100]/10 px-2 py-0.5 rounded border border-[#FFD100]/20">
+                      <span className="text-xs font-bold text-[#FFD100] bg-[#FFD100]/10 px-2 py-0.5 rounded border border-[#FFD100]/20 tabular-nums">
                         {point.name}
                       </span>
                       <span className="text-xs font-semibold text-white">
@@ -320,10 +320,10 @@ export default function InPostPicker({
               <div className="flex items-center gap-2.5">
                 <span className="w-3 h-3 rounded-full bg-[#FFD100] shadow-[0_0_8px_rgba(255,209,0,0.6)]" />
                 <div>
-                  <h3 className="font-serif text-base sm:text-lg font-bold uppercase tracking-wider text-white">
+                  <h3 className="font-serif text-base sm:text-lg font-medium text-white">
                     Wybierz Paczkomat InPost na mapie
                   </h3>
-                  <p className="text-[11px] text-gray-400">
+                  <p className="text-xs text-gray-400">
                     Kliknij punkt odbioru na mapie, aby zatwierdzić Paczkomat do wysyłki
                   </p>
                 </div>
@@ -343,7 +343,7 @@ export default function InPostPicker({
               {!isGeowidgetLoaded && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#141412] text-gray-300 gap-3 z-10">
                   <Loader2 className="w-8 h-8 animate-spin text-[#FFD100]" />
-                  <span className="text-xs font-mono">Inicjalizacja InPost Geowidget v5...</span>
+                  <span className="text-xs">Inicjalizacja InPost Geowidget v5...</span>
                 </div>
               )}
 
@@ -363,12 +363,12 @@ export default function InPostPicker({
             <div className="px-5 py-3 bg-[#1A1A18] border-t border-[#2B2B28] flex items-center justify-between text-xs text-gray-400">
               <span className="flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-[#FFD100]" />
-                Ponad 22 000 Paczkomatów w całej Polsce
+                Paczkomaty w całej Polsce
               </span>
               <button
                 type="button"
                 onClick={() => setIsMapModalOpen(false)}
-                className="text-xs text-gray-300 hover:text-white underline font-mono"
+                className="text-xs text-gray-300 hover:text-white underline"
               >
                 Zamknij mapę
               </button>

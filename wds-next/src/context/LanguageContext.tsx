@@ -71,7 +71,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
     navAccessories: 'Akcesoria',
     navGuide: 'Wave Guide',
 
-    announcement: 'Wysyłamy z Warszawy w 1 dzień • Kup dwa a trzeci otrzymasz gratis • Darmowa dostawa w Europie • Ręcznie szyte duragi • Odbiór osobisty w Warszawie • ',
+    announcement: 'Darmowa dostawa w Polsce · Kup 2, trzeci durag za 1 zł',
 
     cartTitle: 'Twój Koszyk',
     cartEmpty: 'Twój koszyk jest pusty',
@@ -82,26 +82,26 @@ const TRANSLATIONS: Record<Language, Translations> = {
     cartCheckout: 'Przejdź do dostawy i płatności',
     cartPromoPlaceholder: 'Kod rabatowy (np. WARSAW10)',
     cartPromoApply: 'Zastosuj',
-    cartFreeShippingInfo: 'Brakuje Ci {amount} PLN do darmowej dostawy!',
+    cartFreeShippingInfo: 'Darmowa dostawa w Polsce dla każdego zamówienia.',
 
     addToCart: 'Dodaj do koszyka',
-    addedToCart: 'Dodano do koszyka!',
+    addedToCart: 'Dodano do koszyka',
     outOfStock: 'Brak w magazynie',
     inStock: 'Dostępny w magazynie',
     selectColor: 'Wybierz kolor',
-    descriptionTab: 'Opis i Historia',
-    materialTab: 'Materiał i Pielęgnacja',
+    descriptionTab: 'Opis i Materiał',
+    materialTab: 'Tkanina i Pielęgnacja',
     reviewsTab: 'Opinie Klientów',
     ratingAverage: 'Średnia ocena',
 
-    trustHandmadeTitle: 'Szyte w Warszawie',
-    trustHandmadeDesc: 'Każdy durag powstaje lokalnie z pasją i precyzją.',
-    trustSilkTitle: 'Jedwab 19 Momme',
-    trustSilkDesc: 'Naturalny jedwab morwowy najwyższej próby.',
-    trustShippingTitle: 'Wysyłka w 24h w EU',
-    trustShippingDesc: 'Szybka dostawa kurierem z Warszawy do całej Europy.',
-    trustReturnsTitle: '14 Dni na Zwrot',
-    trustReturnsDesc: 'Gwarancja bezpiecznych i prostych zwrotów.',
+    trustHandmadeTitle: 'Szyte ręcznie w Warszawie',
+    trustHandmadeDesc: 'Autorski krój z zewnętrznym płaskim szwem.',
+    trustSilkTitle: 'Jedwab morwowy 19 Momme',
+    trustSilkDesc: 'Naturalny jedwab morwowy z Milanówka.',
+    trustShippingTitle: 'Wysyłka w 1–2 dni robocze',
+    trustShippingDesc: 'Wysyłka z Warszawy. Darmowa dostawa w Polsce.',
+    trustReturnsTitle: '14 dni na zwrot',
+    trustReturnsDesc: '14 dni na bezproblemowy zwrot.',
 
     footerAbout: 'Jedyne duragi szyte w Polsce z jedwabiu morwowego, satyny i weluru. Warszawski kunszt i luksusowa pielęgnacja fal 360.',
     footerShop: 'Kolekcja',
@@ -469,9 +469,22 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const formatPrice = (pricePln: number, priceEur?: number): string => {
     if (currency === 'EUR') {
       const val = priceEur !== undefined && priceEur > 0 ? priceEur : Math.round((pricePln / 4.3) * 100) / 100;
-      return `${val.toFixed(2)} EUR`;
+      const locale = language === 'PL' ? 'pl-PL' : 'de-DE';
+      const hasDecimals = val % 1 !== 0;
+      return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: 'EUR',
+        maximumFractionDigits: hasDecimals ? 2 : 0,
+        minimumFractionDigits: hasDecimals ? 2 : 0,
+      }).format(val);
     }
-    return `${pricePln.toFixed(2)} PLN`;
+    const hasDecimals = pricePln % 1 !== 0;
+    return new Intl.NumberFormat('pl-PL', {
+      style: 'currency',
+      currency: 'PLN',
+      maximumFractionDigits: hasDecimals ? 2 : 0,
+      minimumFractionDigits: hasDecimals ? 2 : 0,
+    }).format(pricePln);
   };
 
   const t = TRANSLATIONS[language] || TRANSLATIONS.PL;
