@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import TrustBanner from '@/components/TrustBanner';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -400,6 +400,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function StaticInfoPage({ params }: PageProps) {
   const { slug } = await params;
+
+  if (slug === 'regulamin') {
+    redirect('/regulamin');
+  }
+  if (slug === 'polityka-prywatnosci') {
+    redirect('/polityka-prywatnosci');
+  }
+
   const pageData = PAGES_DATA[slug];
 
   if (!pageData) {
@@ -436,10 +444,10 @@ export default async function StaticInfoPage({ params }: PageProps) {
 
       <section className="bg-[#0D0D0B] text-white py-16">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <span className="text-[#D9A87E] text-xs uppercase tracking-[0.3em] font-semibold block mb-3">
-            [ warsaw durag store info ]
+          <span className="text-[#C8794B] text-[10px] font-mono uppercase tracking-[0.2em] block mb-3">
+            Warsaw Durag Store
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-medium mb-3">
+          <h1 className="font-serif text-3xl sm:text-4xl font-normal mb-3">
             {pageData.title}
           </h1>
           <p className="text-xs text-gray-300 font-light">{pageData.subtitle}</p>
