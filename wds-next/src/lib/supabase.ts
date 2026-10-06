@@ -135,6 +135,16 @@ export function mapSupabaseRowToProduct(row: any): Product {
     reviews: reviews || [],
     stock: row.stock !== undefined ? Number(row.stock) : (fallback?.stock ?? 10),
     visible: row.visible !== undefined ? Boolean(row.visible) : (fallback?.visible ?? true),
+    priceEur: row.price_eur ? Number(row.price_eur) : Math.round(((Number(row.price) || fallback?.price || 79.0) / 4.3) * 100) / 100,
+    promoEligible: row.promo_eligible !== undefined ? Boolean(row.promo_eligible) : (fallback?.promoEligible ?? true),
+    promoGiftPool: row.promo_gift_pool !== undefined ? Boolean(row.promo_gift_pool) : false,
+    hsCode: row.hs_code || '6505.00',
+    weightKg: row.weight_kg ? Number(row.weight_kg) : 0.08,
+    materialComposition: row.material_composition || row.material || fallback?.material || '100% Jedwab Morwowy',
+    fabricWeight: row.fabric_weight || '19 Momme',
+    careInstructions: row.care_instructions || 'Prać ręcznie w chłodnej wodzie do 30°C, suszyć na płasko z dala od słońca',
+    originCountry: row.origin_country || 'Polska',
+    dimensionsInfo: row.dimensions_info || 'Rozmiar uniwersalny, długość pasów 100 cm, potrójny płaski szew',
   };
 }
 
@@ -623,3 +633,186 @@ export async function fetchNewsletterSubscribers(): Promise<Array<{ id: number; 
   }
 }
 
+// ============================================================================
+// COMPANY INFO & SETTINGS TYPINGS
+// ============================================================================
+export interface CompanyInfo {
+  name: string;
+  nip: string;
+  address: string;
+  email_support: string;
+  email_finance: string;
+  phone: string;
+  instagram: string;
+  pickup_address: string;
+  registered_in: string;
+}
+
+export const DEFAULT_COMPANY_INFO: CompanyInfo = {
+  name: 'Warsaw Durag Store Michał Wyszyński',
+  nip: '7011275454',
+  address: 'Grójecka 186 lok. 212, 02-390 Warszawa',
+  email_support: 'support@warsawduragstore.pl',
+  email_finance: 'finance@warsawduragstore.pl',
+  phone: '',
+  instagram: '@warsawduragstore',
+  pickup_address: 'ul. Włodarzewska 4 i Centrum, po umówieniu',
+  registered_in: 'CEIDG, Rzeczpospolita Polska',
+};
+
+export async function fetchCompanyInfo(): Promise<CompanyInfo> {
+  const settings = await fetchSiteSettings();
+  if (settings.company_info) {
+    try {
+      return { ...DEFAULT_COMPANY_INFO, ...JSON.parse(settings.company_info) };
+    } catch {
+      return DEFAULT_COMPANY_INFO;
+    }
+  }
+  return DEFAULT_COMPANY_INFO;
+}
+
+export interface Promotion2Plus1Config {
+  is_active: boolean;
+  set_size: number;
+  gift_price_pln: number;
+  gift_price_eur: number;
+  description_pl: string;
+  description_en: string;
+}
+
+export const DEFAULT_PROMOTION_CONFIG: Promotion2Plus1Config = {
+  is_active: true,
+  set_size: 2,
+  gift_price_pln: 1.00,
+  gift_price_eur: 0.25,
+  description_pl: 'Kup 2 dowolne duragi, a trzeci losowy otrzymasz za 1 zł',
+  description_en: 'Buy any 2 durags and get a third surprise durag for €0.25',
+};
+
+export async function fetchPromotionConfig(): Promise<Promotion2Plus1Config> {
+  const settings = await fetchSiteSettings();
+  if (settings.promotion_2plus1) {
+    try {
+      return { ...DEFAULT_PROMOTION_CONFIG, ...JSON.parse(settings.promotion_2plus1) };
+    } catch {
+      return DEFAULT_PROMOTION_CONFIG;
+    }
+  }
+  return DEFAULT_PROMOTION_CONFIG;
+}
+
+export interface ShippingZone {
+  id: string;
+  name: string;
+  name_en: string;
+  carrier: string;
+  countries: string[];
+  price_pln: number;
+  price_eur: number;
+  free_threshold_pln: number;
+  free_threshold_eur: number;
+  estimated_delivery: string;
+  estimated_delivery_en: string;
+  is_active: boolean;
+}
+
+export const DEFAULT_SHIPPING_ZONES: ShippingZone[] = [
+  {
+    id: 'pl-paczkomat',
+    name: 'Polska — Paczkomat InPost 24/7',
+    name_en: 'Poland — InPost Parcel Locker 24/7',
+    carrier: 'InPost Paczkomat 24/7',
+    countries: ['PL'],
+    price_pln: 0.00,
+    price_eur: 0.00,
+    free_threshold_pln: 0.00,
+    free_threshold_eur: 0.00,
+    estimated_delivery: '1–2 dni robocze',
+    estimated_delivery_en: '1–2 business days',
+    is_active: true,
+  },
+  {
+    id: 'pl-kurier',
+    name: 'Polska — Kurier DPD / InPost',
+    name_en: 'Poland — Courier DPD / InPost',
+    carrier: 'Kurier InPost / DPD',
+    countries: ['PL'],
+    price_pln: 0.00,
+    price_eur: 0.00,
+    free_threshold_pln: 0.00,
+    free_threshold_eur: 0.00,
+    estimated_delivery: '1–2 dni robocze',
+    estimated_delivery_en: '1–2 business days',
+    is_active: true,
+  },
+  {
+    id: 'eu-courier',
+    name: 'Unia Europejska — Kurier Tracked',
+    name_en: 'European Union — Tracked Courier',
+    carrier: 'Kurier DPD / DHL UE',
+    countries: ['DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'SE', 'DK', 'FI', 'IE', 'PT', 'CZ', 'SK', 'LT', 'LV', 'EE', 'HU', 'RO', 'BG', 'GR', 'HR', 'SI', 'LU', 'CY', 'MT'],
+    price_pln: 35.00,
+    price_eur: 8.50,
+    free_threshold_pln: 250.00,
+    free_threshold_eur: 60.00,
+    estimated_delivery: '3–6 dni roboczych',
+    estimated_delivery_en: '3–6 business days',
+    is_active: true,
+  },
+];
+
+export async function fetchShippingZones(): Promise<ShippingZone[]> {
+  const settings = await fetchSiteSettings();
+  if (settings.shipping_zones) {
+    try {
+      return JSON.parse(settings.shipping_zones);
+    } catch {
+      return DEFAULT_SHIPPING_ZONES;
+    }
+  }
+  return DEFAULT_SHIPPING_ZONES;
+}
+
+export async function fetchVatRates(): Promise<Record<string, number>> {
+  const settings = await fetchSiteSettings();
+  const defaultRates: Record<string, number> = {
+    PL: 23.0, DE: 19.0, FR: 20.0, IT: 22.0, ES: 21.0, NL: 21.0, BE: 21.0, AT: 20.0,
+    SE: 25.0, DK: 25.0, FI: 25.5, IE: 23.0, PT: 23.0, CZ: 21.0, SK: 23.0, LT: 21.0,
+  };
+  if (settings.vat_rates) {
+    try {
+      return { ...defaultRates, ...JSON.parse(settings.vat_rates) };
+    } catch {
+      return defaultRates;
+    }
+  }
+  return defaultRates;
+}
+
+export interface CustomerReview {
+  id: number;
+  author: string;
+  rating: number;
+  content: string;
+  source: 'Vinted' | 'Instagram' | 'Google' | 'Sklep';
+  verified: boolean;
+}
+
+export async function fetchCustomerReviews(): Promise<CustomerReview[]> {
+  const settings = await fetchSiteSettings();
+  const defaultReviews: CustomerReview[] = [
+    { id: 1, author: 'Kamil K.', rating: 5, content: 'Najlepszy durag jaki miałem. Jakość jedwabiu 19 momme czuć w dotyku od razu po otwarciu paczki. Pasy są długie, nie uciskają czoła w nocy.', source: 'Vinted', verified: true },
+    { id: 2, author: 'Maksymilian W.', rating: 5, content: 'Wysyłka w 24h, zapakowane bardzo estetycznie. Na głowie trzyma się idealnie przy waves 360, rano brak jakichkolwiek zagnieceń.', source: 'Instagram', verified: true },
+    { id: 3, author: 'Jakub S.', rating: 5, content: 'Welurowy czarny to klasa sama w sobie. Gruby, ale oddychający materiał. Zdecydowanie warty swojej ceny.', source: 'Google', verified: true },
+    { id: 4, author: 'Mateusz R.', rating: 5, content: 'Kupione 2 sztuki w promocji, prezent w paczce zrobił dzień. Szyte w Polsce, szwy idealnie płaskie.', source: 'Vinted', verified: true },
+  ];
+  if (settings.customer_reviews) {
+    try {
+      return JSON.parse(settings.customer_reviews);
+    } catch {
+      return defaultReviews;
+    }
+  }
+  return defaultReviews;
+}

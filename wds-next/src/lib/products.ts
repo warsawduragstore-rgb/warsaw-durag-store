@@ -27,6 +27,7 @@ export interface Product {
   nameEn?: string;
   description: string;
   price: number;
+  priceEur?: number;
   compareAtPrice?: number;
   images: string[];
   category: 'silk' | 'satin' | 'velvet' | 'seasonal' | 'accessories';
@@ -39,6 +40,14 @@ export interface Product {
   stock?: number;
   isFeatured?: boolean;
   promoEligible?: boolean;
+  promoGiftPool?: boolean;
+  hsCode?: string;
+  weightKg?: number;
+  materialComposition?: string;
+  fabricWeight?: string;
+  careInstructions?: string;
+  originCountry?: string;
+  dimensionsInfo?: string;
   createdAt?: string;
   updatedAt?: string;
   visible?: boolean;
