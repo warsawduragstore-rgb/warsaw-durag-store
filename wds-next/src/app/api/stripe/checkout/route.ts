@@ -4,6 +4,8 @@ import { createOrderInSupabase } from '@/lib/supabase';
 import { resolveCartServer } from '@/lib/cart-server';
 import { CartItemRef } from '@/store/useCartStore';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   try {
     const rawStripeKey = process.env.STRIPE_SECRET_KEY;
@@ -91,9 +93,19 @@ export async function POST(req: NextRequest) {
       req.headers.get('referer')?.replace(/\/$/, '') ||
       'https://warsawduragstore.pl';
 
-    // Construct Stripe line items strictly in accordance with Spec Section 5:
-    // "Przy tworzeniu Stripe Checkout Session: backend przelicza line_items, dodając trzecią sztukę z unit_amount: 0 i etykietą 'GRATIS'."
-    
+    // Helper: Stripe accepts only publicly accessible HTTPS images
+    const getSafeImages = (imgUrl?: string): string[] => {
+      if (!imgUrl) return [];
+      if (
+        imgUrl.startsWith('https://') &&
+        !imgUrl.includes('localhost') &&
+        !imgUrl.includes('127.0.0.1')
+      ) {
+        return [imgUrl];
+      }
+      return [];
+    };
+
     // We determine which units among promo-eligible items are free
     const eligibleUnits: Array<{
       productId: number;
@@ -107,10 +119,11 @@ export async function POST(req: NextRequest) {
     const nonEligibleLineItems: any[] = [];
 
     for (const item of resolvedCart.items) {
-      const imgUrl = item.product.images?.[0]
-        ? item.product.images[0].startsWith('http')
-          ? item.product.images[0]
-          : `${origin}${item.product.images[0]}`
+      const rawImg = item.product.images?.[0];
+      const imgUrl = rawImg
+        ? rawImg.startsWith('http')
+          ? rawImg
+          : `${origin.startsWith('https://') ? origin : 'https://warsawduragstore.pl'}${rawImg}`
         : undefined;
 
       if (item.promoEligible) {
@@ -130,7 +143,7 @@ export async function POST(req: NextRequest) {
             currency: 'pln',
             product_data: {
               name: `${item.product.name}${item.variant ? ` (${item.variant})` : ''}`,
-              images: imgUrl ? [imgUrl] : [],
+              images: getSafeImages(imgUrl),
               description: item.product.material || 'Warsaw Durag Store',
             },
             unit_amount: Math.round(item.unitPrice * 100),
@@ -156,7 +169,7 @@ export async function POST(req: NextRequest) {
           currency: 'pln',
           product_data: {
             name: `GRATIS — ${freeUnit.name}${freeUnit.variant ? ` (${freeUnit.variant})` : ''}`,
-            images: freeUnit.image ? [freeUnit.image] : [],
+            images: getSafeImages(freeUnit.image),
             description: 'Promocja Warsaw Durag Store: Kup 2, trzeci gratis!',
           },
           unit_amount: 0,
@@ -183,7 +196,7 @@ export async function POST(req: NextRequest) {
           currency: 'pln',
           product_data: {
             name: `${unit.name}${unit.variant ? ` (${unit.variant})` : ''}`,
-            images: unit.image ? [unit.image] : [],
+            images: getSafeImages(unit.image),
             description: unit.material || 'Warsaw Durag Store — Silk & Satin Durag',
           },
           unit_amount: Math.round(unit.unitPrice * 100),
@@ -240,7 +253,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json(
         {
-          error: 'Brak aktywnego klucza Stripe. Wklej poprawny STRIPE_SECRET_KEY (np. sk_test_...) w pliku wds-next/.env.local.',
+          error: 'Brak aktywnego klucza Stripe. Wklej poprawny STRIPE_SECRET_KEY (np. sk_test_... lub sk_live_...) w pliku wds-next/.env.local.',
         },
         { status: 500 }
       );
@@ -262,10 +275,10 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Create Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      payment_method_types: ['card', 'blik', 'p24'],
+    // Base Stripe Checkout Session config
+    const sessionConfig = {
+      mode: 'payment' as const,
+      locale: 'pl' as const,
       customer_email: customerEmail.trim(),
       line_items: stripeLineItems,
       discounts,
@@ -283,7 +296,27 @@ export async function POST(req: NextRequest) {
       },
       success_url: `${origin}/zamowienie/sukces?session_id={CHECKOUT_SESSION_ID}&order_no=${orderNo}`,
       cancel_url: `${origin}/checkout?canceled=true`,
-    });
+    };
+
+    // Resilient payment methods: try BLIK, P24, Card, fallback to default/card if account didn't enable BLIK
+    let session;
+    try {
+      session = await stripe.checkout.sessions.create({
+        ...sessionConfig,
+        payment_method_types: ['card', 'blik', 'p24'],
+      });
+    } catch (pmErr: any) {
+      console.warn('[Stripe Checkout] Błąd specyficznych typów płatności (np. BLIK/P24 wyłączone w Dashboard), próba domyślnych metod konta:', pmErr?.message);
+      try {
+        session = await stripe.checkout.sessions.create(sessionConfig);
+      } catch (fallbackErr: any) {
+        console.warn('[Stripe Checkout] Ostateczny fallback do samej karty:', fallbackErr?.message);
+        session = await stripe.checkout.sessions.create({
+          ...sessionConfig,
+          payment_method_types: ['card'],
+        });
+      }
+    }
 
     // Save pending order to database with server-verified prices
     const orderPayload = {
