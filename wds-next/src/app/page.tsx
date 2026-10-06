@@ -83,7 +83,7 @@ export default async function HomePage() {
   return (
     <div className="bg-[#0B0B0C] text-[#FAFAF9] min-h-screen selection:bg-[#C8794B] selection:text-[#0B0B0C]">
       {/* Hero Section: Factual, Clean, Real Product Photography */}
-      <section className="relative min-h-[75vh] sm:min-h-[82vh] flex items-center justify-center overflow-hidden border-b border-[#1E1E22]">
+      <section className="hero-section relative min-h-[75vh] sm:min-h-[82vh] flex items-center justify-center overflow-hidden border-b border-[#1E1E22]">
         <HeroVideo poster="/media/wds/wyszol1126.jpg" />
 
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center py-16 sm:py-24">

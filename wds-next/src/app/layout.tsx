@@ -3,6 +3,7 @@ import { Newsreader, Hanken_Grotesk } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { LanguageProvider } from '@/context/LanguageContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
@@ -160,23 +161,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${newsreader.variable} ${hanken.variable}`}>
+    <html lang="pl" suppressHydrationWarning className={`${newsreader.variable} ${hanken.variable}`}>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var p=new URLSearchParams(window.location.search).get('theme');if(p==='light'||p==='dark'){localStorage.setItem('wds_theme',p);}var t=localStorage.getItem('wds_theme');if(t==='light'){document.documentElement.classList.add('light');}else{document.documentElement.classList.remove('light');}}catch(e){}})();`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
         />
       </head>
-      <body className="bg-[#0B0B0C] text-[#FAFAF9] font-sans antialiased selection:bg-[#C8794B] selection:text-[#0B0B0C]">
-        <LanguageProvider>
-          <CartProvider>
-            <Header />
-            <CartDrawer />
-            <main className="min-h-screen">{children}</main>
-            <Footer />
-            <CookieBanner />
-          </CartProvider>
-        </LanguageProvider>
+      <body className="bg-[#0B0B0C] text-[#FAFAF9] font-sans antialiased selection:bg-[#C8794B] selection:text-[#0B0B0C] transition-colors duration-200">
+        <ThemeProvider>
+          <LanguageProvider>
+            <CartProvider>
+              <Header />
+              <CartDrawer />
+              <main className="min-h-screen">{children}</main>
+              <Footer />
+              <CookieBanner />
+            </CartProvider>
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -81,3 +81,228 @@ code, kbd, samp, pre {
   background-color: #C8794B;
   color: #0B0B0C;
 }
+
+/* ========================================================
+   LOGO VISIBILITY (Pure CSS, Instant, Zero Hydration Lag)
+   ======================================================== */
+.light-logo {
+  display: none !important;
+}
+.dark-logo {
+  display: block !important;
+}
+
+html.light .light-logo {
+  display: block !important;
+}
+html.light .dark-logo {
+  display: none !important;
+}
+
+/* ========================================================
+   EDITORIAL LIGHT MODE (High-Fashion Atelier Palette)
+   ======================================================== */
+html.light {
+  background-color: #FAF9F6;
+  color: #141416;
+  color-scheme: light;
+}
+
+html.light body {
+  background-color: #FAF9F6;
+  color: #141416;
+}
+
+html.light ::selection {
+  background-color: #B85C2E;
+  color: #FAF9F6;
+}
+
+/* Canvas & Base backgrounds */
+html.light .bg-\[\#0B0B0C\],
+html.light .bg-\[\#0D0D0B\],
+html.light .bg-\[\#0E0E10\] {
+  background-color: #FAF9F6 !important;
+}
+
+/* Card surfaces & panels (crisp studio white) */
+html.light .bg-\[\#141416\],
+html.light .bg-\[\#111113\] {
+  background-color: #FFFFFF !important;
+}
+
+/* Secondary panels, subtle tabs, pills */
+html.light .bg-\[\#1E1E22\],
+html.light .bg-\[\#1A1A1D\],
+html.light .bg-\[\#1A1A18\],
+html.light .bg-\[\#222220\] {
+  background-color: #F3EFE8 !important;
+}
+
+html.light .bg-\[\#26262A\] {
+  background-color: #EBE5DC !important;
+}
+
+/* Translucent surfaces & headers */
+html.light .bg-\[\#0B0B0C\]\/95,
+html.light .bg-\[\#0B0B0C\]\/90,
+html.light .bg-\[\#0B0B0C\]\/80 {
+  background-color: rgba(250, 249, 246, 0.94) !important;
+}
+
+html.light .bg-\[\#141416\]\/90,
+html.light .bg-\[\#141416\]\/80 {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+}
+
+html.light .bg-black\/80,
+html.light .bg-black\/75 {
+  background-color: rgba(20, 20, 22, 0.55) !important;
+}
+
+/* Borders */
+html.light .border-\[\#1E1E22\],
+html.light .border-\[\#26262A\],
+html.light .border-\[\#222220\],
+html.light .border-\[\#2A2A28\],
+html.light .border-\[\#333330\] {
+  border-color: #E5E0D8 !important;
+}
+
+html.light .border-white\/10,
+html.light .border-white\/15,
+html.light .border-white\/20 {
+  border-color: rgba(20, 20, 22, 0.08) !important;
+}
+
+html.light .divide-\[\#1E1E22\] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #E5E0D8 !important;
+}
+
+/* Typography */
+html.light .text-white,
+html.light .text-\[\#FAFAF9\] {
+  color: #141416 !important;
+}
+
+html.light .text-\[\#ECEAE7\],
+html.light .text-\[\#E0DED9\] {
+  color: #2D2C2A !important;
+}
+
+html.light .text-\[\#A3A09B\],
+html.light .text-gray-400,
+html.light .text-\[\#9E9B95\] {
+  color: #63605A !important;
+}
+
+html.light .text-\[\#787570\],
+html.light .text-gray-500 {
+  color: #8C8880 !important;
+}
+
+/* Accents */
+html.light .text-\[\#C8794B\] {
+  color: #B85C2E !important;
+}
+
+html.light .bg-\[\#C8794B\] {
+  background-color: #B85C2E !important;
+  color: #FFFFFF !important;
+}
+
+html.light .bg-\[\#C8794B\] * {
+  color: #FFFFFF !important;
+}
+
+html.light .bg-\[\#C8794B\]\/10 {
+  background-color: rgba(184, 92, 46, 0.08) !important;
+  color: #141416 !important;
+}
+
+html.light .hover\:bg-\[\#D48B5E\]:hover,
+html.light .hover\:bg-\[\#B86D43\]:hover {
+  background-color: #A24E24 !important;
+}
+
+/* Luxury Contrast Buttons in Light Mode:
+   Pills that were light on black in dark mode become deep ink black in light mode */
+html.light .bg-\[\#ECEAE7\].text-\[\#0B0B0C\],
+html.light .bg-white.text-\[\#0B0B0C\],
+html.light .bg-white.text-black {
+  background-color: #141416 !important;
+  color: #FAF9F6 !important;
+  border-color: #141416 !important;
+}
+
+html.light .bg-\[\#ECEAE7\].text-\[\#0B0B0C\]:hover,
+html.light .bg-white.text-\[\#0B0B0C\]:hover,
+html.light .bg-white.text-black:hover {
+  background-color: #2D2C30 !important;
+  border-color: #2D2C30 !important;
+  color: #FAF9F6 !important;
+}
+
+/* Exception: Hero section over dark video keeps its bright white pill */
+html.light .hero-section .bg-white.text-\[\#0B0B0C\] {
+  background-color: #FFFFFF !important;
+  color: #141416 !important;
+  border-color: #FFFFFF !important;
+}
+html.light .hero-section .bg-white.text-\[\#0B0B0C\]:hover {
+  background-color: #FAF9F6 !important;
+  color: #141416 !important;
+}
+html.light .hero-section h1,
+html.light .hero-section p,
+html.light .hero-section .text-white,
+html.light .hero-section .text-\[\#ECEAE7\] {
+  color: #FFFFFF !important;
+}
+
+/* Hover States */
+html.light .hover\:text-white:hover {
+  color: #000000 !important;
+}
+
+html.light .hover\:bg-\[\#141416\]:hover {
+  background-color: #F4F0E8 !important;
+}
+
+html.light .hover\:bg-\[\#1E1E22\]:hover {
+  background-color: #ECE7DD !important;
+}
+
+html.light .hover\:border-\[\#787570\]:hover {
+  border-color: #8C8880 !important;
+}
+
+html.light .hover\:border-white:hover {
+  border-color: #141416 !important;
+}
+
+/* Inputs, Textareas, Selects */
+html.light input:not([type="checkbox"]):not([type="radio"]),
+html.light select,
+html.light textarea {
+  background-color: #FFFFFF !important;
+  color: #141416 !important;
+  border-color: #D8D3C8 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #9C978E !important;
+}
+
+html.light input:focus,
+html.light select:focus,
+html.light textarea:focus {
+  border-color: #B85C2E !important;
+}
+
+/* Soft luxury shadows */
+html.light .shadow-2xl,
+html.light .shadow-xl {
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04) !important;
+}

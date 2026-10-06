@@ -3,13 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBag, Search, Menu, X, Globe } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Globe, Sun, Moon } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useLanguage, Language } from '@/context/LanguageContext';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function Header() {
   const { cartCount, setIsCartOpen } = useCart();
   const { language, setLanguage, currency, setCurrency } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
@@ -71,14 +73,22 @@ export default function Header() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
-          {/* Brand Logo */}
+          {/* Brand Logo (Instant CSS switch, no hydration flicker) */}
           <Link href="/" className="flex items-center group">
             <Image
               src="/assets/logo_white.png"
               alt="Warsaw Durag Store"
               width={240}
               height={70}
-              className="h-8 sm:h-9 w-auto object-contain transition-opacity duration-200 group-hover:opacity-85"
+              className="h-8 sm:h-9 w-auto object-contain transition-opacity duration-200 group-hover:opacity-85 dark-logo"
+              priority
+            />
+            <Image
+              src="/assets/logo_black.png"
+              alt="Warsaw Durag Store"
+              width={240}
+              height={70}
+              className="h-8 sm:h-9 w-auto object-contain transition-opacity duration-200 group-hover:opacity-85 light-logo"
               priority
             />
           </Link>
@@ -106,7 +116,27 @@ export default function Header() {
           </nav>
 
           {/* Right Controls */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 sm:px-2.5 sm:py-1 border border-[#1E1E22] bg-[#141416] text-[#ECEAE7] hover:border-[#787570] hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 text-[13px] font-medium"
+              title={theme === 'dark' ? 'Przełącz na jasny motyw' : 'Przełącz na ciemny motyw'}
+              aria-label={theme === 'dark' ? 'Przełącz na jasny motyw' : 'Przełącz na ciemny motyw'}
+            >
+              {theme === 'dark' ? (
+                <>
+                  <Sun className="w-4 h-4 text-[#C8794B]" />
+                  <span className="hidden xl:inline text-[12px]">Jasny</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-4 h-4 text-[#C8794B]" />
+                  <span className="hidden xl:inline text-[12px]">Ciemny</span>
+                </>
+              )}
+            </button>
+
             {/* Currency switch */}
             <div className="hidden sm:inline-flex items-center border border-[#1E1E22] text-[13px] font-medium bg-[#141416]">
               <button
@@ -202,19 +232,63 @@ export default function Header() {
           />
           <div className="relative w-full max-w-[320px] bg-[#0B0B0C] text-white h-full shadow-2xl flex flex-col z-10 border-r border-[#1E1E22]">
             <div className="p-4 border-b border-[#1E1E22] flex items-center justify-between">
-              <Image
-                src="/assets/logo_white.png"
-                alt="Warsaw Durag Store"
-                width={160}
-                height={40}
-                className="h-7 w-auto object-contain"
-              />
+              <div className="flex items-center">
+                <Image
+                  src="/assets/logo_white.png"
+                  alt="Warsaw Durag Store"
+                  width={160}
+                  height={40}
+                  className="h-7 w-auto object-contain dark-logo"
+                />
+                <Image
+                  src="/assets/logo_black.png"
+                  alt="Warsaw Durag Store"
+                  width={160}
+                  height={40}
+                  className="h-7 w-auto object-contain light-logo"
+                />
+              </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-1.5 text-gray-400 hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
+            </div>
+
+            {/* Mobile quick controls: Theme, Currency, Language */}
+            <div className="p-3 border-b border-[#1E1E22] bg-[#141416] flex items-center justify-between gap-2">
+              <button
+                onClick={toggleTheme}
+                className="flex items-center gap-1.5 px-2.5 py-1 text-xs border border-[#1E1E22] bg-[#0B0B0C] text-[#ECEAE7]"
+              >
+                {theme === 'dark' ? (
+                  <>
+                    <Sun className="w-3.5 h-3.5 text-[#C8794B]" />
+                    <span>Jasny motyw</span>
+                  </>
+                ) : (
+                  <>
+                    <Moon className="w-3.5 h-3.5 text-[#C8794B]" />
+                    <span>Ciemny motyw</span>
+                  </>
+                )}
+              </button>
+
+              <div className="inline-flex items-center border border-[#1E1E22] text-xs font-medium bg-[#0B0B0C]">
+                <button
+                  onClick={() => setCurrency('PLN')}
+                  className={`px-2 py-1 ${currency === 'PLN' ? 'bg-[#ECEAE7] text-[#0B0B0C] font-semibold' : 'text-[#787570]'}`}
+                >
+                  PLN
+                </button>
+                <button
+                  onClick={() => setCurrency('EUR')}
+                  className={`px-2 py-1 ${currency === 'EUR' ? 'bg-[#ECEAE7] text-[#0B0B0C] font-semibold' : 'text-[#787570]'}`}
+                >
+                  EUR
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
