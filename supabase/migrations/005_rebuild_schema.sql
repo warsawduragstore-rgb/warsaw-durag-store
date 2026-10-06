@@ -258,7 +258,7 @@ INSERT INTO site_settings (key, value, label, category)
 VALUES
   (
     'company_info',
-    '{"name": "Warsaw Durag Store Michał Wyszyński", "nip": "7011275454", "address": "Grójecka 186 lok. 212, 02-390 Warszawa", "email_support": "support@warsawduragstore.pl", "email_finance": "finance@warsawduragstore.pl", "phone": "", "instagram": "@warsawduragstore", "pickup_address": "ul. Włodarzewska 4 i Centrum, po umówieniu", "registered_in": "CEIDG, Rzeczpospolita Polska"}',
+    '{"name": "Warsaw Durag Store Michał Wyszyński", "nip": "7011275454", "address": "Grójecka 186 lok. 212, 02-390 Warszawa", "email_support": "support@warsawduragstore.com", "email_finance": "finance@warsawduragstore.com", "phone": "", "instagram": "@warsawduragstore", "pickup_address": "ul. Włodarzewska 4 i Centrum, po umówieniu", "registered_in": "CEIDG, Rzeczpospolita Polska"}',
     'Oficjalne dane rejestrowe i kontaktowe firmy',
     'general'
   ),

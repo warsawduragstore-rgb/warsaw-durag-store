@@ -25,8 +25,8 @@ Deno.serve(async (req) => {
 
     // Get env variables
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-    const OWNER_EMAIL = Deno.env.get("OWNER_EMAIL") || "contact@warsawduragstore.pl";
-    const FROM_EMAIL = Deno.env.get("FROM_EMAIL") || "sklep@warsawduragstore.pl";
+    const OWNER_EMAIL = Deno.env.get("OWNER_EMAIL") || "contact@warsawduragstore.com";
+    const FROM_EMAIL = Deno.env.get("FROM_EMAIL") || "sklep@warsawduragstore.com";
 
     if (!RESEND_API_KEY) {
       throw new Error("Missing RESEND_API_KEY environment variable");
@@ -210,7 +210,7 @@ Deno.serve(async (req) => {
       </div>
 
       <p style="color: #888; font-size: 12px; line-height: 1.7; text-align: center; margin: 0;">
-        Masz pytania? Napisz na <a href="mailto:contact@warsawduragstore.pl" style="color: #1a1a1a;">contact@warsawduragstore.pl</a>
+        Masz pytania? Napisz na <a href="mailto:contact@warsawduragstore.com" style="color: #1a1a1a;">contact@warsawduragstore.com</a>
       </p>
     </div>
 

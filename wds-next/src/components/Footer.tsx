@@ -87,7 +87,7 @@ export default function Footer() {
               <div className="pt-1.5 border-t border-[#1E1E22] space-y-1">
                 <p className="flex items-center gap-1.5 text-gray-300">
                   <Mail className="w-3.5 h-3.5 text-[#C8794B]" />
-                  <a href="mailto:support@warsawduragstore.pl" className="hover:text-white transition-colors">support@warsawduragstore.pl</a>
+                  <a href="mailto:support@warsawduragstore.com" className="hover:text-white transition-colors">support@warsawduragstore.com</a>
                 </p>
               </div>
             </div>

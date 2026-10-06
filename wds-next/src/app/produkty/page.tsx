@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: 'Katalog Duragów — Warsaw Durag Store',
   description: 'Duragi szyte w Warszawie z jedwabiu, satyny i weluru. Bezodciskowy szew zewnętrzny i długie pasy.',
   alternates: {
-    canonical: 'https://warsawduragstore.pl/produkty',
+    canonical: 'https://warsawduragstore.com/produkty',
   },
 };
 

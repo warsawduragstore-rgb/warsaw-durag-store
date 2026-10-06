@@ -24,7 +24,7 @@ export async function GET(request: Request) {
     const res = await fetch(targetUrl.toString(), {
       headers: {
         'Accept': 'application/json',
-        'User-Agent': 'WarsawDuragStore/1.0 (+https://warsawduragstore.pl)',
+        'User-Agent': 'WarsawDuragStore/1.0 (+https://warsawduragstore.com)',
       },
       next: { revalidate: 300 }, // cache for 5 minutes
     });

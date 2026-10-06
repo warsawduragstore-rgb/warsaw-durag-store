@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
       process.env.NEXT_PUBLIC_BASE_URL ||
       req.headers.get('origin') ||
       req.headers.get('referer')?.replace(/\/$/, '') ||
-      'https://warsawduragstore.pl';
+      'https://warsawduragstore.com';
 
     // Helper: Stripe accepts only publicly accessible HTTPS images
     const getSafeImages = (imgUrl?: string): string[] => {
@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
       const imgUrl = rawImg
         ? rawImg.startsWith('http')
           ? rawImg
-          : `${origin.startsWith('https://') ? origin : 'https://warsawduragstore.pl'}${rawImg}`
+          : `${origin.startsWith('https://') ? origin : 'https://warsawduragstore.com'}${rawImg}`
         : undefined;
 
       if (item.promoEligible) {

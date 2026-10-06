@@ -55,7 +55,7 @@ const PAGES_DATA: Record<string, { title: string; subtitle: string; content: Rea
             Niestety nie mamy jeszcze własnej miejscówki w Warszawie, ale łatwo umówisz się na darmowy odbiór osobisty pod <strong>Włodarzewską 4</strong> na dalszej Ochocie lub w centrum. Dodatkowo nasze produkty znajdziesz w salonie barberskim <strong>Eclipse pod Rondem Waszyngtona</strong>.
           </p>
           <p className="text-xs text-gray-300 pt-2">
-            Instagram: <strong>@WARSAWDURAGSTORE</strong> | Mail: <strong>support@warsawduragstore.pl</strong>, <strong>finance@warsawduragstore.pl</strong>
+            Instagram: <strong>@WARSAWDURAGSTORE</strong> | Mail: <strong>support@warsawduragstore.com</strong>, <strong>finance@warsawduragstore.com</strong>
           </p>
         </div>
       </div>
@@ -85,7 +85,7 @@ const PAGES_DATA: Record<string, { title: string; subtitle: string; content: Rea
             <h3 className="font-serif text-xl text-[#0D0D0B] font-medium">Dane Kontaktowe</h3>
             <div className="space-y-2 text-xs">
               <p><strong>Instagram:</strong> @WARSAWDURAGSTORE</p>
-              <p><strong>E-maile:</strong> support@warsawduragstore.pl, finance@warsawduragstore.pl</p>
+              <p><strong>E-maile:</strong> support@warsawduragstore.com, finance@warsawduragstore.com</p>
               <p><strong>Godziny kontaktu:</strong> Pn–Sob: 9:00 – 20:00</p>
             </div>
             <p className="text-xs text-gray-500">
@@ -195,7 +195,7 @@ const PAGES_DATA: Record<string, { title: string; subtitle: string; content: Rea
 
         <h3 className="font-serif text-xl text-[#0D0D0B] font-medium mt-8">3. Prawo do Zwrotu (14 Dni)</h3>
         <p>
-          Zgodnie z polską ustawą o prawach konsumenta masz prawo odstąpić od umowy sprzedaży w ciągu 14 dni od dnia otrzymania przesyłki bez podawania przyczyny. Zwracany produkt nie powinien nosić śladów użytkowania i powinien posiadać oryginalne metki. W celu zwrotu napisz do nas na adres: <strong>support@warsawduragstore.pl</strong>.
+          Zgodnie z polską ustawą o prawach konsumenta masz prawo odstąpić od umowy sprzedaży w ciągu 14 dni od dnia otrzymania przesyłki bez podawania przyczyny. Zwracany produkt nie powinien nosić śladów użytkowania i powinien posiadać oryginalne metki. W celu zwrotu napisz do nas na adres: <strong>support@warsawduragstore.com</strong>.
         </p>
       </div>
     ),
@@ -260,10 +260,10 @@ const PAGES_DATA: Record<string, { title: string; subtitle: string; content: Rea
         <section className="space-y-3">
           <h3 className="font-serif text-lg text-[#0D0D0B] font-medium">§ 1. Postanowienia Ogólne</h3>
           <p>
-            1. Niniejszy Regulamin określa zasady korzystania ze sklepu internetowego Warsaw Durag Store, dostępnego pod adresem <strong>warsawduragstore.pl</strong>.
+            1. Niniejszy Regulamin określa zasady korzystania ze sklepu internetowego Warsaw Durag Store, dostępnego pod adresem <strong>warsawduragstore.com</strong>.
           </p>
           <p>
-            2. Sklep prowadzony jest przez markę Warsaw Durag Store z siedzibą w Warszawie przy ul. Włodarzewskiej 4, e-mail: <strong>support@warsawduragstore.pl</strong>.
+            2. Sklep prowadzony jest przez markę Warsaw Durag Store z siedzibą w Warszawie przy ul. Włodarzewskiej 4, e-mail: <strong>support@warsawduragstore.com</strong>.
           </p>
           <p>
             3. Sklep prowadzi sprzedaż detaliczną duragów i akcesoriów na terytorium Polski oraz Unii Europejskiej.
@@ -299,7 +299,7 @@ const PAGES_DATA: Record<string, { title: string; subtitle: string; content: Rea
             1. Konsument ma prawo odstąpić od umowy zawartej na odległość w terminie <strong>14 dni</strong> od dnia wejścia w posiadanie towaru, bez podawania przyczyny.
           </p>
           <p>
-            2. Aby skorzystać z prawa do odstąpienia od umowy, należy poinformować Sklep drogą mailową: <strong>support@warsawduragstore.pl</strong>.
+            2. Aby skorzystać z prawa do odstąpienia od umowy, należy poinformować Sklep drogą mailową: <strong>support@warsawduragstore.com</strong>.
           </p>
           <p>
             3. Zwracany towar nie może nosić śladów użytkowania i powinien zostać odesłany w stanie kompletnym. Sklep zwraca wszystkie otrzymane od konsumenta płatności w terminie do 14 dni od otrzymania oświadczenia.
@@ -312,7 +312,7 @@ const PAGES_DATA: Record<string, { title: string; subtitle: string; content: Rea
             1. Sprzedawca odpowiada wobec Klienta za zgodność towaru z umową na zasadach określonych w przepisach Ustawy o prawach konsumenta oraz Kodeksu cywilnego.
           </p>
           <p>
-            2. Reklamacje można zgłaszać na adres e-mail: <strong>support@warsawduragstore.pl</strong>. Reklamacje rozpatrywane są w terminie do 14 dni roboczych.
+            2. Reklamacje można zgłaszać na adres e-mail: <strong>support@warsawduragstore.com</strong>. Reklamacje rozpatrywane są w terminie do 14 dni roboczych.
           </p>
         </section>
       </div>
@@ -327,7 +327,7 @@ const PAGES_DATA: Record<string, { title: string; subtitle: string; content: Rea
         <section className="space-y-3">
           <h3 className="font-serif text-lg text-[#0D0D0B] font-medium">1. Administrator Danych Osobowych</h3>
           <p>
-            Administratorem Twoich danych osobowych jest <strong>Warsaw Durag Store</strong> z siedzibą w Warszawie przy ul. Włodarzewskiej 4. W sprawach związanych z ochroną danych osobowych możesz skontaktować się z nami pod adresem e-mail: <strong>support@warsawduragstore.pl</strong>.
+            Administratorem Twoich danych osobowych jest <strong>Warsaw Durag Store</strong> z siedzibą w Warszawie przy ul. Włodarzewskiej 4. W sprawach związanych z ochroną danych osobowych możesz skontaktować się z nami pod adresem e-mail: <strong>support@warsawduragstore.com</strong>.
           </p>
         </section>
 

@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'warsawduragstore.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'warsawduragstore.pl',
         pathname: '/**',
       },

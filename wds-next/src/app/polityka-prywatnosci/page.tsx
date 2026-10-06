@@ -41,7 +41,7 @@ export default function PolitykaPrywatnosciPage() {
             </p>
             <p>
               W sprawach związanych z ochroną danych osobowych możesz skontaktować się z nami bezpośrednio drogą elektroniczną pod adresem e-mail:{' '}
-              <a href="mailto:support@warsawduragstore.pl" className="text-[#C8794B] underline">support@warsawduragstore.pl</a>.
+              <a href="mailto:support@warsawduragstore.com" className="text-[#C8794B] underline">support@warsawduragstore.com</a>.
             </p>
           </section>
 
@@ -83,7 +83,7 @@ export default function PolitykaPrywatnosciPage() {
             </ul>
             <p className="pt-2">
               Wszelkie wnioski dotyczące realizacji powyższych praw prosimy kierować na adres:{' '}
-              <a href="mailto:support@warsawduragstore.pl" className="text-[#C8794B] underline">support@warsawduragstore.pl</a>.
+              <a href="mailto:support@warsawduragstore.com" className="text-[#C8794B] underline">support@warsawduragstore.com</a>.
             </p>
           </section>
 

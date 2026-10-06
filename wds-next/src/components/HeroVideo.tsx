@@ -59,7 +59,7 @@ export default function HeroVideo({ poster = '/media/wds/wyszol1126.jpg' }: Hero
         }`}
       >
         <source src="/media/wds/hero-video.mp4" type="video/mp4" />
-        <source src="https://warsawduragstore.pl/wp-content/uploads/2025/06/Krotsza-wersja-1.mp4" type="video/mp4" />
+        <source src="https://warsawduragstore.com/wp-content/uploads/2025/06/Krotsza-wersja-1.mp4" type="video/mp4" />
       </video>
 
       {/* Atmospheric Vignette & Grid Gradient Overlay */}

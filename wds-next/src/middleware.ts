@@ -28,9 +28,9 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 2. 301 Redirect secondary domains (e.g., .com or www) to target production domain
-  if (host === 'warsawduragstore.com' || host === 'www.warsawduragstore.com' || host === 'www.warsawduragstore.pl') {
-    url.host = 'warsawduragstore.pl';
+  // 2. 301 Redirect secondary domains (e.g., .pl or www) to target production domain warsawduragstore.com
+  if (host === 'warsawduragstore.pl' || host === 'www.warsawduragstore.pl' || host === 'www.warsawduragstore.com') {
+    url.host = 'warsawduragstore.com';
     url.port = '';
     url.protocol = 'https:';
     return NextResponse.redirect(url, { status: 301 });
@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
   // 3. Add X-Robots-Tag: noindex, nofollow for admin and preview/non-production domains
-  const isMainProductionDomain = host === 'warsaw-durag-store.vercel.app' || host === 'warsawduragstore.pl';
+  const isMainProductionDomain = host === 'warsawduragstore.com' || host === 'warsaw-durag-store.vercel.app';
   const isPreviewDomain = host.includes('vercel.app') && !isMainProductionDomain;
   const isNonProduction = process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production';
   const isAdmin = pathname.startsWith('/admin');

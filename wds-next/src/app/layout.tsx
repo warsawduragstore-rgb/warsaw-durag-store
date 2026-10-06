@@ -116,7 +116,7 @@ const jsonLdOrg = {
       'logo': `${SITE_URL}/assets/logo_black.png`,
       'contactPoint': {
         '@type': 'ContactPoint',
-        'email': 'support@warsawduragstore.pl',
+        'email': 'support@warsawduragstore.com',
         'contactType': 'customer service',
         'availableLanguage': ['Polish', 'English', 'German', 'French', 'Spanish', 'Czech', 'Lithuanian'],
       },
