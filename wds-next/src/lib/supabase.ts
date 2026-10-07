@@ -878,9 +878,10 @@ export async function fetchShippingZones(): Promise<ShippingZone[]> {
 
 export async function fetchVatRates(): Promise<Record<string, number>> {
   const settings = await fetchSiteSettings();
+  // Klient zwolniony z VAT podmiotowo (art. 113 ust. 1 ustawy o VAT) — stawka 0% / zw.
   const defaultRates: Record<string, number> = {
-    PL: 23.0, DE: 19.0, FR: 20.0, IT: 22.0, ES: 21.0, NL: 21.0, BE: 21.0, AT: 20.0,
-    SE: 25.0, DK: 25.0, FI: 25.5, IE: 23.0, PT: 23.0, CZ: 21.0, SK: 23.0, LT: 21.0,
+    PL: 0.0, DE: 0.0, FR: 0.0, IT: 0.0, ES: 0.0, NL: 0.0, BE: 0.0, AT: 0.0,
+    SE: 0.0, DK: 0.0, FI: 0.0, IE: 0.0, PT: 0.0, CZ: 0.0, SK: 0.0, LT: 0.0,
   };
   if (settings.vat_rates) {
     try {
