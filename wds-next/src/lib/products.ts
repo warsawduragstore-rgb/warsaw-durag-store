@@ -143,11 +143,12 @@ export const PRODUCTS: Product[] = [
     "storyDescription": "Warszawa. Stolica polskiego streetwearu, surowa nowoczesność i nieustanny ruch. Głęboka, uniwersalna czerń, która stanowi fundament każdej stylizacji.",
     "images": [
       "/assets/product-photos/durag-warszawa/durag-warszawa_1.jpg",
-      "/assets/product-photos/durag-warszawa/durag-warszawa_2.jpg",
       "/assets/product-photos/durag-warszawa/durag-warszawa_3.jpg",
-      "/assets/product-photos/durag-warszawa/durag-warszawa_4.jpg",
-      "/assets/product-photos/durag-warszawa/durag-warszawa_5.jpg",
-      "/assets/product-photos/durag-warszawa/durag-warszawa_6.jpg"
+      "/assets/product-photos/durag-warszawa/durag-warszawa_7.jpg",
+      "/assets/product-photos/durag-warszawa/durag-warszawa_8.jpg",
+      "/assets/product-photos/durag-warszawa/durag-warszawa_9.jpg",
+      "/assets/product-photos/durag-warszawa/durag-warszawa_10.jpg",
+      "/assets/product-photos/durag-warszawa/durag-warszawa_11.jpg"
     ],
     "colors": [
       {
