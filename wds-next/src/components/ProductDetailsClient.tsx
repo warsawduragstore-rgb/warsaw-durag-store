@@ -20,6 +20,9 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
   const localized = getLocalizedProduct(product, language);
 
   const [selectedImage, setSelectedImage] = useState<string>(product.images[0] || '/assets/durag_silk_black.png');
+  const [selectedVariant, setSelectedVariant] = useState<string | undefined>(
+    product.variants?.[0]?.name || product.colors?.[0]?.name
+  );
   const [quantity, setQuantity] = useState<number>(1);
   const [activeTab, setActiveTab] = useState<'shipping' | 'payments' | 'materials' | 'reviews' | null>(null);
   const [addedMessage, setAddedMessage] = useState(false);
@@ -46,9 +49,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
   }, []);
 
   const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addToCart(product);
-    }
+    addToCart(product, quantity, selectedVariant || undefined);
     setAddedMessage(true);
     setTimeout(() => {
       setAddedMessage(false);
@@ -154,6 +155,42 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
           <div className="text-[14px] text-[#A3A09B] leading-relaxed whitespace-pre-line border-b border-[#1E1E22] pb-4">
             {localized.description}
           </div>
+
+          {/* Variant / Color Picker */}
+          {((product.variants && product.variants.length > 1) || (product.colors && product.colors.length > 1)) && (
+            <div className="space-y-2 border-b border-[#1E1E22] pb-4">
+              <span className="text-xs text-[#787570] block font-medium">
+                {isEn ? 'Select color / variant:' : 'Wybierz kolor / wariant:'}{' '}
+                <span className="text-[#141416] font-semibold">{selectedVariant}</span>
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {(product.variants || product.colors || []).map((v: any, idx: number) => {
+                  const valName = v.name || v.value;
+                  const isSelected = selectedVariant === valName;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedVariant(valName)}
+                      className={`px-3.5 py-2 text-xs font-medium border transition-all cursor-pointer flex items-center gap-2 ${
+                        isSelected
+                          ? 'border-[#141416] bg-[#141416] text-[#FAF9F6]'
+                          : 'border-[#DFDAD1] bg-white text-[#141416] hover:border-[#141416]'
+                      }`}
+                    >
+                      {v.hex && (
+                        <span
+                          className="w-2.5 h-2.5 rounded-full border border-black/20"
+                          style={{ backgroundColor: v.hex }}
+                        />
+                      )}
+                      <span>{valName}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Main Quantity & Add to Cart */}
           <div ref={mainBuyBoxRef} className="pt-2 space-y-3">

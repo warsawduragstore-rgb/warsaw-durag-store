@@ -1,5 +1,5 @@
 import { fetchProducts } from './products-db';
-import { Product, PROMO_GIFT_PRODUCT, PROMO_GIFT_PRODUCT_ID } from './products';
+import { Product, PRODUCTS, getProductById, PROMO_GIFT_PRODUCT, PROMO_GIFT_PRODUCT_ID } from './products';
 import { CartItemRef } from '@/store/useCartStore';
 
 export interface ResolvedCartItem {
@@ -58,7 +58,18 @@ export async function resolveCartServer(
     };
   }
 
-  const allProducts = await fetchProducts();
+  // Load DB products and merge with static PRODUCTS so no item is ever dropped
+  const dbProducts = await fetchProducts().catch(() => []);
+  const allProducts: Product[] = [...PRODUCTS];
+  for (const dbp of dbProducts) {
+    const idx = allProducts.findIndex((p) => p.id === dbp.id);
+    if (idx >= 0) {
+      allProducts[idx] = dbp;
+    } else {
+      allProducts.push(dbp);
+    }
+  }
+
   if (!allProducts.some((p) => p.id === PROMO_GIFT_PRODUCT_ID)) {
     allProducts.push(PROMO_GIFT_PRODUCT);
   }
@@ -70,7 +81,7 @@ export async function resolveCartServer(
 
   for (const itemRef of itemsRef) {
     const qty = Math.max(1, Math.floor(Number(itemRef.qty) || 1));
-    const product = productMap.get(itemRef.productId);
+    const product = productMap.get(itemRef.productId) || getProductById(itemRef.productId);
 
     if (!product || product.visible === false) {
       continue;

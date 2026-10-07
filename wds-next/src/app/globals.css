@@ -93,27 +93,29 @@ code, kbd, samp, pre {
 }
 
 /* ========================================================
-   EDITORIAL LIGHT MODE (High-Fashion Atelier Palette)
+   EDITORIAL LIGHT MODE (Permanent & Universal)
    ======================================================== */
-html.light,
-html {
-  background-color: #FAF9F6;
-  color: #141416;
+:root,
+html,
+html.light {
   color-scheme: light;
-}
-
-html.light body,
-body {
   background-color: #FAF9F6;
   color: #141416;
 }
 
-html.light ::selection {
+body,
+html.light body {
+  background-color: #FAF9F6;
+  color: #141416;
+}
+
+html.light ::selection,
+::selection {
   background-color: #B85C2E;
   color: #FAF9F6;
 }
 
-/* Canvas & Base backgrounds */
+/* Base Canvas & Background Overrides */
 html.light .bg-\[\#0B0B0C\],
 html.light .bg-\[\#0D0D0B\],
 html.light .bg-\[\#0E0E10\],
@@ -129,7 +131,8 @@ html.light .bg-\[\#20201D\],
 html.light .bg-\[\#211E19\],
 html.light .bg-\[\#242421\],
 html.light .bg-\[\#2A2A2E\],
-html.light .bg-\[\#2B2B28\] {
+html.light .bg-\[\#2B2B28\],
+html.light .bg-\[\#FAF9F7\] {
   background-color: #FAF9F6 !important;
 }
 
@@ -141,7 +144,7 @@ html.light .bg-\[\#1A1A18\] {
   background-color: #FFFFFF !important;
 }
 
-/* Secondary panels, subtle tabs, pills */
+/* Secondary subtle panels, pills & tab bars */
 html.light .bg-\[\#1E1E22\],
 html.light .bg-\[\#1A1A1D\],
 html.light .bg-\[\#222220\],
@@ -151,16 +154,16 @@ html.light .bg-\[\#333338\] {
   background-color: #F1EDE5 !important;
 }
 
-/* Translucent surfaces & headers */
+/* Translucent surfaces & header blurs */
 html.light .bg-\[\#0B0B0C\]\/95,
 html.light .bg-\[\#0B0B0C\]\/90,
 html.light .bg-\[\#0B0B0C\]\/80 {
-  background-color: rgba(250, 249, 246, 0.94) !important;
+  background-color: rgba(250, 249, 246, 0.95) !important;
 }
 
 html.light .bg-\[\#141416\]\/90,
 html.light .bg-\[\#141416\]\/80 {
-  background-color: rgba(255, 255, 255, 0.94) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
 }
 
 html.light .bg-black\/80,
@@ -168,7 +171,7 @@ html.light .bg-black\/75 {
   background-color: rgba(20, 20, 22, 0.55) !important;
 }
 
-/* Borders */
+/* Architectural 1px Borders */
 html.light .border-\[\#1E1E22\],
 html.light .border-\[\#26262A\],
 html.light .border-\[\#222220\],
@@ -179,8 +182,7 @@ html.light .border-\[\#333338\],
 html.light .border-\[\#262624\],
 html.light .border-\[\#242421\],
 html.light .border-\[\#3A3A36\],
-html.light .border-\[\#5A3333\],
-html.light .border-\[\#2A4D30\],
+html.light .border-\[\#0D0D0B\],
 html.light .border-white\/10,
 html.light .border-white\/15,
 html.light .border-white\/20,
@@ -222,14 +224,11 @@ html.light .text-gray-500 {
   color: #6B6760 !important;
 }
 
-/* Warm, Accessible Accents for Light Mode */
+/* Warm, High-Contrast Accents */
 html.light .text-\[\#C8794B\],
-html.light .text-\[\#D9A87E\] {
-  color: #A85A28 !important;
-}
-
+html.light .text-\[\#D9A87E\],
 html.light .text-\[\#C6A87D\] {
-  color: #8C6A35 !important;
+  color: #A85A28 !important;
 }
 
 html.light .text-\[\#FFD100\] {
@@ -249,7 +248,9 @@ html.light .text-\[\#FF9E9E\] {
 /* Primary Terracotta Action Buttons */
 html.light .bg-\[\#C8794B\],
 html.light button.bg-\[\#C8794B\],
-html.light a.bg-\[\#C8794B\] {
+html.light a.bg-\[\#C8794B\],
+html.light button.bg-\[\#B85C2E\],
+html.light a.bg-\[\#B85C2E\] {
   background-color: #B85C2E !important;
   color: #FFFFFF !important;
   border-color: #B85C2E !important;
@@ -257,7 +258,9 @@ html.light a.bg-\[\#C8794B\] {
 
 html.light .bg-\[\#C8794B\] *,
 html.light button.bg-\[\#C8794B\] *,
-html.light a.bg-\[\#C8794B\] * {
+html.light a.bg-\[\#C8794B\] *,
+html.light button.bg-\[\#B85C2E\] *,
+html.light a.bg-\[\#B85C2E\] * {
   color: #FFFFFF !important;
 }
 
@@ -274,53 +277,96 @@ html.light .hover\:bg-\[\#c99569\]:hover {
   background-color: #A24E24 !important;
 }
 
-/* Primary Dark Buttons (Black Luxury Inks) */
+/* Luxury Dark Atelier Buttons: Always dark ink with pure white text */
+html.light button.bg-\[\#141416\],
+html.light a.bg-\[\#141416\],
+html.light button.bg-\[\#0B0B0C\],
+html.light a.bg-\[\#0B0B0C\],
+html.light button.bg-\[\#0D0D0B\],
+html.light a.bg-\[\#0D0D0B\],
+html.light button.bg-black,
+html.light a.bg-black,
 html.light .bg-\[\#ECEAE7\].text-\[\#0B0B0C\],
-html.light .bg-white.text-\[\#0B0B0C\],
-html.light .bg-white.text-black,
-html.light button.bg-\[\#0B0B0C\].text-white,
-html.light a.bg-\[\#0B0B0C\].text-white,
-html.light button.bg-\[\#0D0D0B\].text-white,
-html.light a.bg-\[\#0D0D0B\].text-white {
+html.light button.bg-\[\#ECEAE7\],
+html.light a.bg-\[\#ECEAE7\] {
   background-color: #141416 !important;
   color: #FAF9F6 !important;
   border-color: #141416 !important;
 }
 
+html.light button.bg-\[\#141416\] *,
+html.light a.bg-\[\#141416\] *,
+html.light button.bg-\[\#0B0B0C\] *,
+html.light a.bg-\[\#0B0B0C\] *,
+html.light button.bg-\[\#0D0D0B\] *,
+html.light a.bg-\[\#0D0D0B\] *,
+html.light button.bg-black *,
+html.light a.bg-black *,
 html.light .bg-\[\#ECEAE7\].text-\[\#0B0B0C\] *,
-html.light .bg-white.text-\[\#0B0B0C\] *,
-html.light .bg-white.text-black *,
-html.light button.bg-\[\#0B0B0C\].text-white *,
-html.light a.bg-\[\#0B0B0C\].text-white *,
-html.light button.bg-\[\#0D0D0B\].text-white *,
-html.light a.bg-\[\#0D0D0B\].text-white * {
+html.light button.bg-\[\#ECEAE7\] *,
+html.light a.bg-\[\#ECEAE7\] * {
   color: #FAF9F6 !important;
 }
 
+html.light button.bg-\[\#141416\]:hover,
+html.light a.bg-\[\#141416\]:hover,
+html.light button.bg-\[\#0B0B0C\]:hover,
+html.light a.bg-\[\#0B0B0C\]:hover,
+html.light button.bg-black:hover,
+html.light a.bg-black:hover,
 html.light .bg-\[\#ECEAE7\].text-\[\#0B0B0C\]:hover,
-html.light .bg-white.text-\[\#0B0B0C\]:hover,
-html.light .bg-white.text-black:hover,
-html.light button.bg-\[\#0B0B0C\].text-white:hover,
-html.light a.bg-\[\#0B0B0C\].text-white:hover {
+html.light button.bg-\[\#ECEAE7\]:hover,
+html.light a.bg-\[\#ECEAE7\]:hover {
   background-color: #2D2C30 !important;
   border-color: #2D2C30 !important;
   color: #FAF9F6 !important;
 }
 
-/* Exception: Hero section over dark video keeps its bright white pill and white copy */
-html.light .hero-section .bg-white.text-\[\#0B0B0C\] {
+/* SPECIAL: Hero section with dark video overlay - KEEP CRISP WHITE TEXT */
+html.light .hero-section {
+  background-color: #0D0D0B !important;
+  color: #FFFFFF !important;
+}
+
+html.light .hero-section h1,
+html.light .hero-section p,
+html.light .hero-section span,
+html.light .hero-section div {
+  color: #FFFFFF !important;
+}
+
+html.light .hero-section a {
   background-color: #FFFFFF !important;
   color: #141416 !important;
   border-color: #FFFFFF !important;
 }
-html.light .hero-section .bg-white.text-\[\#0B0B0C\]:hover {
+
+html.light .hero-section a * {
+  color: #141416 !important;
+}
+
+html.light .hero-section a:hover {
   background-color: #FAF9F6 !important;
   color: #141416 !important;
 }
-html.light .hero-section h1,
-html.light .hero-section p,
-html.light .hero-section .text-white,
-html.light .hero-section .text-\[\#ECEAE7\] {
+
+html.light .hero-section button {
+  color: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+html.light .hero-section button * {
+  color: #FFFFFF !important;
+}
+
+/* Image photo overlay captions and scrims (always pure white on dark scrim) */
+html.light [class*="bg-\[\#0D0D0B\]/"],
+html.light [class*="bg-black/"] {
+  color: #FFFFFF !important;
+}
+
+html.light [class*="bg-\[\#0D0D0B\]/"] *,
+html.light [class*="bg-black/"] * {
   color: #FFFFFF !important;
 }
 
@@ -345,24 +391,25 @@ html.light .hover\:border-white:hover {
   border-color: #141416 !important;
 }
 
-/* Inputs, Textareas, Selects */
+/* Form inputs, textareas, selects */
 html.light input:not([type="checkbox"]):not([type="radio"]),
 html.light select,
 html.light textarea {
   background-color: #FFFFFF !important;
   color: #141416 !important;
-  border-color: #D4CFC6 !important;
+  border-color: #DFDAD1 !important;
 }
 
 html.light input::placeholder,
 html.light textarea::placeholder {
-  color: #8A857D !important;
+  color: #787570 !important;
 }
 
 html.light input:focus,
 html.light select:focus,
 html.light textarea:focus {
   border-color: #B85C2E !important;
+  outline: none !important;
 }
 
 /* Soft luxury shadows */
