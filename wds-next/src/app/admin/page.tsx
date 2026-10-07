@@ -604,7 +604,7 @@ export default function AdminPage() {
   const courierOrdersCount = ordersList.filter((o) => o.delivery_method === 'courier').length;
 
   return (
-    <div className="min-h-screen bg-[#0D0D0B] text-[#EAE6DF] flex flex-col font-sans selection:bg-[#C6A87D] selection:text-black">
+    <div className="admin-view min-h-screen bg-[#FAF9F6] text-[#141416] flex flex-col font-sans selection:bg-[#B85C2E] selection:text-white">
       
       {/* Top Bar / Brand Atelier Header */}
       <header className="border-b border-[#242421] bg-[#141412] px-6 py-4 flex items-center justify-between sticky top-0 z-40">
@@ -2097,8 +2097,8 @@ export default function AdminPage() {
       {/* PRODUCT EDIT / ADD MODAL */}
       {/* ==================================================================== */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white border border-[#D5D0C7] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl my-8 text-[#141416]">
+        <div className="admin-modal-backdrop fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="admin-modal-card bg-white border border-[#D5D0C7] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl my-8 text-[#141416]">
             <div className="p-5 border-b border-[#E5E0D6] flex items-center justify-between sticky top-0 bg-[#FAF9F6] z-10 rounded-t-2xl">
               <h3 className="font-serif text-lg text-[#141416] font-bold">
                 {editingProductId ? `Edycja Produktu #${editingProductId}` : 'Nowy Produkt w Katalogu'}
@@ -2287,8 +2287,8 @@ export default function AdminPage() {
       {/* ORDER DETAILS & FULL PURCHASE LOG MODAL */}
       {/* ==================================================================== */}
       {selectedOrderForModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white border border-[#D5D0C7] rounded-2xl w-full max-w-3xl max-h-[92vh] overflow-y-auto shadow-2xl my-6 flex flex-col text-[#141416]">
+        <div className="admin-modal-backdrop fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="admin-modal-card bg-white border border-[#D5D0C7] rounded-2xl w-full max-w-3xl max-h-[92vh] overflow-y-auto shadow-2xl my-6 flex flex-col text-[#141416]">
             
             {/* Modal Header */}
             <div className="p-5 border-b border-[#E5E0D6] flex items-center justify-between sticky top-0 bg-[#FAF9F6] z-10 rounded-t-2xl">

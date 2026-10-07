@@ -359,15 +359,108 @@ html.light .hero-section button * {
   color: #FFFFFF !important;
 }
 
-/* Image photo overlay captions and scrims (always pure white on dark scrim) */
-html.light [class*="bg-\[\#0D0D0B\]/"],
-html.light [class*="bg-black/"] {
+/* Scoped image photo overlay captions (white text on dark scrim only when explicitly scoped) */
+html.light .photo-scrim,
+html.light .photo-scrim * {
   color: #FFFFFF !important;
 }
 
-html.light [class*="bg-\[\#0D0D0B\]/"] *,
-html.light [class*="bg-black/"] * {
+/* ========================================================
+   ADMIN ATELIER CMS — HIGH-CONTRAST LIGHT PALETTE
+   ======================================================== */
+.admin-view {
+  background-color: #FAF9F6 !important;
+  color: #141416 !important;
+}
+
+.admin-view h1,
+.admin-view h2,
+.admin-view h3,
+.admin-view h4,
+.admin-view strong,
+.admin-view th {
+  color: #141416 !important;
+}
+
+.admin-view p,
+.admin-view td {
+  color: #2D2C2A !important;
+}
+
+.admin-view label {
+  color: #1C1A17 !important;
+  font-weight: 600 !important;
+}
+
+.admin-view .text-\[\#8C8D94\],
+.admin-view .text-gray-400,
+.admin-view .text-gray-500 {
+  color: #55524E !important;
+}
+
+.admin-view input,
+.admin-view select,
+.admin-view textarea {
+  color: #141416 !important;
+  background-color: #FFFFFF !important;
+  border-color: #C5BFB5 !important;
+}
+
+.admin-view input::placeholder,
+.admin-view textarea::placeholder {
+  color: #8C8D94 !important;
+}
+
+.admin-view [class*="bg-[#141412]"],
+.admin-view [class*="bg-[#161614]"],
+.admin-view [class*="bg-[#1A1A18]"],
+.admin-view [class*="bg-[#181816]"] {
+  background-color: #FFFFFF !important;
+  border-color: #DFDAD1 !important;
+}
+
+/* Modals inside Admin */
+.admin-modal-backdrop {
+  background-color: rgba(20, 20, 22, 0.65) !important;
+}
+
+.admin-modal-card {
+  background-color: #FFFFFF !important;
+  color: #141416 !important;
+}
+
+.admin-modal-card h1,
+.admin-modal-card h2,
+.admin-modal-card h3,
+.admin-modal-card h4 {
+  color: #141416 !important;
+}
+
+.admin-modal-card label {
+  color: #1C1A17 !important;
+  font-weight: 600 !important;
+}
+
+.admin-modal-card input,
+.admin-modal-card select,
+.admin-modal-card textarea {
+  color: #141416 !important;
+  background-color: #FFFFFF !important;
+  border-color: #C5BFB5 !important;
+}
+
+.admin-modal-card input::placeholder,
+.admin-modal-card textarea::placeholder {
+  color: #8C8D94 !important;
+}
+
+.admin-modal-card button[type="submit"] {
   color: #FFFFFF !important;
+  background-color: #B85C2E !important;
+}
+
+.admin-modal-card button[type="button"] {
+  color: #141416 !important;
 }
 
 /* Hover States */
