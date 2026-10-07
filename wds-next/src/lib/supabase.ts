@@ -240,6 +240,24 @@ export async function fetchServerProductsByCategory(category: string): Promise<P
 
 // Client/Admin: Save product to Supabase
 export async function saveProductToSupabase(product: Partial<Product>): Promise<{ success: boolean; data?: any; error?: string }> {
+  // If in browser, use the secure server route with admin session & service_role key
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/admin/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, error: json.error || `HTTP ${res.status}` };
+      }
+      return { success: true, data: json.data };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Błąd połączenia z serwerem' };
+    }
+  }
+
   const client = getSupabaseBrowserClient();
   if (!client) {
     return { success: false, error: 'Supabase client is not configured' };
@@ -283,6 +301,23 @@ export async function saveProductToSupabase(product: Partial<Product>): Promise<
 
 // Client/Admin: Delete product
 export async function deleteProductFromSupabase(id: number): Promise<{ success: boolean; error?: string }> {
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/admin/products', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, error: json.error || `HTTP ${res.status}` };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Błąd połączenia z serwerem' };
+    }
+  }
+
   const client = getSupabaseBrowserClient();
   if (!client) {
     return { success: false, error: 'Supabase client is not configured' };
@@ -372,6 +407,20 @@ export async function createOrderInSupabase(order: Omit<SupabaseOrder, 'id' | 'c
 }
 
 export async function fetchOrdersFromSupabase(): Promise<SupabaseOrder[]> {
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/admin/orders');
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          return json.data;
+        }
+      }
+    } catch {
+      // fallback
+    }
+  }
+
   const client = getSupabaseBrowserClient();
   if (!client) return [];
 
@@ -392,6 +441,23 @@ export async function updateOrderStatusInSupabase(
   orderId: number,
   status: SupabaseOrder['status']
 ): Promise<{ success: boolean; error?: string }> {
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/admin/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: orderId, status }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, error: json.error || `HTTP ${res.status}` };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message };
+    }
+  }
+
   const client = getSupabaseBrowserClient();
   if (!client) return { success: false, error: 'Brak klienta Supabase' };
 
@@ -412,6 +478,23 @@ export async function updateOrderDetailsInSupabase(
   orderId: number,
   updates: Partial<SupabaseOrder>
 ): Promise<{ success: boolean; error?: string }> {
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/admin/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: orderId, ...updates }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, error: json.error || `HTTP ${res.status}` };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message };
+    }
+  }
+
   const client = getSupabaseBrowserClient();
   if (!client) return { success: false, error: 'Brak klienta Supabase' };
 
@@ -503,6 +586,20 @@ export interface SupabasePromoCode {
 }
 
 export async function fetchPromoCodesFromSupabase(): Promise<SupabasePromoCode[]> {
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/admin/promos');
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          return json.data;
+        }
+      }
+    } catch {
+      // fallback
+    }
+  }
+
   const client = getSupabaseBrowserClient();
   if (!client) return [];
 
@@ -524,6 +621,23 @@ export async function savePromoCodeToSupabase(
   rate: number,
   active = true
 ): Promise<{ success: boolean; error?: string }> {
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/admin/promos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, rate, active }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, error: json.error || `HTTP ${res.status}` };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message };
+    }
+  }
+
   const client = getSupabaseBrowserClient();
   if (!client) return { success: false, error: 'Brak klienta Supabase' };
 
@@ -543,6 +657,23 @@ export async function togglePromoCodeStatus(
   id: number,
   active: boolean
 ): Promise<{ success: boolean; error?: string }> {
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/admin/promos', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, active }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, error: json.error || `HTTP ${res.status}` };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message };
+    }
+  }
+
   const client = getSupabaseBrowserClient();
   if (!client) return { success: false, error: 'Brak klienta Supabase' };
 
@@ -692,6 +823,23 @@ export async function saveSiteSetting(
   label = '',
   category = 'general'
 ): Promise<{ success: boolean; error?: string }> {
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value, label, category }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, error: json.error || `HTTP ${res.status}` };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message };
+    }
+  }
+
   const client = getSupabaseBrowserClient();
   if (!client) return { success: false, error: 'Brak klienta Supabase' };
 

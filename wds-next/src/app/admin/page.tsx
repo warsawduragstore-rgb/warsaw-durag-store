@@ -132,10 +132,26 @@ export default function AdminPage() {
 
     try {
       // 1. Products
-      const { data: prodData } = await client
-        .from('products')
-        .select('*')
-        .order('id', { ascending: true });
+      let prodData: any[] | null = null;
+      try {
+        const adminRes = await fetch('/api/admin/products');
+        if (adminRes.ok) {
+          const json = await adminRes.json();
+          if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+            prodData = json.data;
+          }
+        }
+      } catch {
+        // fallback to client below
+      }
+
+      if (!prodData) {
+        const { data } = await client
+          .from('products')
+          .select('*')
+          .order('id', { ascending: true });
+        prodData = data;
+      }
 
       if (prodData && prodData.length > 0) {
         setProductsList(prodData.map(mapSupabaseRowToProduct));
