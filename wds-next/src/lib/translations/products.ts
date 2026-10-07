@@ -199,6 +199,40 @@ export const PRODUCT_TRANSLATIONS_EN: Record<string, ProductLocalization> = {
   },
 };
 
+const PRODUCT_ID_TO_SLUG: Record<number, string> = {
+  1160: 'durag-milanowek',
+  1161: 'durag-warszawa',
+  1335: 'durag-wroclaw',
+  1365: 'durag-lodz',
+  1366: 'durag-bialystok',
+  1367: 'durag-zyrardow',
+  1368: 'durag-stalowa-wola',
+  1369: 'durag-krakow',
+  1370: 'durag-bielsko-biala',
+  1371: 'durag-radom',
+  1372: 'durag-katowice',
+  1373: 'durag-zabrze',
+  1374: 'durag-kielce',
+  1375: 'durag-rzeszow',
+  1376: 'durag-elblag',
+  1377: 'durag-legionowo',
+  1378: 'durag-chalupy',
+  1379: 'durag-tychy',
+  1380: 'durag-sosnowiec',
+  1381: 'durag-wloclawek',
+  1382: 'durag-gdansk',
+  1383: 'durag-szczecin',
+  1384: 'durag-poznan',
+  1385: 'durag-bydgoszcz',
+  1386: 'durag-czestochowa',
+  1387: 'durag-olsztyn',
+  1388: 'durag-biala-podlaska',
+  13691: 'durag-barbie',
+  2001: 'wave-brush-premium',
+  2002: 'wave-cap-classic',
+  2003: 'wave-elixir-bottle',
+};
+
 /**
  * Returns a localized copy of product fields based on active language
  */
@@ -207,7 +241,26 @@ export function getLocalizedProduct(product: Product, language: 'PL' | 'EN'): Pr
     return product;
   }
 
-  const enTranslation = PRODUCT_TRANSLATIONS_EN[product.slug];
+  // 1. Direct slug match
+  let enTranslation = PRODUCT_TRANSLATIONS_EN[product.slug];
+
+  // 2. Lookup by product ID
+  if (!enTranslation && product.id && PRODUCT_ID_TO_SLUG[product.id]) {
+    const slugFromId = PRODUCT_ID_TO_SLUG[product.id];
+    enTranslation = PRODUCT_TRANSLATIONS_EN[slugFromId];
+  }
+
+  // 3. Prefix or fuzzy match on slug
+  if (!enTranslation && product.slug) {
+    const slugLower = product.slug.toLowerCase();
+    const foundKey = Object.keys(PRODUCT_TRANSLATIONS_EN).find(
+      (k) => slugLower.startsWith(k) || k.startsWith(slugLower)
+    );
+    if (foundKey) {
+      enTranslation = PRODUCT_TRANSLATIONS_EN[foundKey];
+    }
+  }
+
   if (enTranslation) {
     return {
       ...product,
@@ -242,10 +295,22 @@ export function getLocalizedProduct(product: Product, language: 'PL' | 'EN'): Pr
       ? 'Accessories'
       : 'Seasonal';
 
+  const fallbackDescription =
+    product.category === 'silk'
+      ? 'Crafted from pure natural 19 Momme mulberry silk. Luxuriously smooth, frictionless, and designed to protect hair hydration and 360 wave definition.'
+      : product.category === 'velvet'
+      ? 'Heavyweight luxury velvet with deep compression. Handcrafted in Warsaw with flat outer seams and 100 cm straps.'
+      : product.category === 'satin'
+      ? 'Ultra-smooth high-density satin durag handcrafted in Warsaw. Features exterior flat seams and 100 cm straps.'
+      : product.category === 'accessories'
+      ? 'Premium wave routine accessory. Handcrafted for optimal 360 wave formation and compression.'
+      : 'Handcrafted seasonal fabric durag sewn in Warsaw with seamless exterior stitching and 100 cm straps.';
+
   return {
     ...product,
     name: product.nameEn || product.name,
     categoryLabel: fallbackCategoryLabel,
     material: fallbackMaterial,
+    description: fallbackDescription,
   };
 }

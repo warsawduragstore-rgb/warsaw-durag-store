@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { DEFAULT_SITE_SETTINGS, fetchSiteSettings } from '@/lib/supabase';
 
 export type Language = 'PL' | 'EN';
 
@@ -257,6 +258,8 @@ interface LanguageContextType {
   formatPrice: (pricePln: number, priceEur?: number) => string;
   t: Translations;
   isEn: boolean;
+  siteSettings: Record<string, string>;
+  getSetting: (key: string, fallback?: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -264,6 +267,50 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('PL');
   const [currency, setCurrencyState] = useState<'PLN' | 'EUR'>('PLN');
+  const [siteSettings, setSiteSettings] = useState<Record<string, string>>(DEFAULT_SITE_SETTINGS);
+
+  useEffect(() => {
+    // 1. Initial cached settings
+    try {
+      const cached = localStorage.getItem('wds_site_settings');
+      if (cached) {
+        setSiteSettings((prev) => ({ ...prev, ...JSON.parse(cached) }));
+      }
+    } catch {
+      // ignore
+    }
+
+    // 2. Fetch fresh settings from Supabase
+    fetchSiteSettings().then((remote) => {
+      if (remote && Object.keys(remote).length > 0) {
+        setSiteSettings((prev) => ({ ...prev, ...remote }));
+        try {
+          localStorage.setItem('wds_site_settings', JSON.stringify(remote));
+        } catch {
+          // ignore
+        }
+      }
+    });
+
+    // 3. Listen for CMS updates from Admin
+    const handleSettingsUpdate = () => {
+      try {
+        const cached = localStorage.getItem('wds_site_settings');
+        if (cached) {
+          setSiteSettings((prev) => ({ ...prev, ...JSON.parse(cached) }));
+        }
+      } catch {
+        // ignore
+      }
+    };
+    window.addEventListener('wds_settings_updated', handleSettingsUpdate);
+    window.addEventListener('storage', handleSettingsUpdate);
+
+    return () => {
+      window.removeEventListener('wds_settings_updated', handleSettingsUpdate);
+      window.removeEventListener('storage', handleSettingsUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     try {
@@ -340,11 +387,68 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }).format(pricePln);
   };
 
-  const t = TRANSLATIONS[language] || TRANSLATIONS.PL;
+  const baseT = TRANSLATIONS[language] || TRANSLATIONS.PL;
   const isEn = language === 'EN';
 
+  const getSetting = (key: string, fallback: string = ''): string => {
+    return siteSettings[key] || fallback;
+  };
+
+  // Dynamically overlay CMS settings on top of default translations
+  const t: Translations = {
+    ...baseT,
+    announcement: isEn
+      ? (siteSettings.announcement_bar_en || siteSettings.announcement_bar || baseT.announcement)
+      : (siteSettings.announcement_bar || baseT.announcement),
+    heroTitle: isEn
+      ? (siteSettings.hero_title_en || baseT.heroTitle)
+      : (siteSettings.hero_title || baseT.heroTitle),
+    heroDesc: isEn
+      ? (siteSettings.hero_subtitle_en || baseT.heroDesc)
+      : (siteSettings.hero_subtitle || baseT.heroDesc),
+    heroCta: isEn
+      ? (siteSettings.hero_cta_text_en || baseT.heroCta)
+      : (siteSettings.hero_cta_text || baseT.heroCta),
+    promoStripTitle: isEn
+      ? (siteSettings.promo_strip_title_en || baseT.promoStripTitle)
+      : (siteSettings.promo_strip_title || baseT.promoStripTitle),
+    promoStripDesc: isEn
+      ? (siteSettings.promo_strip_desc_en || baseT.promoStripDesc)
+      : (siteSettings.promo_strip_desc || baseT.promoStripDesc),
+    promoStripCta: isEn
+      ? (siteSettings.promo_strip_cta_en || baseT.promoStripCta)
+      : (siteSettings.promo_strip_cta || baseT.promoStripCta),
+    bestsellersTitle: isEn
+      ? (siteSettings.bestsellers_title_en || baseT.bestsellersTitle)
+      : (siteSettings.bestsellers_title || baseT.bestsellersTitle),
+    chooseFabricTitle: isEn
+      ? (siteSettings.choose_fabric_title_en || baseT.chooseFabricTitle)
+      : (siteSettings.choose_fabric_title || baseT.chooseFabricTitle),
+    chooseFabricDesc: isEn
+      ? (siteSettings.choose_fabric_desc_en || baseT.chooseFabricDesc)
+      : (siteSettings.choose_fabric_desc || baseT.chooseFabricDesc),
+    trustFacts: [
+      isEn ? (siteSettings.trust_fact_1_en || baseT.trustFacts[0]) : (siteSettings.trust_fact_1 || baseT.trustFacts[0]),
+      isEn ? (siteSettings.trust_fact_2_en || baseT.trustFacts[1]) : (siteSettings.trust_fact_2 || baseT.trustFacts[1]),
+      isEn ? (siteSettings.trust_fact_3_en || baseT.trustFacts[2]) : (siteSettings.trust_fact_3 || baseT.trustFacts[2]),
+      isEn ? (siteSettings.trust_fact_4_en || baseT.trustFacts[3]) : (siteSettings.trust_fact_4 || baseT.trustFacts[3]),
+    ],
+  };
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, currency, setCurrency, formatPrice, t, isEn }}>
+    <LanguageContext.Provider
+      value={{
+        language,
+        setLanguage,
+        currency,
+        setCurrency,
+        formatPrice,
+        t,
+        isEn,
+        siteSettings,
+        getSetting,
+      }}
+    >
       {children}
     </LanguageContext.Provider>
   );

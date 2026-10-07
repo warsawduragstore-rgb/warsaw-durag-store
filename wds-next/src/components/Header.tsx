@@ -40,7 +40,7 @@ export default function Header() {
   }, [mobileMenuOpen]);
 
   const categories = [
-    { href: '/kolekcja/silk', label: t.navSilk },
+    { href: '/produkt/durag-milanowek', label: t.navSilk },
     { href: '/kolekcja/satin', label: t.navSatin },
     { href: '/kolekcja/velvet', label: t.navVelvet },
     { href: '/kolekcja/all', label: t.navAll },
@@ -86,7 +86,7 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-7 text-[14px] font-medium text-[#ECEAE7] tracking-[0.02em]">
-            <Link href="/kolekcja/silk" className="hover:text-white transition-colors">
+            <Link href="/produkt/durag-milanowek" className="hover:text-white transition-colors">
               {t.navSilk}
             </Link>
             <Link href="/kolekcja/satin" className="hover:text-white transition-colors">

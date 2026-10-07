@@ -14,7 +14,7 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('dark');
+  const [theme, setThemeState] = useState<Theme>('light');
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -41,10 +41,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
           document.documentElement.classList.remove('light');
         }
       } else {
-        // Default is dark
-        if (document.documentElement.classList.contains('light')) {
-          setThemeState('light');
-        }
+        // Default is light mode
+        setThemeState('light');
+        document.documentElement.classList.add('light');
       }
     } catch {
       // ignore localStorage errors (e.g. private mode)

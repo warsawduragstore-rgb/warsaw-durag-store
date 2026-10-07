@@ -99,6 +99,18 @@ export const metadata: Metadata = {
     description: 'Ręcznie szyte duragi z jedwabiu morwowego 19 Momme i aksamitu. Darmowa dostawa w Polsce.',
     images: [`${SITE_URL}/assets/logo_black.png`],
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: ['/favicon.ico'],
+  },
 };
 
 const jsonLdOrg = {
@@ -156,11 +168,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" suppressHydrationWarning className={`${newsreader.variable} ${hanken.variable}`}>
+    <html lang="pl" suppressHydrationWarning className={`${newsreader.variable} ${hanken.variable} light`}>
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/icon.png" sizes="32x32" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var p=new URLSearchParams(window.location.search).get('theme');if(p==='light'||p==='dark'){localStorage.setItem('wds_theme',p);}var t=localStorage.getItem('wds_theme');if(t==='light'){document.documentElement.classList.add('light');}else{document.documentElement.classList.remove('light');}}catch(e){}})();`,
+            __html: `(function(){try{var p=new URLSearchParams(window.location.search).get('theme');if(p==='light'||p==='dark'){localStorage.setItem('wds_theme',p);}var t=localStorage.getItem('wds_theme');if(t==='dark'){document.documentElement.classList.remove('light');}else{document.documentElement.classList.add('light');}}catch(e){}})();`,
           }}
         />
         <script

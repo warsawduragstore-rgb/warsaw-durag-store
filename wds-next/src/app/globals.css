@@ -121,26 +121,39 @@ html.light ::selection {
 /* Canvas & Base backgrounds */
 html.light .bg-\[\#0B0B0C\],
 html.light .bg-\[\#0D0D0B\],
-html.light .bg-\[\#0E0E10\] {
+html.light .bg-\[\#0E0E10\],
+html.light .bg-\[\#090908\],
+html.light .bg-\[\#11110F\],
+html.light .bg-\[\#141412\],
+html.light .bg-\[\#161614\],
+html.light .bg-\[\#171715\],
+html.light .bg-\[\#191917\],
+html.light .bg-\[\#1C1C1A\],
+html.light .bg-\[\#1F1F1D\],
+html.light .bg-\[\#20201D\],
+html.light .bg-\[\#211E19\],
+html.light .bg-\[\#242421\],
+html.light .bg-\[\#2A2A2E\],
+html.light .bg-\[\#2B2B28\] {
   background-color: #FAF9F6 !important;
 }
 
 /* Card surfaces & panels (crisp studio white) */
 html.light .bg-\[\#141416\],
-html.light .bg-\[\#111113\] {
+html.light .bg-\[\#111113\],
+html.light .bg-\[\#1A1A1B\],
+html.light .bg-\[\#1A1A18\] {
   background-color: #FFFFFF !important;
 }
 
 /* Secondary panels, subtle tabs, pills */
 html.light .bg-\[\#1E1E22\],
 html.light .bg-\[\#1A1A1D\],
-html.light .bg-\[\#1A1A18\],
-html.light .bg-\[\#222220\] {
+html.light .bg-\[\#222220\],
+html.light .bg-\[\#26262A\],
+html.light .bg-\[\#333330\],
+html.light .bg-\[\#333338\] {
   background-color: #F3EFE8 !important;
-}
-
-html.light .bg-\[\#26262A\] {
-  background-color: #EBE5DC !important;
 }
 
 /* Translucent surfaces & headers */
@@ -165,18 +178,21 @@ html.light .border-\[\#1E1E22\],
 html.light .border-\[\#26262A\],
 html.light .border-\[\#222220\],
 html.light .border-\[\#2A2A28\],
-html.light .border-\[\#333330\] {
-  border-color: #E5E0D8 !important;
-}
-
+html.light .border-\[\#2B2B28\],
+html.light .border-\[\#333330\],
+html.light .border-\[\#333338\],
+html.light .border-\[\#262624\],
 html.light .border-white\/10,
 html.light .border-white\/15,
-html.light .border-white\/20 {
-  border-color: rgba(20, 20, 22, 0.08) !important;
+html.light .border-white\/20,
+html.light .border-white\/5 {
+  border-color: #E2DDD5 !important;
 }
 
-html.light .divide-\[\#1E1E22\] > :not([hidden]) ~ :not([hidden]) {
-  border-color: #E5E0D8 !important;
+html.light .divide-\[\#1E1E22\] > :not([hidden]) ~ :not([hidden]),
+html.light .divide-white\/5 > :not([hidden]) ~ :not([hidden]),
+html.light .divide-white\/10 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #E2DDD5 !important;
 }
 
 /* Typography */
@@ -192,13 +208,15 @@ html.light .text-\[\#E0DED9\] {
 
 html.light .text-\[\#A3A09B\],
 html.light .text-gray-400,
+html.light .text-gray-300,
+html.light .text-gray-200,
 html.light .text-\[\#9E9B95\] {
-  color: #63605A !important;
+  color: #55524D !important;
 }
 
 html.light .text-\[\#787570\],
 html.light .text-gray-500 {
-  color: #8C8880 !important;
+  color: #7A766F !important;
 }
 
 /* Accents */

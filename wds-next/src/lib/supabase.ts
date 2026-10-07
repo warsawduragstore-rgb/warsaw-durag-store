@@ -345,6 +345,8 @@ export interface SupabaseOrder {
   payment_status?: 'pending' | 'paid' | 'failed' | 'refunded';
   payment_method?: string | null;
   status: 'pending_payment' | 'new' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  tracking_number?: string | null;
+  notes?: string | null;
 }
 
 export async function createOrderInSupabase(order: Omit<SupabaseOrder, 'id' | 'created_at'>): Promise<{ success: boolean; orderNo?: string; error?: string }> {
@@ -403,6 +405,26 @@ export async function updateOrderStatusInSupabase(
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err?.message || 'Błąd aktualizacji' };
+  }
+}
+
+export async function updateOrderDetailsInSupabase(
+  orderId: number,
+  updates: Partial<SupabaseOrder>
+): Promise<{ success: boolean; error?: string }> {
+  const client = getSupabaseBrowserClient();
+  if (!client) return { success: false, error: 'Brak klienta Supabase' };
+
+  try {
+    const { error } = await client
+      .from('orders')
+      .update(updates)
+      .eq('id', orderId);
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Błąd aktualizacji zamówienia' };
   }
 }
 
@@ -550,13 +572,93 @@ export interface SiteSetting {
 }
 
 export const DEFAULT_SITE_SETTINGS: Record<string, string> = {
-  announcement_bar: 'Darmowa wysyłka InPost od 150 PLN • Ręczne pakowanie w Warszawie • Wysyłka w 24h',
-  hero_badge: 'Atelier Warszawa 2026 • 100% Mulberry Silk',
-  hero_title: 'Ręcznie Szyte Duragi Jedwabne i Satynowe',
-  hero_subtitle: 'Stworzone z myślą o perfekcyjnych falach 360 waves i ochronie włosów. Prawdziwy jedwab morwowy 19 Momme, szyty w warszawskim atelier.',
-  contact_email: 'kontakt@warsawduragstore.com',
-  contact_phone: '+48 500 000 000',
+  // Top Announcement Bar
+  announcement_bar: 'Darmowa dostawa w Polsce · Kup 2, trzeci durag za 1 zł',
+  announcement_bar_en: 'Free shipping in Poland · Buy 2, get 3rd random durag for €0.25',
+
+  // Hero Section
+  hero_badge: 'Atelier Warszawa · 100% Mulberry Silk',
+  hero_title: 'Jedyne duragi szyte w Polsce',
+  hero_title_en: 'The Only Durags Handcrafted in Poland',
+  hero_subtitle: 'Ręcznie szyte w Warszawie z prawdziwego jedwabiu morwowego 19 Momme, satyny i weluru. Bezodciskowy szew zewnętrzny i pasy 100 cm.',
+  hero_subtitle_en: 'Handcrafted in Warsaw from genuine 19 Momme mulberry silk, satin and velvet. Seamless exterior stitching and 100 cm straps.',
+  hero_cta_text: 'Odkryj kolekcję',
+  hero_cta_text_en: 'Explore collection',
+  hero_cta_link: '#kolekcja',
+
+  // Promo Strip (2+1)
+  promo_strip_title: 'Kup 2 duragi, trzeci losowy otrzymasz za 1 zł',
+  promo_strip_title_en: 'Buy 2 durags, get a 3rd surprise durag for €0.25',
+  promo_strip_desc: 'Wybierz dowolne dwa duragi do koszyka. Trzeci losowy model zostanie automatycznie dodany za 1 zł przy kasie.',
+  promo_strip_desc_en: 'Add any two durags to your cart. The 3rd surprise model will be automatically discounted at checkout.',
+  promo_strip_cta: 'Wybierz duragi',
+  promo_strip_cta_en: 'Choose durags',
+
+  // Section Headers
+  bestsellers_title: 'Bestsellery pracowni',
+  bestsellers_title_en: 'Atelier Bestsellers',
+  choose_fabric_title: 'Wybierz materiał',
+  choose_fabric_title_en: 'Choose your fabric',
+  choose_fabric_desc: 'Jedwab morwowy, satyna o wysokim połysku, mięsisty welur oraz tkaniny sezonowe.',
+  choose_fabric_desc_en: 'Pure mulberry silk, high-glide satin, heavyweight velvet, and seasonal weaves.',
+
+  // About Section & Founders
+  about_title: 'O nas i naszej pracowni',
+  about_title_en: 'About Us & Our Workshop',
+  about_description: 'Warsaw Durag Store powstał w 2020 roku w Warszawie przez braci bliźniaków. Duragi szyjemy ręcznie z naturalnego jedwabiu morwowego, satyny i weluru, z autorskim zewnętrznym bezodciskowym szwem i pasami o długości 100 cm.',
+  about_description_en: 'Warsaw Durag Store was founded in 2020 in Warsaw by twin brothers. We craft durags by hand using genuine mulberry silk, satin and velvet, featuring seamless exterior stitching and 100 cm straps.',
+  about_pickup_info: 'Odbiór osobisty w Warszawie po wcześniejszym umówieniu (ul. Włodarzewska 4, Ochota).',
+  about_pickup_info_en: 'Local pickup available in Warsaw by prior appointment at ul. Włodarzewska 4.',
+  about_image_url: '/assets/founders.jpg',
+
+  // Contact & Socials
+  contact_email: 'support@warsawduragstore.com',
+  contact_phone: '+48 797 786 024',
   instagram_handle: '@warsawduragstore',
+
+  // Trust Facts
+  trust_fact_1: 'Wysyłka z Warszawy w 1–2 dni robocze',
+  trust_fact_1_en: 'Dispatched from Warsaw in 1–2 business days',
+  trust_fact_2: 'Darmowa dostawa w Polsce',
+  trust_fact_2_en: 'Free shipping across Poland',
+  trust_fact_3: '14 dni na zwrot',
+  trust_fact_3_en: '14-day return window',
+  trust_fact_4: 'Odbiór osobisty w Warszawie po umówieniu',
+  trust_fact_4_en: 'Warsaw pickup by appointment',
+
+  // FAQs
+  faq_items: JSON.stringify([
+    {
+      q_pl: 'Kiedy paczka zostanie wysłana?',
+      q_en: 'When will my order ship?',
+      a_pl: 'Wysyłka z Warszawy w 1–2 dni robocze. Wszystkie przesyłki do Paczkomatów InPost i kurierem na terenie Polski są darmowe.',
+      a_en: 'Orders are dispatched from Warsaw within 1–2 business days. Standard shipping across Poland is completely free via InPost Paczkomat or courier.'
+    },
+    {
+      q_pl: 'Jak działa promocja: kup 2, trzeci losowy durag za 1 zł?',
+      q_en: 'How does the "Buy 2, get 3rd for 1 PLN" offer work?',
+      a_pl: 'Wybierz dowolne dwa duragi do koszyka. Trzeci losowy model zostanie automatycznie dodany za 1 zł przy kasie.',
+      a_en: 'Add any two durags to your cart. The third random durag is automatically discounted to 1 PLN / €0.25 at checkout.'
+    },
+    {
+      q_pl: 'Czym charakteryzuje się jedwab morwowy 19 Momme?',
+      q_en: 'What is special about 19 Momme Mulberry Silk?',
+      a_pl: 'Model Milanówek wykonany jest w 100% z naturalnego jedwabiu morwowego o gramaturze 19 Momme. Gładka struktura chroni włosy przed łamaniem i redukuje puszenie.',
+      a_en: 'The Milanówek model is crafted from 100% natural 19 Momme mulberry silk. Its ultra-smooth structure protects hair from mechanical breakage, retains hydration and maintains 360 wave definition.'
+    },
+    {
+      q_pl: 'Czy durag zostawia odciski na czole?',
+      q_en: 'Will the durag leave forehead lines or marks?',
+      a_pl: 'Nie. Wszystkie duragi szyjemy z autorskim zewnętrznym szwem i szerokimi pasami o długości 100 cm, co eliminuje odciski po całej nocy.',
+      a_en: 'No. All our durags are designed with an exterior flat seam and extra-wide 100 cm straps to eliminate marks even after an entire night of sleep.'
+    },
+    {
+      q_pl: 'Gdzie możliwy jest odbiór osobisty w Warszawie?',
+      q_en: 'Is local pickup available in Warsaw?',
+      a_pl: 'Odbiór osobisty w Warszawie po umówieniu przy ul. Włodarzewskiej 4 na Ochocie.',
+      a_en: 'Yes, local pickup is available in Warsaw by prior appointment at ul. Włodarzewska 4 (Ochota).'
+    }
+  ])
 };
 
 export async function fetchSiteSettings(): Promise<Record<string, string>> {

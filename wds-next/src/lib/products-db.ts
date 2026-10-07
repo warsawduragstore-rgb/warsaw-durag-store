@@ -27,8 +27,9 @@ export function slugify(text: string): string {
 export function normalizeProduct(row: Record<string, unknown>): Product {
   const id = Number(row.id) || 0;
 
-  // Slug determination
-  let slug = (row.slug as string) || '';
+  // Slug determination (align with canonical PRODUCTS to preserve translation matching)
+  const matchedCanonical = PRODUCTS.find((p) => p.id === id || p.name === row.name);
+  let slug = (row.slug as string) || (matchedCanonical?.slug) || '';
   if (!slug) {
     slug = slugify((row.name as string) || `produkt-${id}`);
   }
@@ -240,7 +241,15 @@ export async function fetchProductBySlug(slug: string): Promise<Product | undefi
   }
 
   const allProducts = rawData.map(normalizeProduct);
-  return allProducts.find((p) => p.slug === normalizedSlug);
+  const found = allProducts.find(
+    (p) =>
+      p.slug === normalizedSlug ||
+      p.slug === slugify(normalizedSlug) ||
+      p.slug.replace(/-\d+$/, '') === normalizedSlug
+  );
+  if (found) return found;
+
+  return PRODUCTS.find((p) => p.slug === normalizedSlug);
 }
 
 /**

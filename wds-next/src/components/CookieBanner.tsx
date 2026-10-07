@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ShieldCheck, X } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function CookieBanner() {
+  const { isEn } = useLanguage();
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -42,7 +44,7 @@ export default function CookieBanner() {
   return (
     <div
       role="region"
-      aria-label="Prywatność i cookies"
+      aria-label={isEn ? 'Privacy and cookies' : 'Prywatność i cookies'}
       className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-50 bg-[#0D0D0B] text-white border border-[#262624] p-5 rounded-2xl shadow-2xl animate-fade-in"
     >
       <div className="flex items-start gap-3">
@@ -51,33 +53,35 @@ export default function CookieBanner() {
         </div>
         <div className="flex-1 space-y-2">
           <h4 className="font-serif text-base font-medium text-white">
-            Prywatność i pliki cookies
+            {isEn ? 'Privacy & Cookies' : 'Prywatność i pliki cookies'}
           </h4>
           <p className="text-xs text-gray-400 leading-relaxed">
-            Używamy niezbędnych plików cookies do działania koszyka oraz opcjonalnych narzędzi analitycznych. Dowiedz się więcej w naszej{' '}
+            {isEn
+              ? 'We use essential cookies for cart operations and optional analytics. Learn more in our '
+              : 'Używamy niezbędnych plików cookies do działania koszyka oraz opcjonalnych narzędzi analitycznych. Dowiedz się więcej w naszej '}
             <Link href="/polityka-prywatnosci" className="underline text-gray-300 hover:text-[#C8794B]">
-              Polityce prywatności
+              {isEn ? 'Privacy Policy' : 'Polityce prywatności'}
             </Link>.
           </p>
           <div className="flex items-center gap-2 pt-1">
             <button
               onClick={handleAccept}
-              className="px-4 py-2 bg-[#C8794B] text-black font-semibold text-xs rounded-lg hover:bg-[#d98b5d] transition-colors"
+              className="px-4 py-2 bg-[#C8794B] text-black font-semibold text-xs rounded-lg hover:bg-[#d98b5d] transition-colors cursor-pointer"
             >
-              Akceptuję
+              {isEn ? 'Accept' : 'Akceptuję'}
             </button>
             <button
               onClick={handleDecline}
-              className="px-3 py-2 text-xs text-gray-400 hover:text-white transition-colors"
+              className="px-3 py-2 text-xs text-gray-400 hover:text-white transition-colors cursor-pointer"
             >
-              Tylko niezbędne
+              {isEn ? 'Essential only' : 'Tylko niezbędne'}
             </button>
           </div>
         </div>
         <button
           onClick={handleDecline}
-          className="text-gray-500 hover:text-gray-300 p-1"
-          aria-label="Zamknij powiadomienie"
+          className="text-gray-500 hover:text-gray-300 p-1 cursor-pointer"
+          aria-label={isEn ? 'Close notice' : 'Zamknij powiadomienie'}
         >
           <X className="w-4 h-4" />
         </button>
