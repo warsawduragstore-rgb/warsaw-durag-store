@@ -176,7 +176,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var p=new URLSearchParams(window.location.search).get('theme');if(p==='light'||p==='dark'){localStorage.setItem('wds_theme',p);}var t=localStorage.getItem('wds_theme');if(t==='dark'){document.documentElement.classList.remove('light');}else{document.documentElement.classList.add('light');}}catch(e){}})();`,
+            __html: `(function(){try{localStorage.removeItem('wds_theme');document.documentElement.classList.add('light');}catch(e){}})();`,
           }}
         />
         <script
@@ -184,7 +184,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
         />
       </head>
-      <body className="bg-[#0B0B0C] text-[#FAFAF9] font-sans antialiased selection:bg-[#C8794B] selection:text-[#0B0B0C] transition-colors duration-200">
+      <body className="bg-[#FAF9F6] text-[#141416] font-sans antialiased selection:bg-[#B85C2E] selection:text-[#FAF9F6] transition-colors duration-200">
         <ThemeProvider>
           <LanguageProvider>
             <CartProvider>

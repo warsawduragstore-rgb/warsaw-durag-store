@@ -51,6 +51,7 @@ export interface Product {
   createdAt?: string;
   updatedAt?: string;
   visible?: boolean;
+  isPromoGift?: boolean;
 }
 
 export const CATEGORY_DESCRIPTIONS: Record<string, string> = {
@@ -60,6 +61,28 @@ export const CATEGORY_DESCRIPTIONS: Record<string, string> = {
   velvet: "Mięsisty, luksusowy welur o głębokiej strukturze i eleganckim wyglądzie.",
   seasonal: "Wyjątkowe tkaniny takie jak cupro, len i krepa satynowa dopasowane do zmieniających się pór roku.",
   accessories: "Szczotki wave brush z włosia dzika, wave capy i niezbędne akcesoria do pielęgnacji fal 360 waves."
+};
+
+export const PROMO_GIFT_PRODUCT_ID = 999;
+
+export const PROMO_GIFT_PRODUCT: Product = {
+  id: PROMO_GIFT_PRODUCT_ID,
+  slug: "losowy-durag-promocja",
+  name: "Losowy Durag (Promocja 2+1)",
+  nameEn: "Surprise Durag (2+1 Promo)",
+  price: 1,
+  priceEur: 0.25,
+  compareAtPrice: 89,
+  category: "silk",
+  categoryLabel: "Promocja 2+1",
+  material: "Losowo wybrany: Jedwab morwowy / Welur / Satyna",
+  description: "Trzeci losowy durag dodawany automatycznie w ramach oficjalnej promocji 2+1 za 1 zł. Zostanie starannie wybrany z kolekcji przez naszą pracownię w Warszawie.",
+  images: ["/assets/product-photos/durag-milanowek/durag-milanowek_1.jpg"],
+  stock: 9999,
+  promoEligible: false,
+  promoGiftPool: false,
+  visible: true,
+  isPromoGift: true,
 };
 
 export const PRODUCTS: Product[] = [
@@ -1105,7 +1128,13 @@ export function getAllProducts(): Product[] {
 }
 
 export function getProductBySlug(slug: string): Product | undefined {
+  if (slug === PROMO_GIFT_PRODUCT.slug) return PROMO_GIFT_PRODUCT;
   return PRODUCTS.find(p => p.slug === slug);
+}
+
+export function getProductById(id: number): Product | undefined {
+  if (id === PROMO_GIFT_PRODUCT_ID) return PROMO_GIFT_PRODUCT;
+  return PRODUCTS.find(p => p.id === id);
 }
 
 export function getProductsByCategory(category: string): Product[] {

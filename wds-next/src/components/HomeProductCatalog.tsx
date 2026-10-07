@@ -22,10 +22,14 @@ export default function HomeProductCatalog({ initialProducts }: HomeProductCatal
     { key: 'accessories', label: t.catAccessories },
   ];
 
+  const catalogProducts = useMemo(() => {
+    return initialProducts.filter((p) => p.id !== 999 && !p.isPromoGift);
+  }, [initialProducts]);
+
   const filteredProducts = useMemo(() => {
-    if (selectedCategory === 'all') return initialProducts;
-    return initialProducts.filter((p) => p.category === selectedCategory);
-  }, [selectedCategory, initialProducts]);
+    if (selectedCategory === 'all') return catalogProducts;
+    return catalogProducts.filter((p) => p.category === selectedCategory);
+  }, [selectedCategory, catalogProducts]);
 
   return (
     <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6" id="kolekcja">
@@ -41,8 +45,8 @@ export default function HomeProductCatalog({ initialProducts }: HomeProductCatal
         {categories.map((cat) => {
           const count =
             cat.key === 'all'
-              ? initialProducts.length
-              : initialProducts.filter((p) => p.category === cat.key).length;
+              ? catalogProducts.length
+              : catalogProducts.filter((p) => p.category === cat.key).length;
 
           const isActive = selectedCategory === cat.key;
 

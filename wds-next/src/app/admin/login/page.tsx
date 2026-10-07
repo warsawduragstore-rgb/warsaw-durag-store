@@ -59,7 +59,15 @@ export default function AdminLoginPage() {
               alt="Warsaw Durag Store"
               width={200}
               height={60}
-              className="h-10 w-auto object-contain"
+              className="h-10 w-auto object-contain dark-logo"
+              priority
+            />
+            <Image
+              src="/assets/logo_black.png"
+              alt="Warsaw Durag Store"
+              width={200}
+              height={60}
+              className="h-10 w-auto object-contain light-logo"
               priority
             />
           </Link>

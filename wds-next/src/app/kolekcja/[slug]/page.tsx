@@ -141,7 +141,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   };
 
   return (
-    <div className="bg-[#0B0B0C] text-[#FAFAF9] min-h-screen">
+    <div className="bg-[#FAF9F6] text-[#141416] min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
@@ -165,9 +165,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {products
+              .filter((p) => p.id !== 999 && !p.isPromoGift)
+              .map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
           </div>
         )}
       </section>

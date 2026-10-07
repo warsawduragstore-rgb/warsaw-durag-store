@@ -1,5 +1,5 @@
 import { fetchProducts } from './products-db';
-import { Product } from './products';
+import { Product, PROMO_GIFT_PRODUCT, PROMO_GIFT_PRODUCT_ID } from './products';
 import { CartItemRef } from '@/store/useCartStore';
 
 export interface ResolvedCartItem {
@@ -36,7 +36,7 @@ const STATIC_PROMO_CODES: Record<string, number> = {
 
 /**
  * Resolves raw cart references ({ productId, variant, qty }) using the official database products,
- * computing server-side subtotal, the "Kup 2, trzeci gratis" promotion, and promo codes.
+ * computing server-side subtotal, the "Kup 2, trzeci durag za 1 zł" promotion, and promo codes.
  */
 export async function resolveCartServer(
   itemsRef: CartItemRef[],
@@ -59,14 +59,14 @@ export async function resolveCartServer(
   }
 
   const allProducts = await fetchProducts();
+  if (!allProducts.some((p) => p.id === PROMO_GIFT_PRODUCT_ID)) {
+    allProducts.push(PROMO_GIFT_PRODUCT);
+  }
   const productMap = new Map<number, Product>(allProducts.map((p) => [p.id, p]));
 
   const resolvedItems: ResolvedCartItem[] = [];
   let subtotal = 0;
   let totalItemCount = 0;
-
-  // Flattened list of individual units that are promo eligible to pick the cheapest ones for free
-  const eligibleUnits: Array<{ productId: number; unitPrice: number; name: string }> = [];
 
   for (const itemRef of itemsRef) {
     const qty = Math.max(1, Math.floor(Number(itemRef.qty) || 1));
@@ -87,11 +87,16 @@ export async function resolveCartServer(
       }
     }
 
+    const isPromoGift = itemRef.productId === PROMO_GIFT_PRODUCT_ID;
+    if (isPromoGift) {
+      unitPrice = 1.0;
+    }
+
     const totalPrice = unitPrice * qty;
     subtotal += totalPrice;
     totalItemCount += qty;
 
-    const isEligible = Boolean(product.promoEligible ?? (product.category !== 'accessories'));
+    const isEligible = !isPromoGift && Boolean(product.promoEligible ?? (product.category !== 'accessories'));
 
     resolvedItems.push({
       productId: itemRef.productId,
@@ -102,32 +107,52 @@ export async function resolveCartServer(
       totalPrice,
       promoEligible: isEligible,
     });
+  }
 
-    if (isEligible) {
-      for (let i = 0; i < qty; i++) {
-        eligibleUnits.push({
-          productId: product.id,
-          unitPrice,
-          name: product.name,
-        });
-      }
+  // --- Promocja 2+1: Kup 2 duragi, trzeci losowy za 1 zł ---
+  // Dla każdych 2 sztuk regularnych duragów, klient otrzymuje 1 losowy durag za 1 zł
+  const regularEligibleCount = resolvedItems
+    .filter((i) => i.productId !== PROMO_GIFT_PRODUCT_ID && i.promoEligible)
+    .reduce((sum, i) => sum + i.qty, 0);
+
+  const targetGiftQty = Math.floor(regularEligibleCount / 2);
+  const existingGiftIdx = resolvedItems.findIndex((i) => i.productId === PROMO_GIFT_PRODUCT_ID);
+
+  if (targetGiftQty > 0) {
+    const giftProduct = productMap.get(PROMO_GIFT_PRODUCT_ID) || PROMO_GIFT_PRODUCT;
+    const giftUnitPrice = 1.0;
+    const giftTotalPrice = giftUnitPrice * targetGiftQty;
+
+    if (existingGiftIdx >= 0) {
+      // Skoryguj do właściwej ilości i ceny
+      subtotal -= resolvedItems[existingGiftIdx].totalPrice;
+      totalItemCount -= resolvedItems[existingGiftIdx].qty;
+
+      resolvedItems[existingGiftIdx].qty = targetGiftQty;
+      resolvedItems[existingGiftIdx].unitPrice = giftUnitPrice;
+      resolvedItems[existingGiftIdx].totalPrice = giftTotalPrice;
+
+      subtotal += giftTotalPrice;
+      totalItemCount += targetGiftQty;
+    } else {
+      // Samoczynnie dodaj produkt promocyjny za 1 zł
+      resolvedItems.push({
+        productId: PROMO_GIFT_PRODUCT_ID,
+        qty: targetGiftQty,
+        product: giftProduct,
+        unitPrice: giftUnitPrice,
+        totalPrice: giftTotalPrice,
+        promoEligible: false,
+      });
+      subtotal += giftTotalPrice;
+      totalItemCount += targetGiftQty;
     }
+  } else if (existingGiftIdx >= 0) {
+    // Usuń produkt promocyjny, jeśli w koszyku jest mniej niż 2 regularne duragi
+    subtotal -= resolvedItems[existingGiftIdx].totalPrice;
+    totalItemCount -= resolvedItems[existingGiftIdx].qty;
+    resolvedItems.splice(existingGiftIdx, 1);
   }
-
-  // --- Promocja: "Kup 2, trzeci gratis" ---
-  // Dla każdych 3 sztuk produktów kwalifikujących się, najtańsza z nich jest w 100% darmowa (0 zł)
-  const promoEligibleCount = eligibleUnits.length;
-  const freeItemsCount = Math.floor(promoEligibleCount / 3);
-  let freeItemsDiscount = 0;
-
-  if (freeItemsCount > 0) {
-    // Posortuj jednostki od najtańszej do najdroższej
-    eligibleUnits.sort((a, b) => a.unitPrice - b.unitPrice);
-    const freeUnits = eligibleUnits.slice(0, freeItemsCount);
-    freeItemsDiscount = freeUnits.reduce((acc, u) => acc + u.unitPrice, 0);
-  }
-
-  const subtotalAfterBogo = Math.max(0, subtotal - freeItemsDiscount);
 
   // --- Kod rabatowy ---
   let cleanPromoCode: string | null = null;
@@ -137,7 +162,7 @@ export async function resolveCartServer(
     const candidate = promoCodeInput.trim().toUpperCase();
     if (STATIC_PROMO_CODES[candidate]) {
       cleanPromoCode = candidate;
-      promoDiscount = Math.round(subtotalAfterBogo * STATIC_PROMO_CODES[candidate] * 100) / 100;
+      promoDiscount = Math.round(subtotal * STATIC_PROMO_CODES[candidate] * 100) / 100;
     } else {
       // Możliwość weryfikacji w Supabase
       try {
@@ -153,7 +178,7 @@ export async function resolveCartServer(
 
           if (data && data.rate) {
             cleanPromoCode = candidate;
-            promoDiscount = Math.round(subtotalAfterBogo * Number(data.rate) * 100) / 100;
+            promoDiscount = Math.round(subtotal * Number(data.rate) * 100) / 100;
           }
         }
       } catch {
@@ -164,15 +189,15 @@ export async function resolveCartServer(
 
   // Darmowa dostawa w Polsce na zamówienia
   const shippingCost = 0;
-  const finalTotal = Math.max(0, subtotalAfterBogo - promoDiscount + shippingCost);
+  const finalTotal = Math.max(0, subtotal - promoDiscount + shippingCost);
 
   return {
     items: resolvedItems,
     itemCount: totalItemCount,
     subtotal: Math.round(subtotal * 100) / 100,
-    promoEligibleCount,
-    freeItemsCount,
-    freeItemsDiscount: Math.round(freeItemsDiscount * 100) / 100,
+    promoEligibleCount: regularEligibleCount,
+    freeItemsCount: targetGiftQty,
+    freeItemsDiscount: 0,
     promoCode: cleanPromoCode,
     promoDiscount: Math.round(promoDiscount * 100) / 100,
     total: Math.round(finalTotal * 100) / 100,

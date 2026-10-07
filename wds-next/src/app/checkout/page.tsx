@@ -456,13 +456,25 @@ export default function CheckoutPage() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-white truncate">{localizedProd.name}</p>
+                        <p className="font-medium text-white truncate flex items-center gap-1.5">
+                          {localizedProd.name}
+                          {item.product.id === 999 && (
+                            <span className="text-[10px] bg-[#B85C2E]/15 text-[#B85C2E] border border-[#B85C2E]/30 px-1.5 py-0.2 font-semibold">
+                              PROMO 2+1
+                            </span>
+                          )}
+                        </p>
                         <p className="text-xs text-[#A3A09B]">
                           {isEn ? 'Qty: ' : 'Ilość: '}{item.quantity} {item.variant ? `(${item.variant})` : ''}
                         </p>
                       </div>
                       <div className="text-white text-right font-semibold tabular-nums">
                         {formatPrice(item.unitPrice * item.quantity, item.product.priceEur ? item.product.priceEur * item.quantity : undefined)}
+                        {item.product.id === 999 && (
+                          <span className="block text-[10px] text-[#787570] line-through">
+                            {formatPrice(89 * item.quantity)}
+                          </span>
+                        )}
                       </div>
                     </div>
                   );

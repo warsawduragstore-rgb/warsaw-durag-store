@@ -36,9 +36,11 @@ export default function HomeBestsellersSection({
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
-        {bestsellers.map((product, idx) => (
-          <ProductCard key={product.id} product={product} priority={idx < 2} />
-        ))}
+        {bestsellers
+          .filter((p) => p.id !== 999 && !p.isPromoGift)
+          .map((product, idx) => (
+            <ProductCard key={product.id} product={product} priority={idx < 2} />
+          ))}
       </div>
     </section>
   );

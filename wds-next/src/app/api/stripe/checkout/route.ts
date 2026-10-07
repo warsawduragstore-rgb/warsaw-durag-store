@@ -153,34 +153,11 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Sort eligible units by price ascending to award the cheapest ones for free
-    eligibleUnits.sort((a, b) => a.unitPrice - b.unitPrice);
-
-    const freeUnitsCount = resolvedCart.freeItemsCount;
-    const freeUnits = eligibleUnits.slice(0, freeUnitsCount);
-    const paidUnits = eligibleUnits.slice(freeUnitsCount);
-
     const stripeLineItems: any[] = [...nonEligibleLineItems];
 
-    // Add free items with unit_amount: 0 and label GRATIS
-    for (const freeUnit of freeUnits) {
-      stripeLineItems.push({
-        price_data: {
-          currency: 'pln',
-          product_data: {
-            name: `GRATIS — ${freeUnit.name}${freeUnit.variant ? ` (${freeUnit.variant})` : ''}`,
-            images: getSafeImages(freeUnit.image),
-            description: 'Promocja Warsaw Durag Store: Kup 2, trzeci gratis!',
-          },
-          unit_amount: 0,
-        },
-        quantity: 1,
-      });
-    }
-
-    // Group remaining paid units by (productId + variant + unitPrice)
+    // Group paid eligible units by (productId + variant + unitPrice)
     const paidMap = new Map<string, { unit: typeof eligibleUnits[0]; count: number }>();
-    for (const unit of paidUnits) {
+    for (const unit of eligibleUnits) {
       const key = `${unit.productId}_${unit.variant || ''}_${unit.unitPrice}`;
       const existing = paidMap.get(key);
       if (existing) {

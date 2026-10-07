@@ -62,9 +62,11 @@ export function ProductRelatedSection({ relatedProducts }: RelatedProps) {
           {isEn ? 'Recommended Durags' : 'Polecane produkty'}
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-          {relatedProducts.map((rel) => (
-            <ProductCard key={rel.id} product={rel} />
-          ))}
+          {relatedProducts
+            .filter((p) => p.id !== 999 && !p.isPromoGift)
+            .map((rel) => (
+              <ProductCard key={rel.id} product={rel} />
+            ))}
         </div>
       </div>
     </section>

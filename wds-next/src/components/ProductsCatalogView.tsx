@@ -140,13 +140,15 @@ export default function ProductsCatalogView({
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {products.map((product, idx) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                priority={idx < 4}
-              />
-            ))}
+            {products
+              .filter((p) => p.id !== 999 && !p.isPromoGift)
+              .map((product, idx) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  priority={idx < 4}
+                />
+              ))}
           </div>
         )}
 

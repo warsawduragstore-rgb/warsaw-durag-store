@@ -28,8 +28,8 @@ export default function CartDrawer() {
   if (!isCartOpen) return null;
 
   // Calculate progress towards next 1 zł durag in 2+1 promotion
-  const eligibleCount = cart.filter((i) => i.promoEligible).reduce((s, i) => s + i.quantity, 0);
-  const neededForNextFree = 3 - (eligibleCount % 3);
+  const regularEligibleCount = cart.filter((i) => i.product.id !== 999 && i.promoEligible).reduce((s, i) => s + i.quantity, 0);
+  const neededForNext = regularEligibleCount % 2 === 0 ? 2 : 1;
 
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
@@ -66,14 +66,15 @@ export default function CartDrawer() {
           <p className="text-[13px] text-[#A3A09B] mt-0.5">
             {freeItemsCount > 0 ? (
               <span className="text-emerald-400 font-medium flex items-center gap-1.5 mt-0.5">
-                <Check className="w-3.5 h-3.5" /> {t.cartPromoBannerSuccess}
+                <Check className="w-3.5 h-3.5" />
+                {isEn
+                  ? `2+1 Deal active: ${freeItemsCount}x surprise durag for 1 PLN added!`
+                  : `Promocja aktywna! ${freeItemsCount}x losowy durag za 1 zł dodany do koszyka.`}
               </span>
-            ) : neededForNextFree === 3 ? (
-              t.cartPromoBannerDesc0
-            ) : neededForNextFree === 1 ? (
-              t.cartPromoBannerDesc1
+            ) : regularEligibleCount === 0 ? (
+              isEn ? 'Buy 2 durags, get a 3rd random one for 1 PLN.' : 'Kup 2 duragi, a trzeci losowy otrzymasz za 1 zł.'
             ) : (
-              t.cartPromoBannerDesc2
+              isEn ? 'Add 1 more durag to claim a 3rd random durag for 1 PLN.' : 'Dodaj jeszcze 1 durag, aby odebrać trzeci losowy durag za 1 zł.'
             )}
           </p>
         </div>
@@ -143,32 +144,43 @@ export default function CartDrawer() {
                     </div>
 
                     <div className="flex items-center justify-between mt-3">
-                      {/* Quantity Selector */}
-                      <div className="flex items-center border border-[#1E1E22] bg-[#141416]">
-                        <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.variant)}
-                          className="p-1.5 text-gray-400 hover:text-white transition-colors cursor-pointer"
-                          aria-label={isEn ? 'Decrease' : 'Zmniejsz ilość'}
-                        >
-                          <Minus className="w-3 h-3" />
-                        </button>
-                        <span className="px-2 text-[13px] font-medium text-white min-w-[24px] text-center tabular-nums">
-                          {item.quantity}
+                      {/* Quantity Selector or Promo Badge */}
+                      {item.product.id === 999 ? (
+                        <span className="text-[11px] font-semibold text-[#B85C2E] bg-[#B85C2E]/10 px-2 py-1 border border-[#B85C2E]/25 tracking-wide">
+                          {isEn ? `2+1 DEAL · ${item.quantity}x` : `PROMOCJA 2+1 · ${item.quantity} szt.`}
                         </span>
-                        <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.variant)}
-                          className="p-1.5 text-gray-400 hover:text-white transition-colors cursor-pointer"
-                          aria-label={isEn ? 'Increase' : 'Zwiększ ilość'}
-                        >
-                          <Plus className="w-3 h-3" />
-                        </button>
-                      </div>
+                      ) : (
+                        <div className="flex items-center border border-[#1E1E22] bg-[#141416]">
+                          <button
+                            onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.variant)}
+                            className="p-1.5 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                            aria-label={isEn ? 'Decrease' : 'Zmniejsz ilość'}
+                          >
+                            <Minus className="w-3 h-3" />
+                          </button>
+                          <span className="px-2 text-[13px] font-medium text-white min-w-[24px] text-center tabular-nums">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.variant)}
+                            className="p-1.5 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                            aria-label={isEn ? 'Increase' : 'Zwiększ ilość'}
+                          >
+                            <Plus className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
 
                       {/* Unit Price */}
                       <div className="text-right">
                         <span className="text-[15px] font-semibold text-white tabular-nums">
                           {formatPrice(item.unitPrice * item.quantity, item.product.priceEur ? item.product.priceEur * item.quantity : undefined)}
                         </span>
+                        {item.product.id === 999 && (
+                          <span className="text-[11px] text-[#787570] line-through ml-1.5 tabular-nums">
+                            {formatPrice(89 * item.quantity, item.product.priceEur ? 22 * item.quantity : undefined)}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>

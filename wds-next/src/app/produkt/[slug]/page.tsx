@@ -180,7 +180,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   };
 
   return (
-    <div className="bg-[#0B0B0C] text-[#FAFAF9] min-h-screen">
+    <div className="bg-[#FAF9F6] text-[#141416] min-h-screen">
       {/* Schema Injection */}
       <script
         type="application/ld+json"

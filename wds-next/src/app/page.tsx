@@ -32,7 +32,7 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="bg-[#0B0B0C] text-[#FAFAF9] min-h-screen selection:bg-[#C8794B] selection:text-[#0B0B0C]">
+    <div className="bg-[#FAF9F6] text-[#141416] min-h-screen selection:bg-[#B85C2E] selection:text-[#FAF9F6]">
       {/* Hero Section */}
       <HomeHero />
 

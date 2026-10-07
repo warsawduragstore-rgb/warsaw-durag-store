@@ -3,15 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBag, Search, Menu, X, Sun, Moon } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { useTheme } from '@/context/ThemeContext';
 
 export default function Header() {
   const { cartCount, setIsCartOpen } = useCart();
   const { language, setLanguage, currency, setCurrency, t, isEn } = useLanguage();
-  const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -108,26 +106,6 @@ export default function Header() {
 
           {/* Right Controls */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Theme toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-1.5 sm:px-2.5 sm:py-1 border border-[#1E1E22] bg-[#141416] text-[#ECEAE7] hover:border-[#787570] hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 text-[13px] font-medium"
-              title={theme === 'dark' ? (isEn ? 'Switch to light mode' : 'Przełącz na jasny motyw') : (isEn ? 'Switch to dark mode' : 'Przełącz na ciemny motyw')}
-              aria-label={theme === 'dark' ? 'Light mode' : 'Dark mode'}
-            >
-              {theme === 'dark' ? (
-                <>
-                  <Sun className="w-4 h-4 text-[#C8794B]" />
-                  <span className="hidden xl:inline text-[12px]">{isEn ? 'Light' : 'Jasny'}</span>
-                </>
-              ) : (
-                <>
-                  <Moon className="w-4 h-4 text-[#C8794B]" />
-                  <span className="hidden xl:inline text-[12px]">{isEn ? 'Dark' : 'Ciemny'}</span>
-                </>
-              )}
-            </button>
-
             {/* Language toggle: strictly PL / EN */}
             <div className="hidden sm:inline-flex items-center border border-[#1E1E22] text-[13px] font-medium bg-[#141416]">
               <button
@@ -238,25 +216,8 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Mobile quick controls: Theme, Language (PL/EN), Currency */}
-            <div className="p-3 border-b border-[#1E1E22] bg-[#141416] flex flex-wrap items-center justify-between gap-2">
-              <button
-                onClick={toggleTheme}
-                className="flex items-center gap-1.5 px-2.5 py-1 text-xs border border-[#1E1E22] bg-[#0B0B0C] text-[#ECEAE7]"
-              >
-                {theme === 'dark' ? (
-                  <>
-                    <Sun className="w-3.5 h-3.5 text-[#C8794B]" />
-                    <span>{isEn ? 'Light mode' : 'Jasny motyw'}</span>
-                  </>
-                ) : (
-                  <>
-                    <Moon className="w-3.5 h-3.5 text-[#C8794B]" />
-                    <span>{isEn ? 'Dark mode' : 'Ciemny motyw'}</span>
-                  </>
-                )}
-              </button>
-
+            {/* Mobile quick controls: Language (PL/EN), Currency */}
+            <div className="p-3 border-b border-[#1E1E22] bg-[#141416] flex items-center justify-between gap-2">
               <div className="inline-flex items-center border border-[#1E1E22] text-xs font-medium bg-[#0B0B0C]">
                 <button
                   onClick={() => setLanguage('PL')}

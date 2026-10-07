@@ -123,7 +123,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
     cartPromoBannerDesc0: 'Wybierz 2 duragi, a trzeci model otrzymasz za 1 zł.',
     cartPromoBannerDesc1: 'Dodaj jeszcze 1 durag, aby odebrać kolejny za 1 zł.',
     cartPromoBannerDesc2: 'Dodaj jeszcze 2 duragi, aby odebrać kolejny za 1 zł.',
-    cartPromoBannerSuccess: 'Naliczono rabat na trzeci durag w koszyku!',
+    cartPromoBannerSuccess: 'Promocja 2+1 aktywna! Losowy durag za 1 zł dodany do koszyka.',
     cartFreeShippingInfo: 'Darmowa dostawa dla wszystkich zamówień w Polsce.',
 
     addToCart: 'Do koszyka',
@@ -203,7 +203,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
     cartPromoBannerDesc0: 'Add 2 durags to receive a 3rd durag for 1 PLN.',
     cartPromoBannerDesc1: 'Add 1 more durag to unlock your next durag for 1 PLN.',
     cartPromoBannerDesc2: 'Add 2 more durags to unlock your next durag for 1 PLN.',
-    cartPromoBannerSuccess: 'Discount applied to the 3rd durag in cart!',
+    cartPromoBannerSuccess: '2+1 Deal active! Surprise durag for 1 PLN added to cart.',
     cartFreeShippingInfo: 'Free shipping across Poland on all orders.',
 
     addToCart: 'Add to cart',

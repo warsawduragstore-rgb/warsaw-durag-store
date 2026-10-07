@@ -2,11 +2,11 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-export type Theme = 'dark' | 'light';
+export type Theme = 'light';
 
 interface ThemeContextType {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
+  theme: 'light';
+  setTheme: (theme: 'light') => void;
   toggleTheme: () => void;
   isLoaded: boolean;
 }
@@ -14,64 +14,24 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('light');
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     try {
-      const urlTheme = new URLSearchParams(window.location.search).get('theme') as Theme | null;
-      if (urlTheme === 'light' || urlTheme === 'dark') {
-        setThemeState(urlTheme);
-        localStorage.setItem('wds_theme', urlTheme);
-        if (urlTheme === 'light') {
-          document.documentElement.classList.add('light');
-        } else {
-          document.documentElement.classList.remove('light');
-        }
-        setIsLoaded(true);
-        return;
-      }
-
-      const stored = localStorage.getItem('wds_theme') as Theme | null;
-      if (stored === 'light' || stored === 'dark') {
-        setThemeState(stored);
-        if (stored === 'light') {
-          document.documentElement.classList.add('light');
-        } else {
-          document.documentElement.classList.remove('light');
-        }
-      } else {
-        // Default is light mode
-        setThemeState('light');
-        document.documentElement.classList.add('light');
-      }
+      localStorage.removeItem('wds_theme');
+      document.documentElement.classList.add('light');
     } catch {
-      // ignore localStorage errors (e.g. private mode)
+      // ignore
     } finally {
       setIsLoaded(true);
     }
   }, []);
 
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-    try {
-      localStorage.setItem('wds_theme', newTheme);
-    } catch {
-      // ignore
-    }
-    if (newTheme === 'light') {
-      document.documentElement.classList.add('light');
-    } else {
-      document.documentElement.classList.remove('light');
-    }
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
+  const setTheme = () => {};
+  const toggleTheme = () => {};
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme, isLoaded }}>
+    <ThemeContext.Provider value={{ theme: 'light', setTheme, toggleTheme, isLoaded }}>
       {children}
     </ThemeContext.Provider>
   );

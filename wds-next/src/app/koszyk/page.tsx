@@ -118,9 +118,9 @@ export default function CartPage() {
                     <p className="text-xs text-[#A3A09B] mt-1">
                       {freeItemsCount > 0
                         ? isEn
-                          ? 'Promotion automatically applied in your cart.'
-                          : 'Promocja naliczona automatycznie w koszyku.'
-                        : neededForNextFree === 1
+                          ? `Promotion active! ${freeItemsCount}x surprise durag for 1 PLN added to your cart.`
+                          : `Promocja aktywna! ${freeItemsCount}x losowy durag za 1 zł dodany do koszyka.`
+                        : cart.filter((i) => i.product.id !== 999 && i.promoEligible).reduce((s, i) => s + i.quantity, 0) === 1
                         ? isEn
                           ? 'Add 1 more durag to claim a 3rd random durag for 1 PLN.'
                           : 'Dodaj jeszcze 1 durag, aby odebrać trzeci losowy durag za 1 zł.'
@@ -179,32 +179,43 @@ export default function CartPage() {
                         </div>
 
                         <div className="flex items-center justify-between mt-4">
-                          {/* Quantity Counter */}
-                          <div className="flex items-center border border-[#26262A] bg-[#0B0B0C]">
-                            <button
-                              onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.variant)}
-                              className="p-2 text-[#787570] hover:text-white transition-colors cursor-pointer"
-                              aria-label={isEn ? 'Decrease quantity' : 'Zmniejsz ilość'}
-                            >
-                              <Minus className="w-3.5 h-3.5" />
-                            </button>
-                            <span className="px-3 text-xs font-medium text-white min-w-[28px] text-center tabular-nums">
-                              {item.quantity}
+                          {/* Quantity Counter or Promo Badge */}
+                          {item.product.id === 999 ? (
+                            <span className="text-xs font-semibold text-[#B85C2E] bg-[#B85C2E]/10 px-3 py-1.5 border border-[#B85C2E]/30 tracking-wide">
+                              {isEn ? `PROMO 2+1 · QTY: ${item.quantity}` : `PROMOCJA 2+1 · ${item.quantity} szt.`}
                             </span>
-                            <button
-                              onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.variant)}
-                              className="p-2 text-[#787570] hover:text-white transition-colors cursor-pointer"
-                              aria-label={isEn ? 'Increase quantity' : 'Zwiększ ilość'}
-                            >
-                              <Plus className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
+                          ) : (
+                            <div className="flex items-center border border-[#26262A] bg-[#0B0B0C]">
+                              <button
+                                onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.variant)}
+                                className="p-2 text-[#787570] hover:text-white transition-colors cursor-pointer"
+                                aria-label={isEn ? 'Decrease quantity' : 'Zmniejsz ilość'}
+                              >
+                                <Minus className="w-3.5 h-3.5" />
+                              </button>
+                              <span className="px-3 text-xs font-medium text-white min-w-[28px] text-center tabular-nums">
+                                {item.quantity}
+                              </span>
+                              <button
+                                onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.variant)}
+                                className="p-2 text-[#787570] hover:text-white transition-colors cursor-pointer"
+                                aria-label={isEn ? 'Increase quantity' : 'Zwiększ ilość'}
+                              >
+                                <Plus className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          )}
 
                           {/* Price */}
                           <div className="text-right">
                             <span className="text-base font-semibold text-[#FAFAF9] tabular-nums">
                               {formatPrice(item.unitPrice * item.quantity, item.product.priceEur ? item.product.priceEur * item.quantity : undefined)}
                             </span>
+                            {item.product.id === 999 && (
+                              <span className="text-xs text-[#787570] line-through ml-2 tabular-nums">
+                                {formatPrice(89 * item.quantity, item.product.priceEur ? 22 * item.quantity : undefined)}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
