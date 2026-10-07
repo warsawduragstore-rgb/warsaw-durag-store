@@ -2097,64 +2097,74 @@ export default function AdminPage() {
       {/* PRODUCT EDIT / ADD MODAL */}
       {/* ==================================================================== */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-[#141412] border border-[#3A3A36] rounded w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl my-8">
-            <div className="p-5 border-b border-[#242421] flex items-center justify-between sticky top-0 bg-[#141412] z-10">
-              <h3 className="font-serif text-base text-white font-medium">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-[#D5D0C7] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl my-8 text-[#141416]">
+            <div className="p-5 border-b border-[#E5E0D6] flex items-center justify-between sticky top-0 bg-[#FAF9F6] z-10 rounded-t-2xl">
+              <h3 className="font-serif text-lg text-[#141416] font-bold">
                 {editingProductId ? `Edycja Produktu #${editingProductId}` : 'Nowy Produkt w Katalogu'}
               </h3>
               <button
+                type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 text-[#8C8D94] hover:text-white transition-colors"
+                className="p-1.5 text-[#55524E] hover:text-[#141416] hover:bg-[#EAE6DF] rounded-lg transition-colors"
+                title="Zamknij"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveProduct} className="p-6 space-y-4 text-xs">
+            <form onSubmit={handleSaveProduct} className="p-6 space-y-5 text-sm bg-white">
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[#8C8D94] block mb-1">Nazwa produktu (PL) *</label>
+                  <label className="text-[#1C1A17] font-semibold text-xs block mb-1.5">
+                    Nazwa produktu (PL) <span className="text-[#B85C2E]">*</span>
+                  </label>
                   <input
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#1C1C1A] border border-[#2B2B28] rounded text-white outline-none focus:border-[#C6A87D]"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#C5BFB5] rounded-lg text-[#141416] font-medium placeholder:text-[#8C8D94] outline-none focus:border-[#B85C2E] focus:ring-2 focus:ring-[#B85C2E]/20 transition-all shadow-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[#8C8D94] block mb-1">Nazwa produktu (EN)</label>
+                  <label className="text-[#1C1A17] font-semibold text-xs block mb-1.5">
+                    Nazwa produktu (EN)
+                  </label>
                   <input
                     type="text"
                     value={nameEn}
                     onChange={(e) => setNameEn(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#1C1C1A] border border-[#2B2B28] rounded text-white outline-none focus:border-[#C6A87D]"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#C5BFB5] rounded-lg text-[#141416] font-medium placeholder:text-[#8C8D94] outline-none focus:border-[#B85C2E] focus:ring-2 focus:ring-[#B85C2E]/20 transition-all shadow-xs"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-[#8C8D94] block mb-1">Cena (PLN) *</label>
+                  <label className="text-[#1C1A17] font-semibold text-xs block mb-1.5">
+                    Cena (PLN) <span className="text-[#B85C2E]">*</span>
+                  </label>
                   <input
                     type="number"
                     step="0.01"
                     required
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#1C1C1A] border border-[#2B2B28] rounded text-white font-mono outline-none focus:border-[#C6A87D]"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#C5BFB5] rounded-lg text-[#141416] font-mono font-semibold outline-none focus:border-[#B85C2E] focus:ring-2 focus:ring-[#B85C2E]/20 transition-all shadow-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[#8C8D94] block mb-1">Kategoria</label>
+                  <label className="text-[#1C1A17] font-semibold text-xs block mb-1.5">
+                    Kategoria
+                  </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as any)}
-                    className="w-full px-3 py-2 bg-[#1C1C1A] border border-[#2B2B28] rounded text-white outline-none focus:border-[#C6A87D]"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#C5BFB5] rounded-lg text-[#141416] font-medium outline-none focus:border-[#B85C2E] focus:ring-2 focus:ring-[#B85C2E]/20 transition-all shadow-xs"
                   >
                     <option value="silk">Jedwab Morwowy (silk)</option>
                     <option value="satin">Satyna (satin)</option>
@@ -2165,40 +2175,48 @@ export default function AdminPage() {
                 </div>
 
                 <div>
-                  <label className="text-[#8C8D94] block mb-1">Stan magazynowy (szt.)</label>
+                  <label className="text-[#1C1A17] font-semibold text-xs block mb-1.5">
+                    Stan magazynowy (szt.)
+                  </label>
                   <input
                     type="number"
                     min="0"
                     value={stock}
                     onChange={(e) => setStock(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#1C1C1A] border border-[#2B2B28] rounded text-white font-mono outline-none focus:border-[#C6A87D]"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#C5BFB5] rounded-lg text-[#141416] font-mono font-semibold outline-none focus:border-[#B85C2E] focus:ring-2 focus:ring-[#B85C2E]/20 transition-all shadow-xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-[#8C8D94] block mb-1">Materiał (opis specyfikacji)</label>
+                <label className="text-[#1C1A17] font-semibold text-xs block mb-1.5">
+                  Materiał (opis specyfikacji)
+                </label>
                 <input
                   type="text"
                   value={material}
                   onChange={(e) => setMaterial(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#1C1C1A] border border-[#2B2B28] rounded text-white outline-none focus:border-[#C6A87D]"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[#C5BFB5] rounded-lg text-[#141416] font-medium placeholder:text-[#8C8D94] outline-none focus:border-[#B85C2E] focus:ring-2 focus:ring-[#B85C2E]/20 transition-all shadow-xs"
                 />
               </div>
 
               <div>
-                <label className="text-[#8C8D94] block mb-1">Opis produktu</label>
+                <label className="text-[#1C1A17] font-semibold text-xs block mb-1.5">
+                  Opis produktu
+                </label>
                 <textarea
                   rows={4}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#1C1C1A] border border-[#2B2B28] rounded text-white outline-none focus:border-[#C6A87D]"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[#C5BFB5] rounded-lg text-[#141416] leading-relaxed placeholder:text-[#8C8D94] outline-none focus:border-[#B85C2E] focus:ring-2 focus:ring-[#B85C2E]/20 transition-all shadow-xs"
                 />
               </div>
 
               {/* Images Gallery Manager */}
-              <div className="space-y-2 pt-2 border-t border-[#242421]">
-                <label className="text-[#8C8D94] block font-semibold">Galeria Zdjęć</label>
+              <div className="space-y-3 pt-4 border-t border-[#E5E0D6]">
+                <label className="text-[#1C1A17] font-bold text-xs uppercase tracking-wider block">
+                  Galeria Zdjęć
+                </label>
                 
                 <div className="flex gap-2">
                   <input
@@ -2206,7 +2224,7 @@ export default function AdminPage() {
                     placeholder="Wklej ścieżkę lub URL zdjęcia (np. /assets/... lub https://...)"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
-                    className="flex-grow px-3 py-2 bg-[#1C1C1A] border border-[#2B2B28] rounded text-white outline-none focus:border-[#C6A87D]"
+                    className="flex-grow px-3.5 py-2.5 bg-white border border-[#C5BFB5] rounded-lg text-[#141416] text-xs placeholder:text-[#8C8D94] outline-none focus:border-[#B85C2E] focus:ring-2 focus:ring-[#B85C2E]/20 transition-all shadow-xs"
                   />
                   <button
                     type="button"
@@ -2216,17 +2234,17 @@ export default function AdminPage() {
                         setImageUrl('');
                       }
                     }}
-                    className="px-3 py-2 bg-[#1F1F1D] hover:bg-[#2B2B28] text-white border border-[#3A3A36] rounded"
+                    className="px-4 py-2 bg-[#141416] hover:bg-[#2D2C2A] text-white font-semibold text-xs rounded-lg transition-colors shadow-xs"
                   >
                     Dodaj
                   </button>
                 </div>
 
-                <div className="flex flex-wrap gap-2 pt-1">
+                <div className="flex flex-wrap gap-2.5 pt-1">
                   {images.map((img, idx) => (
                     <div
                       key={idx}
-                      className="relative w-16 h-16 bg-[#1C1C1A] rounded border border-[#2B2B28] overflow-hidden group"
+                      className="relative w-16 h-16 bg-[#FAF9F6] rounded-lg border border-[#D5D0C7] overflow-hidden group shadow-xs"
                     >
                       <Image src={img} alt="" fill className="object-cover" />
                       <button
@@ -2235,7 +2253,7 @@ export default function AdminPage() {
                         className="absolute inset-0 bg-black/70 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                         title="Usuń zdjęcie"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4 text-red-400" />
                       </button>
                     </div>
                   ))}
@@ -2243,18 +2261,18 @@ export default function AdminPage() {
               </div>
 
               {/* Submit Buttons */}
-              <div className="pt-4 border-t border-[#242421] flex justify-end gap-2">
+              <div className="pt-4 border-t border-[#E5E0D6] flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 bg-[#1F1F1D] text-[#8C8D94] hover:text-white rounded transition-colors"
+                  className="px-5 py-2.5 bg-[#EAE6DF] hover:bg-[#DFDAD1] text-[#141416] font-semibold text-sm rounded-lg border border-[#C5BFB5] transition-colors"
                 >
                   Anuluj
                 </button>
                 <button
                   type="submit"
                   disabled={isSyncing}
-                  className="px-5 py-2 bg-[#C6A87D] hover:bg-[#D4AF37] text-black font-bold uppercase tracking-wider rounded transition-colors shadow-sm"
+                  className="px-6 py-2.5 bg-[#B85C2E] hover:bg-[#A04F25] text-white font-bold text-sm uppercase tracking-wider rounded-lg transition-all shadow-md hover:shadow-lg disabled:opacity-50"
                 >
                   {isSyncing ? 'Zapisywanie w bazie...' : 'Zapisz Produkt'}
                 </button>
@@ -2269,25 +2287,25 @@ export default function AdminPage() {
       {/* ORDER DETAILS & FULL PURCHASE LOG MODAL */}
       {/* ==================================================================== */}
       {selectedOrderForModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-[#141412] border border-[#3A3A36] rounded w-full max-w-3xl max-h-[92vh] overflow-y-auto shadow-2xl my-6 flex flex-col">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-[#D5D0C7] rounded-2xl w-full max-w-3xl max-h-[92vh] overflow-y-auto shadow-2xl my-6 flex flex-col text-[#141416]">
             
             {/* Modal Header */}
-            <div className="p-5 border-b border-[#242421] flex items-center justify-between sticky top-0 bg-[#141412] z-10">
+            <div className="p-5 border-b border-[#E5E0D6] flex items-center justify-between sticky top-0 bg-[#FAF9F6] z-10 rounded-t-2xl">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded bg-[#1F1F1D] border border-[#3A3A36] flex items-center justify-center text-[#C6A87D]">
+                <div className="w-9 h-9 rounded-lg bg-[#EAE6DF] border border-[#D5D0C7] flex items-center justify-center text-[#B85C2E]">
                   <FileText className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-mono text-base text-white font-bold">
+                    <h3 className="font-mono text-base text-[#141416] font-bold">
                       {selectedOrderForModal.order_no}
                     </h3>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#242421] text-[#8C8D94] border border-[#3A3A36]">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#EAE6DF] text-[#55524E] border border-[#D5D0C7]">
                       Log ID: #{selectedOrderForModal.id || 'N/A'}
                     </span>
                   </div>
-                  <span className="text-xs text-[#8C8D94] block">
+                  <span className="text-xs text-[#55524E] block">
                     Złożone: {selectedOrderForModal.created_at ? new Date(selectedOrderForModal.created_at).toLocaleString('pl-PL') : 'Bieżące'}
                   </span>
                 </div>
@@ -2296,7 +2314,7 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => setSelectedOrderForModal(null)}
-                className="p-1.5 text-[#8C8D94] hover:text-white hover:bg-[#1F1F1D] rounded transition-colors"
+                className="p-1.5 text-[#55524E] hover:text-[#141416] hover:bg-[#EAE6DF] rounded-lg transition-colors"
                 title="Zamknij podgląd"
               >
                 <X className="w-5 h-5" />
@@ -2304,19 +2322,19 @@ export default function AdminPage() {
             </div>
 
             {/* Modal Body */}
-            <div className="p-6 space-y-6 flex-grow">
+            <div className="p-6 space-y-6 flex-grow bg-white">
               
               {/* Quick Status Bar */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#181816] p-4 rounded border border-[#262624]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#FAF9F6] p-4 rounded-xl border border-[#E5E0D6]">
                 {/* Order Status */}
                 <div>
-                  <label className="text-[11px] uppercase tracking-wider text-[#8C8D94] block mb-1.5 font-bold">
+                  <label className="text-[11px] uppercase tracking-wider text-[#1C1A17] block mb-1.5 font-bold">
                     Status realizacji zamówienia:
                   </label>
                   <select
                     value={selectedOrderForModal.status}
                     onChange={(e) => handleModalOrderStatusChange(e.target.value as SupabaseOrder['status'])}
-                    className="w-full px-3 py-2 text-xs bg-[#1F1F1D] border border-[#3A3A36] rounded text-white font-medium outline-none focus:border-[#C6A87D]"
+                    className="w-full px-3 py-2 text-xs bg-white border border-[#C5BFB5] rounded-lg text-[#141416] font-medium outline-none focus:border-[#B85C2E]"
                   >
                     <option value="new">Nowe (do spakowania)</option>
                     <option value="processing">W realizacji</option>
@@ -2329,20 +2347,20 @@ export default function AdminPage() {
 
                 {/* Payment Status */}
                 <div>
-                  <label className="text-[11px] uppercase tracking-wider text-[#8C8D94] block mb-1.5 font-bold">
+                  <label className="text-[11px] uppercase tracking-wider text-[#1C1A17] block mb-1.5 font-bold">
                     Status płatności Stripe:
                   </label>
                   <select
                     value={selectedOrderForModal.payment_status || 'pending'}
                     onChange={(e) => handleModalPaymentStatusChange(e.target.value as SupabaseOrder['payment_status'])}
-                    className={`w-full px-3 py-2 text-xs border rounded font-medium outline-none focus:border-[#C6A87D] ${
+                    className={`w-full px-3 py-2 text-xs border rounded-lg font-bold outline-none ${
                       selectedOrderForModal.payment_status === 'paid'
-                        ? 'bg-[#18271B] border-[#2A4D30] text-[#7CE08A]'
+                        ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
                         : selectedOrderForModal.payment_status === 'failed'
-                        ? 'bg-[#2A1818] border-[#4D2A2A] text-[#FF8A8A]'
+                        ? 'bg-red-50 border-red-300 text-red-800'
                         : selectedOrderForModal.payment_status === 'refunded'
-                        ? 'bg-[#2A1828] border-[#4D2A4A] text-[#E08AE0]'
-                        : 'bg-[#2E2010] border-[#5E3F18] text-[#FFB74D]'
+                        ? 'bg-purple-50 border-purple-300 text-purple-800'
+                        : 'bg-amber-50 border-amber-300 text-amber-800'
                     }`}
                   >
                     <option value="paid">Opłacone (Płatność potwierdzona)</option>
@@ -2357,24 +2375,24 @@ export default function AdminPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
                 {/* Customer card */}
-                <div className="bg-[#181816] p-4 rounded border border-[#262624] space-y-3">
-                  <h4 className="text-xs uppercase tracking-wider text-[#C6A87D] font-bold flex items-center gap-1.5">
+                <div className="bg-[#FAF9F6] p-4 rounded-xl border border-[#E5E0D6] space-y-3">
+                  <h4 className="text-xs uppercase tracking-wider text-[#B85C2E] font-bold flex items-center gap-1.5">
                     <Smartphone className="w-3.5 h-3.5" />
                     Dane Klienta
                   </h4>
 
                   <div className="space-y-2 text-xs">
                     <div>
-                      <span className="text-[#8C8D94] block text-[11px]">Imię i nazwisko:</span>
-                      <strong className="text-white text-sm">{selectedOrderForModal.customer_name}</strong>
+                      <span className="text-[#55524E] block text-[11px]">Imię i nazwisko:</span>
+                      <strong className="text-[#141416] text-sm">{selectedOrderForModal.customer_name}</strong>
                     </div>
 
                     <div>
-                      <span className="text-[#8C8D94] block text-[11px]">Adres e-mail:</span>
+                      <span className="text-[#55524E] block text-[11px]">Adres e-mail:</span>
                       <div className="flex items-center gap-2 mt-0.5">
                         <a
                           href={`mailto:${selectedOrderForModal.customer_email}`}
-                          className="text-[#C6A87D] hover:underline"
+                          className="text-[#B85C2E] font-medium hover:underline"
                         >
                           {selectedOrderForModal.customer_email}
                         </a>
@@ -2384,7 +2402,7 @@ export default function AdminPage() {
                             navigator.clipboard.writeText(selectedOrderForModal.customer_email);
                             showTemporaryToast('Skopiowano e-mail!');
                           }}
-                          className="text-[#8C8D94] hover:text-white p-0.5"
+                          className="text-[#55524E] hover:text-[#141416] p-0.5"
                           title="Kopiuj email"
                         >
                           <Copy className="w-3 h-3" />
@@ -2393,11 +2411,11 @@ export default function AdminPage() {
                     </div>
 
                     <div>
-                      <span className="text-[#8C8D94] block text-[11px]">Telefon:</span>
+                      <span className="text-[#55524E] block text-[11px]">Telefon:</span>
                       <div className="flex items-center gap-2 mt-0.5">
                         <a
                           href={`tel:${selectedOrderForModal.customer_phone}`}
-                          className="text-white hover:text-[#C6A87D]"
+                          className="text-[#141416] font-medium hover:text-[#B85C2E]"
                         >
                           {selectedOrderForModal.customer_phone}
                         </a>
@@ -2407,7 +2425,7 @@ export default function AdminPage() {
                             navigator.clipboard.writeText(selectedOrderForModal.customer_phone);
                             showTemporaryToast('Skopiowano telefon!');
                           }}
-                          className="text-[#8C8D94] hover:text-white p-0.5"
+                          className="text-[#55524E] hover:text-[#141416] p-0.5"
                           title="Kopiuj telefon"
                         >
                           <Copy className="w-3 h-3" />
@@ -2418,16 +2436,16 @@ export default function AdminPage() {
                 </div>
 
                 {/* Delivery card */}
-                <div className="bg-[#181816] p-4 rounded border border-[#262624] space-y-3">
-                  <h4 className="text-xs uppercase tracking-wider text-[#C6A87D] font-bold flex items-center gap-1.5">
+                <div className="bg-[#FAF9F6] p-4 rounded-xl border border-[#E5E0D6] space-y-3">
+                  <h4 className="text-xs uppercase tracking-wider text-[#B85C2E] font-bold flex items-center gap-1.5">
                     <Truck className="w-3.5 h-3.5" />
                     Dostawa & Paczkomat
                   </h4>
 
                   <div className="space-y-2 text-xs">
                     <div>
-                      <span className="text-[#8C8D94] block text-[11px]">Metoda doręczenia:</span>
-                      <span className="font-semibold text-white">
+                      <span className="text-[#55524E] block text-[11px]">Metoda doręczenia:</span>
+                      <span className="font-semibold text-[#141416]">
                         {selectedOrderForModal.delivery_method === 'paczkomat'
                           ? 'Paczkomat InPost 24/7'
                           : selectedOrderForModal.delivery_method === 'pickup'
@@ -2438,9 +2456,9 @@ export default function AdminPage() {
 
                     {selectedOrderForModal.delivery_method === 'paczkomat' && (
                       <div>
-                        <span className="text-[#8C8D94] block text-[11px]">Kod paczkomatu:</span>
+                        <span className="text-[#55524E] block text-[11px]">Kod paczkomatu:</span>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="font-mono text-sm font-bold text-[#FFD100] bg-[#2A2418] px-2 py-0.5 rounded border border-[#5E4D18]">
+                          <span className="font-mono text-sm font-bold text-[#141416] bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
                             📦 {selectedOrderForModal.locker_code || 'Brak kodu'}
                           </span>
                           {selectedOrderForModal.locker_code && (
@@ -2448,7 +2466,7 @@ export default function AdminPage() {
                               href={`https://inpost.pl/znajdz-paczkomat`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-[11px] text-[#C6A87D] hover:underline flex items-center gap-0.5"
+                              className="text-[11px] text-[#B85C2E] hover:underline flex items-center gap-0.5"
                             >
                               <span>Mapa InPost</span>
                               <ExternalLink className="w-3 h-3" />
@@ -2459,8 +2477,8 @@ export default function AdminPage() {
                     )}
 
                     <div>
-                      <span className="text-[#8C8D94] block text-[11px]">Adres punktu / dostawy:</span>
-                      <p className="text-[#EAE6DF] leading-relaxed mt-0.5">
+                      <span className="text-[#55524E] block text-[11px]">Adres punktu / dostawy:</span>
+                      <p className="text-[#141416] font-medium leading-relaxed mt-0.5">
                         {selectedOrderForModal.locker_address || (selectedOrderForModal.delivery_method === 'pickup' ? 'ul. Włodarzewska 4, Warszawa' : 'Adres klienta')}
                       </p>
                     </div>
@@ -2470,9 +2488,9 @@ export default function AdminPage() {
               </div>
 
               {/* InPost Tracking Management Card */}
-              <div className="bg-[#181816] p-4 rounded border border-[#262624] space-y-3">
+              <div className="bg-[#FAF9F6] p-4 rounded-xl border border-[#E5E0D6] space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs uppercase tracking-wider text-[#C6A87D] font-bold flex items-center gap-1.5">
+                  <h4 className="text-xs uppercase tracking-wider text-[#B85C2E] font-bold flex items-center gap-1.5">
                     <Package className="w-3.5 h-3.5" />
                     Numer Listu Przewozowego InPost (Tracking)
                   </h4>
@@ -2481,7 +2499,7 @@ export default function AdminPage() {
                       href={`https://inpost.pl/sledzenie-przesylek?number=${selectedOrderForModal.tracking_number}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-[#7CE08A] hover:underline flex items-center gap-1 font-mono"
+                      className="text-xs text-emerald-700 hover:underline flex items-center gap-1 font-mono font-bold"
                     >
                       <span>Śledź na inpost.pl</span>
                       <ExternalLink className="w-3 h-3" />
@@ -2495,59 +2513,59 @@ export default function AdminPage() {
                     value={trackingNumberInput}
                     onChange={(e) => setTrackingNumberInput(e.target.value)}
                     placeholder="Wpisz 24-cyfrowy numer przesyłki InPost..."
-                    className="flex-grow px-3 py-2 text-xs bg-[#1A1A18] border border-[#2B2B28] rounded text-white font-mono outline-none focus:border-[#C6A87D]"
+                    className="flex-grow px-3.5 py-2 text-xs bg-white border border-[#C5BFB5] rounded-lg text-[#141416] font-mono outline-none focus:border-[#B85C2E]"
                   />
                   <button
                     type="button"
                     onClick={handleSaveTrackingNumber}
                     disabled={isSavingTracking}
-                    className="px-4 py-2 bg-[#C6A87D] hover:bg-[#D4AF37] text-black text-xs font-bold uppercase tracking-wider rounded transition-colors shrink-0 disabled:opacity-50"
+                    className="px-4 py-2 bg-[#B85C2E] hover:bg-[#A04F25] text-white text-xs font-bold uppercase tracking-wider rounded-lg transition-colors shrink-0 disabled:opacity-50"
                   >
                     {isSavingTracking ? 'Zapisywanie...' : 'Zapisz Numer Paczki'}
                   </button>
                 </div>
-                <p className="text-[11px] text-[#8C8D94]">
+                <p className="text-[11px] text-[#55524E]">
                   Wpisanie numeru automatycznie zaktualizuje status na &quot;Wysłane (InPost)&quot; i umożliwi klientowi bezpośrednie śledzenie paczki.
                 </p>
               </div>
 
               {/* Purchased Items Table */}
-              <div className="bg-[#181816] rounded border border-[#262624] overflow-hidden space-y-0">
-                <div className="p-3.5 bg-[#1F1F1D] border-b border-[#262624] flex items-center justify-between">
-                  <h4 className="text-xs uppercase tracking-wider text-[#C6A87D] font-bold">
+              <div className="bg-white rounded-xl border border-[#E5E0D6] overflow-hidden space-y-0">
+                <div className="p-3.5 bg-[#FAF9F6] border-b border-[#E5E0D6] flex items-center justify-between">
+                  <h4 className="text-xs uppercase tracking-wider text-[#1C1A17] font-bold">
                     Zakupione Produkty w Koszyku
                   </h4>
-                  <span className="text-xs text-[#8C8D94]">
-                    Łączna kwota zamówienia: <strong className="text-white font-mono">{Number(selectedOrderForModal.total).toFixed(2)} PLN</strong>
+                  <span className="text-xs text-[#55524E]">
+                    Łączna kwota zamówienia: <strong className="text-[#141416] font-mono">{Number(selectedOrderForModal.total).toFixed(2)} PLN</strong>
                   </span>
                 </div>
 
-                <div className="divide-y divide-[#262624]">
+                <div className="divide-y divide-[#E5E0D6]">
                   {Array.isArray(selectedOrderForModal.items) && selectedOrderForModal.items.length > 0 ? (
                     selectedOrderForModal.items.map((item: any, idx: number) => (
                       <div key={idx} className="p-3.5 flex items-center justify-between gap-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded bg-[#111113] border border-[#2B2B28] overflow-hidden shrink-0 relative">
+                          <div className="w-12 h-12 rounded-lg bg-[#FAF9F6] border border-[#D5D0C7] overflow-hidden shrink-0 relative">
                             {item.image ? (
                               <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center text-[10px] text-[#8C8D94]">
+                              <div className="w-full h-full flex items-center justify-center text-[10px] text-[#55524E]">
                                 Foto
                               </div>
                             )}
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-semibold text-white">
+                              <span className="text-xs font-semibold text-[#141416]">
                                 {item.name}
                               </span>
                               {item.price === 1 && (
-                                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#2B2B28] text-[#7CE08A]">
+                                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">
                                   GRATIS 2+1 (1 zł)
                                 </span>
                               )}
                             </div>
-                            <div className="text-[11px] text-[#8C8D94] mt-0.5">
+                            <div className="text-[11px] text-[#55524E] mt-0.5">
                               {item.variant ? `Wariant: ${item.variant}` : ''}
                               {item.material ? ` · ${item.material}` : ''}
                             </div>
@@ -2555,50 +2573,50 @@ export default function AdminPage() {
                         </div>
 
                         <div className="text-right shrink-0">
-                          <div className="text-xs font-mono font-bold text-white">
+                          <div className="text-xs font-mono font-bold text-[#141416]">
                             {item.quantity || 1}x {Number(item.price).toFixed(2)} PLN
                           </div>
-                          <div className="text-[11px] font-mono text-[#C6A87D] mt-0.5">
+                          <div className="text-[11px] font-mono font-semibold text-[#B85C2E] mt-0.5">
                             Suma: {((Number(item.price) || 0) * (Number(item.quantity) || 1)).toFixed(2)} PLN
                           </div>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <div className="p-4 text-xs text-[#8C8D94]">
+                    <div className="p-4 text-xs text-[#55524E]">
                       {selectedOrderForModal.items_summary || 'Brak rozbicia pozycji — szczegóły w surowym logu JSON.'}
                     </div>
                   )}
                 </div>
 
                 {/* Financial Summary */}
-                <div className="p-4 bg-[#141412] border-t border-[#262624] space-y-1 text-xs">
-                  <div className="flex justify-between text-[#8C8D94]">
+                <div className="p-4 bg-[#FAF9F6] border-t border-[#E5E0D6] space-y-1 text-xs">
+                  <div className="flex justify-between text-[#55524E]">
                     <span>Wartość koszyka (Subtotal):</span>
-                    <span className="font-mono text-white">{Number(selectedOrderForModal.subtotal || selectedOrderForModal.total).toFixed(2)} PLN</span>
+                    <span className="font-mono font-semibold text-[#141416]">{Number(selectedOrderForModal.subtotal || selectedOrderForModal.total).toFixed(2)} PLN</span>
                   </div>
                   {selectedOrderForModal.discount_code && (
-                    <div className="flex justify-between text-[#7CE08A]">
+                    <div className="flex justify-between text-emerald-700 font-semibold">
                       <span>Rabat ({selectedOrderForModal.discount_code}):</span>
                       <span className="font-mono">-{Number(selectedOrderForModal.discount_val || 0).toFixed(2)} PLN</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-sm font-bold text-white pt-2 border-t border-[#262624]">
+                  <div className="flex justify-between text-sm font-bold text-[#141416] pt-2 border-t border-[#E5E0D6]">
                     <span>Razem do zapłaty (Total):</span>
-                    <span className="font-mono text-[#C6A87D] text-base">{Number(selectedOrderForModal.total).toFixed(2)} PLN</span>
+                    <span className="font-mono text-[#B85C2E] text-base font-extrabold">{Number(selectedOrderForModal.total).toFixed(2)} PLN</span>
                   </div>
                 </div>
               </div>
 
               {/* Technical / Stripe Session Info */}
-              <div className="bg-[#181816] p-4 rounded border border-[#262624] space-y-2">
-                <h4 className="text-xs uppercase tracking-wider text-[#C6A87D] font-bold">
+              <div className="bg-[#FAF9F6] p-4 rounded-xl border border-[#E5E0D6] space-y-2">
+                <h4 className="text-xs uppercase tracking-wider text-[#1C1A17] font-bold">
                   Dane Techniczne Transakcji & Stripe
                 </h4>
-                <div className="text-xs space-y-1 text-[#8C8D94]">
+                <div className="text-xs space-y-1 text-[#55524E]">
                   <div className="flex items-center justify-between">
                     <span>ID Sesji Stripe:</span>
-                    <div className="flex items-center gap-1.5 font-mono text-white">
+                    <div className="flex items-center gap-1.5 font-mono text-[#141416] font-semibold">
                       <span className="truncate max-w-xs">{selectedOrderForModal.stripe_session_id || 'Brak (Test)'}</span>
                       {selectedOrderForModal.stripe_session_id && (
                         <button
@@ -2607,7 +2625,7 @@ export default function AdminPage() {
                             navigator.clipboard.writeText(selectedOrderForModal.stripe_session_id || '');
                             showTemporaryToast('Skopiowano ID sesji Stripe!');
                           }}
-                          className="hover:text-[#C6A87D] p-0.5"
+                          className="hover:text-[#B85C2E] p-0.5"
                           title="Kopiuj ID sesji"
                         >
                           <Copy className="w-3 h-3" />
@@ -2617,20 +2635,20 @@ export default function AdminPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Metoda płatności:</span>
-                    <span className="text-white font-medium">{selectedOrderForModal.payment_method || 'Karta / BLIK / P24'}</span>
+                    <span className="text-[#141416] font-semibold">{selectedOrderForModal.payment_method || 'Karta / BLIK / P24'}</span>
                   </div>
                 </div>
               </div>
 
               {/* RAW JSON TRANSACTION LOG */}
-              <div className="bg-[#181816] p-4 rounded border border-[#262624] space-y-2">
+              <div className="bg-[#FAF9F6] p-4 rounded-xl border border-[#E5E0D6] space-y-2">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="text-xs uppercase tracking-wider text-[#7CE08A] font-bold flex items-center gap-1.5">
-                      <FileText className="w-3.5 h-3.5" />
+                    <h4 className="text-xs uppercase tracking-wider text-[#1C1A17] font-bold flex items-center gap-1.5">
+                      <FileText className="w-3.5 h-3.5 text-[#B85C2E]" />
                       Pełny Log Transakcji (Raw JSON)
                     </h4>
-                    <p className="text-[11px] text-[#8C8D94]">
+                    <p className="text-[11px] text-[#55524E]">
                       Kompletny rekord z bazy danych Supabase do celów audytowych i integracji.
                     </p>
                   </div>
@@ -2638,23 +2656,23 @@ export default function AdminPage() {
                   <button
                     type="button"
                     onClick={copyOrderLogJson}
-                    className="px-3 py-1.5 bg-[#1F1F1D] hover:bg-[#2B2B28] text-white border border-[#3A3A36] text-xs font-mono rounded transition-colors flex items-center gap-1.5"
+                    className="px-3 py-1.5 bg-[#EAE6DF] hover:bg-[#DFDAD1] text-[#141416] border border-[#C5BFB5] text-xs font-mono font-semibold rounded-lg transition-colors flex items-center gap-1.5"
                   >
                     {copiedLogJson ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-[#7CE08A]" />
-                        <span className="text-[#7CE08A]">Skopiowano!</span>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700 font-bold">Skopiowano!</span>
                       </>
                     ) : (
                       <>
-                        <Copy className="w-3.5 h-3.5 text-[#C6A87D]" />
+                        <Copy className="w-3.5 h-3.5 text-[#55524E]" />
                         <span>Kopiuj Log JSON</span>
                       </>
                     )}
                   </button>
                 </div>
 
-                <pre className="bg-[#0A0A09] p-3.5 rounded border border-[#242421] text-[11px] font-mono text-[#7CE08A] overflow-x-auto max-h-60 leading-relaxed selection:bg-[#7CE08A] selection:text-black">
+                <pre className="bg-white p-3.5 rounded-lg border border-[#D5D0C7] text-[11px] font-mono text-[#141416] overflow-x-auto max-h-60 leading-relaxed selection:bg-[#B85C2E] selection:text-white">
                   {JSON.stringify(selectedOrderForModal, null, 2)}
                 </pre>
               </div>
@@ -2662,11 +2680,11 @@ export default function AdminPage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-[#242421] bg-[#141412] flex items-center justify-end sticky bottom-0">
+            <div className="p-4 border-t border-[#E5E0D6] bg-[#FAF9F6] flex items-center justify-end sticky bottom-0 rounded-b-2xl">
               <button
                 type="button"
                 onClick={() => setSelectedOrderForModal(null)}
-                className="px-5 py-2 bg-[#1F1F1D] hover:bg-[#2B2B28] text-white text-xs font-semibold rounded transition-colors"
+                className="px-5 py-2.5 bg-[#EAE6DF] hover:bg-[#DFDAD1] text-[#141416] text-xs font-bold rounded-lg border border-[#C5BFB5] transition-colors"
               >
                 Zamknij
               </button>
