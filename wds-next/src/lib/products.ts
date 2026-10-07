@@ -848,12 +848,14 @@ export const PRODUCTS: Product[] = [
     "description": "Hołd dla polskiej stolicy lniarstwa. Wykonany z naturalnego, przewiewnego lnu, który gwarantuje doskonałą cyrkulację powietrza w cieplejsze dni. Surowa, naturalna tekstura i niespotykany dotąd w duragach organiczny chłód.",
     "storyDescription": "Żyrardów. Polska stolica lniarstwa i wielka tradycja włókiennicza. Naturalny len łączący przewiewność z surową, organiczną elegancją.",
     "images": [
-      "/assets/product-photos/durag-zyrardow/durag-zyrardow_1.jpg",
-      "/assets/product-photos/durag-zyrardow/durag-zyrardow_2.jpg",
-      "/assets/product-photos/durag-zyrardow/durag-zyrardow_3.jpg",
-      "/assets/product-photos/durag-zyrardow/durag-zyrardow_4.jpg",
+      "/assets/product-photos/durag-zyrardow/durag-zyrardow_12.jpg",
       "/assets/product-photos/durag-zyrardow/durag-zyrardow_5.jpg",
-      "/assets/product-photos/durag-zyrardow/durag-zyrardow_6.jpg"
+      "/assets/product-photos/durag-zyrardow/durag-zyrardow_19.jpg",
+      "/assets/product-photos/durag-zyrardow/durag-zyrardow_16.jpg",
+      "/assets/product-photos/durag-zyrardow/durag-zyrardow_9.jpg",
+      "/assets/product-photos/durag-zyrardow/durag-zyrardow_20.jpg",
+      "/assets/product-photos/durag-zyrardow/durag-zyrardow_2.jpg",
+      "/assets/product-photos/durag-zyrardow/durag-zyrardow_4.jpg"
     ],
     "colors": [
       {
