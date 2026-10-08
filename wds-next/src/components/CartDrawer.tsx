@@ -220,6 +220,9 @@ export default function CartDrawer() {
               <span>{t.cartShipping}:</span>
               <span className="text-emerald-400 font-medium">{t.cartShippingFree}</span>
             </div>
+            <div className="text-[11px] text-[#787570] -mt-1">
+              {isEn ? 'Worldwide & EU shipping available at checkout.' : 'Wysyłka zagraniczna (UE i świat) dostępna w kasie.'}
+            </div>
 
             {/* Total */}
             <div className="pt-2 border-t border-[#1E1E22] flex justify-between items-baseline">

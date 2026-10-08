@@ -21,22 +21,47 @@ export async function POST(req: NextRequest) {
       customerName,
       customerEmail,
       customerPhone,
+      phonePrefix,
       deliveryMethod = 'paczkomat',
+      shippingCountry = 'PL',
       lockerCode,
       lockerAddress,
+      shippingAddress,
+      deliveryNotes,
       pointId,
       items,
       discountCode,
       promoCode,
     } = body;
 
-    // Validation of customer details
-    if (!customerName?.trim() || !customerEmail?.trim() || !customerPhone?.trim()) {
+    // Validation of customer full name (both first and last name required)
+    const nameTrimmed = (customerName || '').trim();
+    const nameParts = nameTrimmed.split(/\s+/).filter(Boolean);
+    if (!nameTrimmed || nameParts.length < 2 || nameParts[0].length < 2 || nameParts[1].length < 2) {
       return NextResponse.json(
-        { error: 'Wymagane są dane zamawiającego (imię i nazwisko, e-mail, telefon).' },
+        { error: 'Wymagane jest pełne imię i nazwisko (np. Jan Kowalski) — kurier wymaga obu członów do doręczenia.' },
         { status: 400 }
       );
     }
+
+    if (!customerEmail?.trim()) {
+      return NextResponse.json(
+        { error: 'Wymagany jest poprawny adres e-mail.' },
+        { status: 400 }
+      );
+    }
+
+    const rawPhone = (customerPhone || '').trim();
+    if (!rawPhone || rawPhone.replace(/\D/g, '').length < 6) {
+      return NextResponse.json(
+        { error: 'Podaj poprawny numer telefonu (min. 6 cyfr) do powiadomień doręczenia.' },
+        { status: 400 }
+      );
+    }
+
+    const finalPhone = phonePrefix && !rawPhone.startsWith('+')
+      ? `${phonePrefix.trim()} ${rawPhone}`
+      : rawPhone;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
@@ -45,15 +70,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const effectiveLockerCode = pointId || lockerCode;
-    if (deliveryMethod === 'paczkomat' && !effectiveLockerCode) {
-      return NextResponse.json(
-        { error: 'Wybierz Paczkomat InPost przed przejściem do płatności.' },
-        { status: 400 }
-      );
+    const effectiveLockerCode = (lockerCode || pointId)?.trim().toUpperCase() || null;
+    if (deliveryMethod === 'paczkomat') {
+      if (!effectiveLockerCode || effectiveLockerCode.length < 3) {
+        return NextResponse.json(
+          { error: 'Wklej lub wpisz kod Paczkomatu InPost (np. WAW22M).' },
+          { status: 400 }
+        );
+      }
     }
 
-    if (deliveryMethod === 'courier' && !lockerAddress?.trim()) {
+    if (deliveryMethod === 'courier' && !lockerAddress?.trim() && !shippingAddress?.street?.trim()) {
       return NextResponse.json(
         { error: 'Podaj pełny adres doręczenia dla przesyłki kurierskiej.' },
         { status: 400 }
@@ -76,7 +103,7 @@ export async function POST(req: NextRequest) {
 
     // Server-side price resolution and promotional calculations
     const effectivePromoCode = promoCode || discountCode || null;
-    const resolvedCart = await resolveCartServer(cartRefs, effectivePromoCode);
+    const resolvedCart = await resolveCartServer(cartRefs, effectivePromoCode, shippingCountry);
 
     if (resolvedCart.items.length === 0 || resolvedCart.total < 0) {
       return NextResponse.json(
@@ -182,6 +209,23 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Append shipping line item if shipping cost > 0 (e.g. international courier)
+    if (resolvedCart.shippingCost > 0) {
+      stripeLineItems.push({
+        price_data: {
+          currency: 'pln',
+          product_data: {
+            name: shippingCountry !== 'PL'
+              ? `Przesyłka kurierska międzynarodowa (${shippingCountry})`
+              : 'Dostawa kurierska',
+            description: 'Ubezpieczona przesyłka kurierska z Warszawy',
+          },
+          unit_amount: Math.round(resolvedCart.shippingCost * 100),
+        },
+        quantity: 1,
+      });
+    }
+
     // If Stripe key is missing in development mode, allow instant mock payment simulation
     if (!hasStripeKey) {
       if (process.env.NODE_ENV === 'development') {
@@ -189,9 +233,9 @@ export async function POST(req: NextRequest) {
         const mockSessionId = `dev_mock_${Date.now()}`;
         const devOrderPayload = {
           order_no: orderNo,
-          customer_name: customerName.trim(),
+          customer_name: nameTrimmed,
           customer_email: customerEmail.trim(),
-          customer_phone: customerPhone.trim(),
+          customer_phone: finalPhone,
           delivery_method: deliveryMethod as 'paczkomat' | 'courier' | 'pickup',
           locker_code: deliveryMethod === 'paczkomat' ? effectiveLockerCode : null,
           point_id: deliveryMethod === 'paczkomat' ? effectiveLockerCode : null,
@@ -217,6 +261,11 @@ export async function POST(req: NextRequest) {
           status: 'new' as const,
           payment_status: 'paid' as const,
           stripe_session_id: mockSessionId,
+          notes: [
+            shippingCountry !== 'PL' ? `Kraj dostawy: ${shippingCountry}` : null,
+            deliveryNotes ? `Uwagi do zamówienia: ${deliveryNotes}` : null,
+            resolvedCart.shippingCost > 0 ? `Koszt wysyłki: ${resolvedCart.shippingCost} zł` : null,
+          ].filter(Boolean).join(' | ') || null,
         };
 
         await createOrderInSupabase(devOrderPayload);
@@ -261,15 +310,18 @@ export async function POST(req: NextRequest) {
       discounts,
       metadata: {
         order_no: orderNo,
-        customer_name: customerName.trim(),
+        customer_name: nameTrimmed,
         customer_email: customerEmail.trim(),
-        customer_phone: customerPhone.trim(),
+        customer_phone: finalPhone,
+        shipping_country: shippingCountry,
         delivery_method: deliveryMethod,
         locker_code: effectiveLockerCode || '',
         point_id: effectiveLockerCode || '',
         locker_address: lockerAddress || '',
+        delivery_notes: deliveryNotes || '',
         discount_code: resolvedCart.promoCode || '',
         free_items_count: String(resolvedCart.freeItemsCount),
+        shipping_cost: String(resolvedCart.shippingCost),
       },
       success_url: `${origin}/zamowienie/sukces?session_id={CHECKOUT_SESSION_ID}&order_no=${orderNo}`,
       cancel_url: `${origin}/checkout?canceled=true`,
@@ -298,9 +350,9 @@ export async function POST(req: NextRequest) {
     // Save pending order to database with server-verified prices
     const orderPayload = {
       order_no: orderNo,
-      customer_name: customerName.trim(),
+      customer_name: nameTrimmed,
       customer_email: customerEmail.trim(),
-      customer_phone: customerPhone.trim(),
+      customer_phone: finalPhone,
       delivery_method: deliveryMethod as 'paczkomat' | 'courier' | 'pickup',
       locker_code: deliveryMethod === 'paczkomat' ? effectiveLockerCode : null,
       point_id: deliveryMethod === 'paczkomat' ? effectiveLockerCode : null,
@@ -326,6 +378,11 @@ export async function POST(req: NextRequest) {
       status: 'pending_payment' as const,
       payment_status: 'pending' as const,
       stripe_session_id: session.id,
+      notes: [
+        shippingCountry !== 'PL' ? `Kraj dostawy: ${shippingCountry}` : null,
+        deliveryNotes ? `Uwagi do zamówienia: ${deliveryNotes}` : null,
+        resolvedCart.shippingCost > 0 ? `Koszt wysyłki: ${resolvedCart.shippingCost} zł` : null,
+      ].filter(Boolean).join(' | ') || null,
     };
 
     const dbRes = await createOrderInSupabase(orderPayload);

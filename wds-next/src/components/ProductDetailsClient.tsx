@@ -264,6 +264,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
                 <div className="px-4 pb-4 pt-1 text-[13px] text-[#A3A09B] space-y-2 border-t border-[#1E1E22]">
                   <p>• <strong>{isEn ? 'Dispatched from Warsaw:' : 'Wysyłka z Warszawy:'}</strong> {t.tabShippingLine1}</p>
                   <p>• <strong>{isEn ? 'Free shipping across Poland:' : 'Darmowa dostawa w Polsce:'}</strong> {t.tabShippingLine2}</p>
+                  <p>• <strong>{isEn ? 'Worldwide & EU shipping:' : 'Wysyłka zagraniczna (UE i świat):'}</strong> {isEn ? 'Tracked courier delivery in 3–6 business days.' : 'Ubezpieczona przesyłka kurierska w 3–6 dni roboczych.'}</p>
                   <p>• <strong>{isEn ? 'Warsaw local pickup:' : 'Odbiór osobisty w Warszawie:'}</strong> {t.tabShippingLine3}</p>
                 </div>
               )}

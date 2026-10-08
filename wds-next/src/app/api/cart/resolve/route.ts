@@ -8,7 +8,9 @@ export async function POST(req: NextRequest) {
     const items: CartItemRef[] = body.items || [];
     const promoCode: string | null = body.promoCode || null;
 
-    const resolved = await resolveCartServer(items, promoCode);
+    const shippingCountry: string = body.shippingCountry || 'PL';
+
+    const resolved = await resolveCartServer(items, promoCode, shippingCountry);
 
     return NextResponse.json(resolved);
   } catch (error: any) {

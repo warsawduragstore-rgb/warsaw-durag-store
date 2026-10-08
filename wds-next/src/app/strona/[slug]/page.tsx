@@ -327,7 +327,7 @@ const PAGES_DATA: Record<string, { title: string; subtitle: string; content: Rea
         <section className="space-y-3">
           <h3 className="font-serif text-lg text-[#0D0D0B] font-medium">1. Administrator Danych Osobowych</h3>
           <p>
-            Administratorem Twoich danych osobowych jest <strong>Warsaw Durag Store</strong> z siedzibą w Warszawie przy ul. Włodarzewskiej 4. W sprawach związanych z ochroną danych osobowych możesz skontaktować się z nami pod adresem e-mail: <strong>support@warsawduragstore.com</strong>.
+            Operatorem serwisu oraz Administratorem Twoich danych osobowych jest <strong>Michał Wyszyński Grójecka 186/212, Warszawa 02-390</strong>. Adres kontaktowy: <strong>support@warsawduragstore.com</strong>.
           </p>
         </section>
 

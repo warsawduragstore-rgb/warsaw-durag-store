@@ -284,6 +284,9 @@ export default function CartPage() {
                     <span>{isEn ? 'Shipping in Poland:' : 'Dostawa w Polsce:'}</span>
                     <span className="text-emerald-400 font-medium">{isEn ? 'Free shipping' : '0 zł (Darmowa dostawa)'}</span>
                   </div>
+                  <div className="text-[11px] text-[#787570]">
+                    {isEn ? 'Worldwide & EU shipping available at checkout.' : 'Wysyłka zagraniczna (UE i świat) dostępna w kasie.'}
+                  </div>
 
                   <div className="pt-3 border-t border-[#26262A] flex justify-between items-baseline">
                     <span className="font-serif text-base font-medium text-white">

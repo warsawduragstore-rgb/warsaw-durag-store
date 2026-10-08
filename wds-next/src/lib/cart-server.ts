@@ -40,7 +40,8 @@ const STATIC_PROMO_CODES: Record<string, number> = {
  */
 export async function resolveCartServer(
   itemsRef: CartItemRef[],
-  promoCodeInput?: string | null
+  promoCodeInput?: string | null,
+  shippingCountry: string = 'PL'
 ): Promise<ResolvedCart> {
   if (!itemsRef || !Array.isArray(itemsRef) || itemsRef.length === 0) {
     return {
@@ -198,8 +199,10 @@ export async function resolveCartServer(
     }
   }
 
-  // Darmowa dostawa w Polsce na zamówienia
-  const shippingCost = 0;
+  // Dostawa: w Polsce darmowa (0 zł). Za granicę: 35 zł (darmowa od 250 zł).
+  const isInternational = Boolean(shippingCountry && shippingCountry !== 'PL');
+  const shippingCost = isInternational ? (subtotal >= 250 ? 0 : 35) : 0;
+  const freeShippingThresholdMet = isInternational ? subtotal >= 250 : true;
   const finalTotal = Math.max(0, subtotal - promoDiscount + shippingCost);
 
   return {
@@ -213,6 +216,6 @@ export async function resolveCartServer(
     promoDiscount: Math.round(promoDiscount * 100) / 100,
     total: Math.round(finalTotal * 100) / 100,
     shippingCost,
-    freeShippingThresholdMet: true,
+    freeShippingThresholdMet,
   };
 }
