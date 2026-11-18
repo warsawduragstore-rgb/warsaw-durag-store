@@ -4,9 +4,21 @@
   "buildCommand": "echo 'Static storefront ready'",
   "outputDirectory": ".",
   "cleanUrls": true,
-  "redirects": [
-    { "source": "/cart", "destination": "/koszyk", "permanent": true }
-  ],
+  "redirects": "redirects": [
+  {
+    "source": "/(.*)",
+    "has": [{ "type": "host", "value": "warsawduragstore.com" }],
+    "destination": "https://warsawduragstore.pl/",
+    "statusCode": 301
+  },
+  {
+    "source": "/(.*)",
+    "has": [{ "type": "host", "value": "www.warsawduragstore.com" }],
+    "destination": "https://warsawduragstore.pl/",
+    "statusCode": 301
+  },
+  { "source": "/cart", "destination": "/koszyk", "permanent": true }
+],
   "headers": [
     {
       "source": "/(.*)",
